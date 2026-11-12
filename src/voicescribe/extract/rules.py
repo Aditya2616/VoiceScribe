@@ -35,7 +35,7 @@ NOT_NAMES = frozenset(
     "Someone Anyone Nobody Fine Cool Done Agreed Perfect Absolutely Definitely Just Not Today Tomorrow".split()
 )
 FILLER = (
-    r"(?:(?:ok|okay|so|and|right|alright|all right|great|thanks|thank you|yeah|yes|sure|well|also|then|now|cool|"
+    r"(?i:(?:ok|okay|so|and|right|alright|all right|great|thanks|thank you|yeah|yes|sure|well|also|then|now|cool|"
     r"perfect|fine)\b[,.]?\s*)*"
 )
 
@@ -53,7 +53,7 @@ OBLIGATION = re.compile(
 REQUEST = re.compile(r"\b(?:can|could|would|will) you\b|\bplease\b|\bif you could\b|\bdo you mind\b", re.I)
 ACK_WORDS = re.compile(
     r"^\s*(?:(?:yes|yeah|yep|sure|okay|ok|absolutely|of course|got it|no problem|sounds good|will do|on it|"
-    r"happy to|definitely|right|fine|good idea|good point)\b[,.!]?\s*)+",
+    r"happy to|definitely|right|fine|good idea|good point|understood|noted|of course)\b[,.!]?\s*)+",
     re.I,
 )
 HEDGE = re.compile(r"\b(?:probably|maybe|might|perhaps|possibly|i guess|i was thinking|someday|at some point)\b", re.I)
@@ -82,18 +82,40 @@ QUESTION_START = re.compile(r"^\s*(?:should|shall|do|does|did|is|are|what|why|ho
 NEGATED = re.compile(r"\b(?:i can't|i cannot|i won't|i will not|i couldn't|we can't|not going to|no need to)\b", re.I)
 
 
+ACK_TAIL = re.compile(
+    r"^(?:go ahead and\s+)?(?:(?:do|take|handle|get|make)\s+(?:care of\s+)?(?:it|that|this|them|those)\b|"
+    r"have\s+[\w ]{1,24}?\s+ready\b)?"
+    r"(?:[\s,.!]+(?:yes|yep|sure|today|tomorrow|now|then|later|too|right away|this \w+|next \w+|"
+    r"by \w+(?: \w+)?|before \w+(?: \w+)?|on \w+|at \w+))*[\s,.!]*$",
+    re.I,
+)
+SELF_START = re.compile(rf"^{FILLER}(?:i'll|i will|i can|i'm on it|let me|will do)\b", re.I)
+
+
 def is_ack(text: str) -> bool:
-    """A short reply that accepts a request ("Sure, I'll do that tomorrow.", "Will do.", "Okay.")."""
-    if len(text.split()) > 10 or text.rstrip().endswith("?"):
+    """A short reply that accepts a request: "Sure, I'll do that tomorrow.", "Will do.", "I can take that, yes."."""
+    if len(text.split()) > 12 or text.rstrip().endswith("?"):
         return False
     m = ACK_WORDS.match(text)
+    body = text[m.end() :] if m else text
+    cue = SELF.match(body.strip())
+    if cue:
+        return bool(ACK_TAIL.match(body.strip()[cue.end() :].strip()))
     if not m:
         return False
-    stripped = text[m.end() :].strip(" .,!")
-    if stripped and not SELF.search(text) and len(stripped.split()) > 3:
+    rest = body.strip(" .,!")
+    return not rest or (len(rest.split()) <= 3 and not re.search(VERB, rest, re.I))
+
+
+def is_reply(prev_text: str, text: str) -> bool:
+    """Is `text` the answer to the request in `prev_text`? Covers heavy-verb acceptances such as
+    "Sure, I'll reach out today." that only make sense as replies to a question or an addressed request."""
+    if is_ack(text):
+        return True
+    m = ACK_WORDS.match(text)
+    if not m or not SELF.match(text[m.end() :].strip()):
         return False
-    heavy = [v for v in re.findall(VERB, stripped, re.I) if v.lower() not in LIGHT_VERBS]
-    return not heavy
+    return prev_text.rstrip().endswith("?") or ASSIGN_ADDRESS.match(prev_text) is not None
 
 
 @dataclass
@@ -111,6 +133,7 @@ class Candidate:
 def clean_task(text: str) -> str:
     t = re.sub(r"\s+", " ", text).strip(" ,.;:?!-")
     t = re.sub(r"^(?:and|so|then|also|to|please|you)\s+", "", t, flags=re.I)
+    t = re.sub(r"\s+(?:for|by|on|until|before|at|in|to|due|within)$", "", t, flags=re.I)
     return t[:1].upper() + t[1:] if t else t
 
 
@@ -126,7 +149,7 @@ def infer_speaker_names(sentences: list[Sentence]) -> dict[str, str]:
     votes: dict[str, Counter] = defaultdict(Counter)
     for i, s in enumerate(sentences):
         m = ASSIGN_ADDRESS.match(s.text)
-        if not (m and s.speaker and m.group("name") not in NOT_NAMES):
+        if not (m and s.speaker and m.group("name") and m.group("name") not in NOT_NAMES):
             continue
         for nxt in sentences[i + 1 : i + 3]:
             if nxt.speaker and nxt.speaker != s.speaker:
@@ -155,7 +178,7 @@ class RuleExtractor:
             text = s.text
             last = out[-1] if out and out[-1].sentence_ids[-1] == s.id - 1 else None
             # a short acceptance belongs to the request just before it
-            if last and last.kind == "action" and is_ack(text):
+            if last and last.kind == "action" and is_reply(sents[idx - 1].text, text):
                 last.sentence_ids.append(s.id)
                 last.owner = last.owner or speaker_names.get(s.speaker or "")
                 if last.deadline_date is None and (dl := find_deadline(text, meeting_date)):
@@ -226,15 +249,16 @@ class RuleExtractor:
         if NEGATED.search(text):
             return None, None, 0.0
         m = ASSIGN_ADDRESS.match(text)
-        if m and m.group("name") not in NOT_NAMES:
-            after = text[m.end("name") :].lstrip(" ,")
+        if m and (m.group("name") or m.group("name2")) not in NOT_NAMES:
+            who = m.group("name") or m.group("name2")
+            after = text[m.end("name") if m.group("name") else m.end("name2") :].lstrip(" ,")
             task = re.sub(
                 r"^(?:can|could|would|will|should|please|if you could|do you mind|you(?:'ll| will| can| could| should|"
                 r" need to| might want to)?)\s+(?:you\s+)?(?:please\s+)?(?:also\s+)?(?:be able to\s+)?",
                 "", after, flags=re.I,
             )  # fmt: skip
             if re.search(VERB, task, re.I):
-                return m.group("name"), task, 0.9
+                return who, task, 0.9
         for pattern, strength in ((ASSIGN_HAVE, 0.85), (ASSIGN_THIRD, 0.85)):
             m = pattern.search(text)
             if m and m.group("name") not in NOT_NAMES:

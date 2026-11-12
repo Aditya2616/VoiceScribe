@@ -1,0 +1,18 @@
+# title: Pricing and launch sync
+# date: 2026-12-03
+# split: test2
+Ewa: Welcome, today is about pricing and the launch plan.
+Dmitri: The finance team signed off on the new tiers.
+Ewa: Great, that unblocks us.
+Ewa: Dmitri, can you take the minutes and email them out by tomorrow? => ACTION owner=Dmitri due=2026-12-04
+Dmitri: Sure thing.
+Pavel: We should probably look at enterprise pricing at some point.
+Ewa: Decision: we keep the free tier exactly as it is. => DECISION
+Pavel: Agreed, that is simpler.
+Dmitri: I'll book the room for the launch review on the 10th. => ACTION owner=Dmitri due=2026-12-10
+Ewa: Pavel to follow up with the pilot customer on Monday. => ACTION owner=Pavel due=2026-12-07
+Pavel: Yes.
+Dmitri: Is the press release ready?
+Ewa: Almost, legal still has comments.
+Pavel: I can see why that takes a while.
+Ewa: Okay, we are done.

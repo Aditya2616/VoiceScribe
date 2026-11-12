@@ -1,0 +1,40 @@
+# title: Orbit launch sync (Halden Labs)
+# date: 2026-11-12
+# split: demo
+# voices: Maya=af_heart, Rohan=am_adam, Lena=bf_emma, Theo=bm_george
+Maya: Okay, let's get started. This is the Orbit launch sync for Halden Labs.
+Maya: First, the beta feedback.
+Lena: We got about two hundred responses, and most people love the new calendar view.
+Lena: The main complaint is that the invite flow takes too many steps.
+Rohan: I looked at the invite flow yesterday, and we can cut it down to two screens.
+Maya: Great. Rohan, can you ship the shorter invite flow by next Friday? => ACTION owner=Rohan due=2026-11-20
+Rohan: Yes, I'll have it ready for review by then.
+Maya: Next, pricing.
+Theo: Finance wants to know if we keep the free plan after launch.
+Maya: We decided to keep the free plan, with a limit of three calendars. => DECISION
+Theo: That works for me.
+Maya: Theo, please send the final pricing page copy to Lena by Tuesday. => ACTION owner=Theo due=2026-11-17
+Theo: Sure, I'll do that.
+Lena: On the design side, the onboarding screens still need a final pass.
+Lena: I'll update the onboarding screens and post them in the channel tomorrow. => ACTION owner=Lena due=2026-11-13
+Maya: Thanks, Lena.
+Rohan: Also, the calendar sync with other providers still drops events about once a week.
+Maya: Do we know why?
+Rohan: It looks like a rate limit on the provider side.
+Maya: Rohan, please write up the sync bug with logs and share it with the team by Wednesday. => ACTION owner=Rohan due=2026-11-18
+Rohan: Understood, I'll add it to the tracker.
+Rohan: There is one risk. The push notification service is flaky on older phones.
+Maya: How bad is it?
+Rohan: About one in twenty notifications fails to arrive.
+Maya: That is not acceptable for launch.
+Maya: Theo, can you ask the vendor for a status report before the 18th? => ACTION owner=Theo due=2026-11-18
+Theo: Okay, I will email them this afternoon.
+Maya: Let's push the public launch from the twentieth to the first of December. => DECISION
+Rohan: That gives us the extra time we need.
+Lena: Should we tell the beta users about the new date?
+Maya: Yes. Lena, write a short announcement and send it to the beta users by the end of the month. => ACTION owner=Lena due=2026-11-30
+Lena: Will do.
+Maya: I'll book the launch retro for next week. => ACTION owner=Maya due=2026-11-20
+Rohan: One more thing. We should really think about dark mode at some point.
+Maya: Good idea, but not for this release.
+Maya: That's everything. Thanks, all.

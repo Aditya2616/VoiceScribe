@@ -1,0 +1,18 @@
+# title: Platform migration status
+# date: 2026-07-09
+# split: test2
+Karl: Let's go through the migration status.
+Sofia: We have moved about sixty percent of the services.
+Karl: Good progress.
+Sofia: The runbook is still missing though.
+Karl: Sofia will own the migration runbook, due next Friday. => ACTION owner=Sofia due=2026-07-17
+Sofia: Fine.
+Tomas: The load tests showed some timeouts under heavy traffic.
+Karl: We agreed that Tomas handles the load test follow-ups. => ACTION owner=Tomas due=
+Karl: Please send me the draft report by Tuesday. => ACTION owner= due=2026-07-14
+Tomas: Understood.
+Karl: Let's push the customer demo to August. => DECISION
+Sofia: That gives us more breathing room.
+Tomas: We could also add a second region.
+Karl: That is a topic for another day.
+Karl: Thanks, that's all.

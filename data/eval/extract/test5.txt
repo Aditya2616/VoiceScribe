@@ -1,0 +1,18 @@
+# title: Vendor selection
+# date: 2026-04-15
+# split: test2
+Luca: Thanks everyone, we have three vendors left on the shortlist.
+Noor: The second one is the cheapest but their support hours are limited.
+Luca: Noor, could you pull together the vendor quotes before Monday? => ACTION owner=Noor due=2026-04-20
+Noor: Of course, I will send them round.
+Ines: The third vendor offered a pilot at no charge.
+Luca: That is interesting.
+Ines: I'll sort out the travel bookings for the site visits by the end of next week. => ACTION owner=Ines due=2026-04-24
+Luca: We've settled on the second vendor, pending the contract review. => DECISION
+Noor: Can someone ping legal about the contract terms? => ACTION owner=Luca due=2026-04-16
+Luca: I'll ping them tomorrow.
+Ines: What about the security questionnaire?
+Noor: It was sent last week and they have not replied.
+Luca: Right.
+Ines: Honestly I think we might want a different vendor altogether.
+Luca: Let's not reopen that today.
