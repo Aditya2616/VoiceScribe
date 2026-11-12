@@ -19,6 +19,7 @@ const S = {
   kept: new Set(),
   wi: 0, // number of words currently revealed
   si: -1, // active sentence
+  sn: 0, // number of sentences whose first word has been reached
   lastT: 0,
   clock: { at: 0, wall: 0 },
   playing: false,
@@ -64,6 +65,7 @@ function resetPlayback() {
   S.kept.clear();
   S.wi = 0;
   S.si = -1;
+  S.sn = 0;
   S.lastT = 0;
   S.summaryShown = false;
   updatePlayButton();
@@ -217,6 +219,13 @@ function sync(t, instant = false) {
     const lo = Math.min(n, S.wi), hi = Math.max(n, S.wi);
     for (let i = lo; i < hi; i++) S.words[i].el.classList.toggle("on", i < n);
     S.wi = n;
+  }
+  // a row's timestamp and speaker label appear with its first word; the row keeps its space so nothing jumps
+  const sn = bsearch(S.sents, t, "start");
+  if (sn !== S.sn) {
+    const lo = Math.min(sn, S.sn), hi = Math.max(sn, S.sn);
+    for (let i = lo; i < hi; i++) S.sents[i].el.classList.toggle("started", i < sn);
+    S.sn = sn;
   }
   S.words.forEach((w, i) => {
     if (w.cur) { w.el.classList.remove("cur"); w.cur = false; }

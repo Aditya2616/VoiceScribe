@@ -135,6 +135,8 @@ input[type=range]:disabled { opacity: .4; cursor: default; }
 .sent .ts { font-family: var(--mono); font-size: 11px; color: var(--dim); padding-top: 5px; text-align: right; }
 .sent .who { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--lime); display: block; margin-bottom: 1px; }
 .sent .txt { font-size: 17px; line-height: 1.5; }
+.sent .ts, .sent .who { opacity: 0; transition: opacity .22s linear; }
+.sent.started .ts, .sent.started .who { opacity: 1; }
 .w { opacity: 0; transition: opacity .22s linear, color .2s; display: inline; }
 .w.on { opacity: .62; }
 .sent.active .w.on { opacity: 1; }
@@ -195,7 +197,7 @@ footer .label { color: var(--mute); }
   #run-info-m { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .w, .btn, .mode, .play, .bar > div { transition: none; }
+  .w, .btn, .mode, .play, .bar > div, .sent .ts, .sent .who { transition: none; }
   .sent.flash { animation: none; background: rgb(var(--lime-rgb) / .14); }
   .btn.rec.on .dot { animation: none; }
 }
