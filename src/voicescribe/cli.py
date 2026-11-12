@@ -150,6 +150,7 @@ def cmd_eval(a: argparse.Namespace) -> int:
             r, _ = speech_eval.run_demo_eval(
                 data / "demo" / "meeting.mp3", data / "demo" / "script.txt", data / "demo" / "meeting.timing.json",
                 tr, get_extractor(a.extractor), diarise=a.diarize,
+                people=extract_eval.script_participants(data / "demo" / "script.txt"),
             )  # fmt: skip
     text = json.dumps(r, indent=2, default=str)
     if a.out:
@@ -159,7 +160,7 @@ def cmd_eval(a: argparse.Namespace) -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="voicescribe", description="Meetings in, clean action items out.")
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -213,8 +214,11 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument("--data-dir", default="data")
     e.add_argument("--out", default=None)
     e.set_defaults(fn=cmd_eval)
+    return p
 
-    args = p.parse_args(argv)
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
     return args.fn(args)
 
 

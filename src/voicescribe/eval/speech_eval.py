@@ -39,12 +39,9 @@ def librispeech_wer(directory: Path, transcriber: Transcriber) -> dict:
     }
 
 
-def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor) -> dict:
-    """Score a processed demo meeting against its script: WER, sentence boundary timing, extraction."""
-    truth = json.loads(timing.read_text(encoding="utf8"))["sentences"]
+def asr_scores(hyp_words: list[Word], truth: list[dict]) -> dict:
+    """WER and sentence-boundary timing of a word stream against the TTS script and its segment timings."""
     ref_text = " ".join(t["text"] for t in truth)
-    hyp_words: list[Word] = [w for s in meeting.transcript.sentences for w in s.words]
-    hyp_text = " ".join(w.text for w in hyp_words)
     ref_tokens = normalize(ref_text)
     # hyp tokens with the originating Word index (a Word may normalise to several tokens or none)
     hyp_tokens: list[str] = []
@@ -76,7 +73,29 @@ def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor
         if hi in match:
             end_err.append(hyp_words[hyp_owner[match[hi]]].end - t["end"])
     both = start_err + end_err
+    return {
+        "reference_words": len(ref_tokens),
+        "wer": wer_value,
+        "substitutions": s,
+        "deletions": d,
+        "insertions": i,
+        "boundary_error_ms": {
+            "n": len(both),
+            "median_abs": round(1000 * statistics.median(abs(x) for x in both), 0) if both else None,
+            "p90_abs": round(1000 * sorted(abs(x) for x in both)[int(0.9 * (len(both) - 1))], 0) if both else None,
+            "within_250ms": round(sum(abs(x) <= 0.25 for x in both) / len(both), 3) if both else None,
+            "mean_start_signed": round(1000 * statistics.mean(start_err), 0) if start_err else None,
+            "mean_end_signed": round(1000 * statistics.mean(end_err), 0) if end_err else None,
+        },
+        "hypothesis": " ".join(w.text for w in hyp_words),
+    }
 
+
+def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor) -> dict:
+    """Score a processed demo meeting against its script: WER, sentence boundary timing, extraction."""
+    truth = json.loads(timing.read_text(encoding="utf8"))["sentences"]
+    hyp_words: list[Word] = [w for s in meeting.transcript.sentences for w in s.words]
+    asr = asr_scores(hyp_words, truth)
     # extraction against the script labels, matched by time overlap with the true sentence spans
     gold_script = load_meeting(script, with_speakers=True)
     gold = {g.sentence_id: g for g in gold_script.gold}
@@ -100,24 +119,17 @@ def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor
     n_d = sum(g.kind == "decision" for g in gold.values())
     return {
         "asr_model": meeting.transcript.model,
-        "reference_words": len(ref_tokens),
-        "wer": wer_value,
-        "substitutions": s,
-        "deletions": d,
-        "insertions": i,
-        "boundary_error_ms": {
-            "n": len(both),
-            "median_abs": round(1000 * statistics.median(abs(x) for x in both), 0) if both else None,
-            "p90_abs": round(1000 * sorted(abs(x) for x in both)[int(0.9 * (len(both) - 1))], 0) if both else None,
-            "within_250ms": round(sum(abs(x) <= 0.25 for x in both) / len(both), 3) if both else None,
-            "mean_start_signed": round(1000 * statistics.mean(start_err), 0) if start_err else None,
-            "mean_end_signed": round(1000 * statistics.mean(end_err), 0) if end_err else None,
-        },
+        "reference_words": asr["reference_words"],
+        "wer": asr["wer"],
+        "substitutions": asr["substitutions"],
+        "deletions": asr["deletions"],
+        "insertions": asr["insertions"],
+        "boundary_error_ms": asr["boundary_error_ms"],
         "action_items": _prf(tp_a, len(meeting.action_items), n_a),
         "decisions": _prf(tp_d, len(meeting.decisions), n_d),
         "owner_accuracy": owner_ok / tp_a if tp_a else None,
         "due_date_accuracy": due_ok / tp_a if tp_a else None,
-        "hypothesis": hyp_text,
+        "hypothesis": asr["hypothesis"],
         "extractor": extractor.method,
     }
 
@@ -156,14 +168,26 @@ def _prf(tp: int, pred: int, gold: int) -> dict:
     return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r) if p + r else 0.0, "tp": tp, "predicted": pred, "gold": gold}
 
 
+def evaluate_recorded(meeting_json: Path, script: Path, timing: Path) -> dict:
+    """Score a recorded demo run (the meeting.json the UI replays) against its script, so the numbers quoted in the
+    README are those of the run on screen."""
+    meeting = Meeting.model_validate_json(meeting_json.read_text(encoding="utf8"))
+    return demo_eval(meeting, script, timing, _Rules())
+
+
+class _Rules:
+    method = "rules"
+
+
 def run_demo_eval(
-    audio: Path, script: Path, timing: Path, transcriber: Transcriber, extractor: Extractor, diarise: bool = False
+    audio: Path, script: Path, timing: Path, transcriber: Transcriber, extractor: Extractor, diarise: bool = False,
+    people: list[str] | None = None,
 ) -> tuple[dict, Meeting]:
     from ..pipeline import process_file
 
     gold = load_meeting(script)
     meeting, _ = process_file(
-        audio, gold.date, transcriber=transcriber, extractor=extractor, diarise=diarise, synthetic=True
+        audio, gold.date, transcriber=transcriber, extractor=extractor, diarise=diarise, synthetic=True, people=people
     )
     assert isinstance(meeting.date, dt.date)
     return demo_eval(meeting, script, timing, extractor), meeting

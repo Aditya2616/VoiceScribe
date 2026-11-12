@@ -1,7 +1,8 @@
-# VoiceScribe: spec
+# VoiceScribe: design notes (as built)
 
-Meetings in, clean action items out. Python, Whisper, LLM APIs. Pipeline: transcribe, segment, summarise.
-Local port 8107. Repo `Aditya2616/VoiceScribe`, MIT.
+Meetings in, clean action items out. Python, Whisper, optional LLM adapters. Pipeline: transcribe, segment, extract.
+These notes describe the system as it is. The measured results are in the README and `results/`; the early
+exploration that led here is in `RESEARCH.md`.
 
 ## 1. Architecture
 
@@ -10,124 +11,80 @@ flowchart LR
   A[audio file / mic] --> B[decode: PyAV to 16 kHz mono]
   B --> C[faster-whisper int8, word timestamps]
   B --> D[sherpa-onnx diarisation, optional]
-  C --> E[word stream cleanup]
-  E --> F[sentences + topics]
-  D --> F
-  F --> G{extractor}
-  G -->|rules| H[Meeting JSON]
-  G -->|local model verifies candidates| H
-  G -->|openai / anthropic adapter| H
+  C --> E[name canonicalisation, sentences, topics]
+  D --> E
+  E --> F{extractor}
+  F -->|rules, default| H[Meeting JSON]
+  F -->|rules + local model| H
+  F -->|openai / anthropic adapter| H
   H --> I[Pydantic validation + span check]
   I --> J[exports: md, json, srt, vtt]
   I --> K[FastAPI + web UI]
 ```
 
 Package `src/voicescribe/`:
-- `audio.py` decode/resample/peaks (PyAV, numpy), waveform peak envelope for the UI.
-- `asr.py` `Transcriber` protocol; `FasterWhisperTranscriber`, `StubTranscriber` (tests, replay); word cleanup.
-- `segment.py` sentence splitter, pause fallback, TextTiling topics.
-- `diarize.py` sherpa-onnx wrapper, speaker assignment to words by max overlap; model download script.
-- `schema.py` Pydantic models (`Word`, `Sentence`, `Transcript`, `ActionItem`, `Decision`, `Meeting`) and span validators.
+- `audio.py` decode, resample, peak envelope for the waveform (PyAV, numpy), MP3 encoding for the demo.
+- `asr.py` `Transcriber` protocol; `FasterWhisperTranscriber` (CPU, int8), `StubTranscriber` (tests).
+- `segment.py` word clean-up, sentence splitter with pause fallback, TextTiling topics and topic labels.
+- `names.py` one spelling per person (consonant skeleton plus edit distance), closed participants list.
+- `diarize.py` sherpa-onnx wrapper and model download; speakers are assigned to words by maximum overlap.
+- `schema.py` Pydantic models (`Word`, `Sentence`, `Transcript`, `ActionItem`, `Decision`, `Meeting`) and span checks.
 - `dates.py` relative deadline resolver against the meeting date.
-- `extract/` `base.py` (interface, registry via `VOICESCRIBE_EXTRACTOR`), `rules.py`, `local.py` (transformers,
-  verifier over candidates), `openai_adapter.py`, `anthropic_adapter.py` (httpx), `summary.py` (extractive).
-- `export.py` Markdown minutes, JSON, SRT, VTT.
-- `pipeline.py` orchestration, streaming events, progress callbacks.
-- `cli.py` `voicescribe transcribe|extract|run|serve|eval|fetch-models|synth-demo`.
-- `server.py` FastAPI.
-- `eval/` `wer.py` (jiwer, normalisation), `extract_eval.py` (matching + P/R/F1), data under `data/`.
+- `extract/` `rules.py` (default), `local.py` (closed-choice owner resolution and verifier on a small local model),
+  `openai_adapter.py` and `anthropic_adapter.py` (httpx, model id from the environment, tested with `MockTransport`),
+  `summary.py` (extractive), `base.py` (registry, `VOICESCRIBE_EXTRACTOR`).
+- `export.py` Markdown minutes, JSON, SRT, VTT. `pipeline.py` orchestration. `cli.py` and `server.py`.
+- `eval/` WER, extraction scoring, speech-side scoring of the demo meeting.
 
 ## 2. Service
 
-- `GET /api/health`: versions, model availability, active extractor.
-- `POST /api/transcribe` (multipart audio): returns a job id; `GET /api/jobs/{id}/events` is an SSE stream of
-  `progress`, `sentence` (words with times), `action_item`, `decision`, `summary`, `done`. Real-time play-through in the
-  UI is driven by audio time, not by server speed, so the events carry timestamps and the UI reveals them as the
-  playhead passes.
-- `GET /api/jobs/{id}`: final `Meeting` JSON. `GET /api/jobs/{id}/export?format=md|json|srt|vtt`.
-- `GET /api/samples`, `POST /api/samples/{id}`: bundled demo meeting processed through the same path.
-- Typed request/response models, upload size cap (50 MB), duration cap (30 min), temp files deleted, no audio retained.
-- A single worker thread queue, since the CPU is the bottleneck.
+- `GET /api/health`: versions, Whisper size, extractor, diarisation availability, limits.
+- `POST /api/jobs` (multipart: `file`, optional `date`, `title`, `diarize`, `extractor`, `participants`): returns a job.
+- `GET /api/jobs/{id}`: status and, when done, the `Meeting` and waveform peaks.
+- `GET /api/jobs/{id}/events`: server-sent progress events (decode, transcribe, speakers, extract).
+- `GET /api/jobs/{id}/export?format=md|json|srt|vtt`.
+- Upload cap 50 MB, duration cap 30 minutes, temporary file deleted after processing, no audio retained, one worker.
 
 ## 3. Web UI
 
-The full-size version of the portfolio's `voice` scene: audio streams past a playhead, the transcript writes itself
-word by word, action items are extracted at the end of each sentence.
+The full-size version of the portfolio's voice scene: audio streams past a fixed lime playhead, the transcript writes
+itself word by word from real timestamps, and action items animate in at the end of the sentence they came from.
 
-- **Waveform lane**: canvas, peak envelope from the real audio (server computes peaks, or `decodeAudioData` in the
-  browser), scrolling past a fixed lime playhead in sync with `<audio>` currentTime (rAF reading `audio.currentTime`,
-  not a timer). Zoom window of about 20 s. Speaker colour bands underneath when diarised.
-- **Transcript**: each word from real timestamps fades/slides in as the playhead passes it; the current word is
-  highlighted; sentence end triggers the extraction. Click a word or sentence to seek.
-- **Structured panel**: summary, decisions, action items (task, owner chip, resolved deadline date with the original
-  phrase, timestamp chip). Items animate in (transform/opacity, GSAP) when their source sentence ends during playback.
-  Clicking an item seeks the audio to the source and flashes the source span in the transcript. Rule vs model
-  provenance badge on each item.
-- **Modes**: *Demo* (bundled synthetic meeting, replays real recorded output, works as static `docs/` with no backend),
-  *Upload* (file picker and drag/drop), *Record* (MediaRecorder; after stopping, processed like an upload; live
-  chunked transcription is not promised). Without a backend the Upload/Record controls explain that they need the
-  local server.
-- **Export** buttons: Markdown, JSON, SRT, VTT (generated client-side in demo mode, server-side otherwise).
-- Design: tokens from the portfolio (`#07080a`, lime `#d7ff3f`, orange only for errors, Inter Tight / Instrument Serif
-  italic / JetBrains Mono), 390 px first, 44 px targets, `prefers-reduced-motion` shows everything at once, canvas DPR
-  capped at 2, drawing paused when off screen. Footer "Built by Aditya Jain" with both links. Light theme if cheap.
-- Vanilla ES modules, GSAP from CDN, no build step.
+- Waveform canvas driven by `audio.currentTime` (never a timer), about 20 s window, capped device pixel ratio.
+- Transcript rows reveal word by word; a row's timestamp appears with its first word; tapping a word or row seeks.
+- Structured panel: action items (owner, resolved deadline with the phrase it came from, timestamp, method), decisions,
+  an extractive summary, exports (client-side in the static demo, server-side otherwise).
+- Modes: Demo (the bundled synthetic meeting, a recorded run, works as the static `docs/` copy), Upload, Record
+  (local server only). Upload and Record have a participants field.
+- Phone: stage pinned at the top, player bar at the bottom, transcript sized to the space between them, 44 px targets,
+  playback only from a tap, `prefers-reduced-motion` respected.
+- Vanilla ES modules, no build step. `scripts/build_docs.py` copies `web/` to `docs/`.
 
 ## 4. Data
 
-- `data/demo/meeting.wav` (+ `meeting.script.json` ground truth): about 3-4 minute, 4-speaker synthetic product-sync
-  meeting voiced with Kokoro (script written by me). Reproducible via `voicescribe synth-demo`. Committed as 16 kHz
-  mono Opus or compressed wav only if under about 3 MB, otherwise generated on demand and the recorded result JSON is
-  what `docs/` ships (the audio for docs playback as an mp3/ogg if size allows, produced via PyAV).
-- `data/eval/wer/`: about 12 LibriSpeech test-clean clips (CC-BY-4.0, attribution in `data/eval/wer/README.md`) plus
-  reference text.
-- `data/eval/extract/*.json`: about 8 hand-labelled meeting transcripts (sentences with ids; gold action items with
-  owner, deadline phrase, resolved date and sentence ids; gold decisions).
-- Models downloaded by `voicescribe fetch-models` into `models/` (git-ignored): Whisper via the HF cache, sherpa
-  segmentation and embedding, Kokoro (dev/demo generation only), optional Qwen.
+- `data/demo/`: the synthetic demo meeting (Kokoro-82M, script written by me, invented names), as MP3 with the script
+  and the TTS segment timings. `docs/demo/meeting.json` is the recorded run the static page replays.
+- `data/eval/wer/`: 12 LibriSpeech test-clean clips (CC-BY-4.0) with reference text.
+- `data/eval/extract/`: hand-labelled meetings with gold action items and decisions, split into `dev`, `test`, `test2` and
+  `held` (see the README for how each was used).
+- Models are downloaded by `voicescribe fetch-models` and are not committed.
 
-## 5. Evaluation (reproducible commands, numbers go into README only after real runs)
+## 5. Evaluation
 
-- `voicescribe eval wer --model base.en|small.en`: WER via jiwer with Whisper-style text normalisation, per clip and
-  overall, plus decode real-time factor.
-- `voicescribe eval extract --extractor rules|local`: precision, recall, F1 for action items (match = same owner
-  and a sentence-span overlap, with separate scores for owner accuracy and deadline-date accuracy) and decisions.
-  Matching rules and the label guideline documented. The rule extractor is developed on half the meetings and scored on
-  a held-out half so the number is not tuned on the test set; the split is stated.
-- Synthetic meeting end to end: WER of the ASR against the script, word-onset error of timestamps against the TTS
-  segment timings, diarisation frame accuracy.
-- Small hand-written set means wide uncertainty; the README says so.
+Reproducible commands: `voicescribe eval wer|demo|extract`, `scripts/run_extract_matrix.py`, `scripts/eval_diarize.py`,
+`scripts/rerecord_demo.py` (speed, demo re-recording). Matching rules for extraction are in `eval/extract_eval.py`.
+`scripts/check_numbers.py` keeps every number in the README equal to its source file.
 
-## 6. Test plan (`pytest`, offline, fast by default; `-m slow` for model tests)
+## 6. Tests
 
-Fast: schema validation and span checks; date resolver table (many phrases and edge cases, month ends, weekdays);
-sentence splitter; word-timestamp cleanup monotonicity; speaker assignment; rule extractor on fixtures; local
-extractor JSON parsing and fallback with a fake generator; OpenAI/Anthropic adapters via `httpx.MockTransport`
-(including error and malformed-JSON paths); exports (SRT/VTT timestamp formats, Markdown golden file); FastAPI routes
-with the stub transcriber (health, upload, SSE order, size cap, bad file); eval metric functions on toy data.
-Slow (marker): real tiny.en transcription of the JFK clip with word timestamps; sherpa diarisation on the demo; local
-Qwen extraction smoke test.
-CI: GitHub Actions with ruff and fast tests on Python 3.12 and 3.13.
+Fast and offline by default (`pytest`): schema and span checks, date resolver, sentence and topic segmentation, word
+clean-up, name canonicalisation, rule extractor, the local extractor with a fake chooser, hosted adapters over
+`httpx.MockTransport`, exports, FastAPI routes with the stub transcriber, metric functions, and the README number
+check. Model tests are behind `-m slow`. CI (GitHub Actions) runs `ruff` and the fast tests on Python 3.11 and 3.13.
 
-## 7. Done means
+## 7. Known risks
 
-1. Fresh clone, new venv, README quickstart works; model download script works offline-afterwards.
-2. `pytest` and `ruff check` pass.
-3. Demo meeting runs end to end through the real pipeline (real Whisper word timestamps, real extraction), and the
-   recorded run is what the static `docs/` replays, labelled as recorded.
-4. UI verified with Playwright screenshots at 1440x900 and 390x844 with no console errors; audio sync checked
-   (playhead and word reveal stay within about 100 ms of `currentTime`); click-to-seek works; exports download.
-5. Real numbers for WER, extraction P/R/F1, speed (real-time factor) in the README with the commands.
-6. Clear README statement of which paths were exercised for real (Whisper, rules, local model, diarisation) and which
-   are stub-tested adapters (OpenAI, Anthropic).
-7. Clean git history, no weights or secrets, `git status` clean.
-
-## 8. Risks
-
-- `av` version drift breaks faster-whisper: pinned (`>=15,<17`) and covered by a slow test.
-- A busy CPU and small-model quality: the local model only verifies rule candidates; honest numbers either way.
-- Browser mic output is WebM/Opus: decoded by PyAV; tested with a generated WebM fixture.
-- Whisper DTW word times can be loose: clamped, measured on the synthetic meeting.
-- Kokoro voices can mispronounce names; choose simple names and check the Whisper transcript.
-- Download budget (3 GB): Whisper small.en 485 MB + base.en 145 MB + Kokoro 120 MB + sherpa about 35 MB + Qwen 0.5B about 1 GB
-  is about 1.8 GB. Qwen 1.5B (3 GB) is only an optional comparison.
+- PyAV releases newer than the pinned range break faster-whisper 1.2.
+- Whisper word times come from attention alignment and can stretch over pauses; they are clamped and measured.
+- Small local models are over-confident about who owns an item when the text has no speaker turns; the rules are the
+  default for that reason.

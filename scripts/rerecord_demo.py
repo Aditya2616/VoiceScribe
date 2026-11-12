@@ -29,11 +29,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from voicescribe import audio  # noqa: E402
 from voicescribe.asr import FasterWhisperTranscriber  # noqa: E402
 from voicescribe.eval.extract_eval import load_meeting, script_participants  # noqa: E402
-from voicescribe.eval.speech_eval import demo_eval  # noqa: E402
+from voicescribe.eval.speech_eval import asr_scores, demo_eval, evaluate_recorded  # noqa: E402
 from voicescribe.extract.base import get_extractor  # noqa: E402
 from voicescribe.pipeline import process_file  # noqa: E402
 
 QUIET_BELOW = 0.25
+DEFAULT_THREADS = 3
 
 
 def cpu_busy(seconds: float = 3.0) -> float:
@@ -59,7 +60,7 @@ def cpu_busy(seconds: float = 3.0) -> float:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--threads", type=int, default=3)
+    ap.add_argument("--threads", type=int, default=DEFAULT_THREADS)
     ap.add_argument("--models", nargs="*", default=["tiny.en", "base.en", "small.en"])
     ap.add_argument("--record-with", default="small.en")
     args = ap.parse_args()
@@ -91,8 +92,9 @@ def main() -> None:
     tr._load()
     busy = cpu_busy()
     gold = load_meeting(demo / "script.txt")
+    raw: list = []
     meeting, samples = process_file(demo / "meeting.mp3", gold.date, transcriber=tr, extractor=get_extractor("rules"),
-                                    title=gold.title, synthetic=True,
+                                    title=gold.title, synthetic=True, on_words=raw.extend,
                                     people=script_participants(demo / "script.txt"))  # fmt: skip
     meeting.timings["quiet_machine"] = 1.0 if busy < QUIET_BELOW else 0.0
     meeting.timings["cpu_busy_before"] = busy
@@ -100,6 +102,12 @@ def main() -> None:
     (web / "meeting.json").write_text(meeting.model_dump_json(), encoding="utf8")
     (web / "peaks.json").write_text(json.dumps({"per_second": 50, "peaks": audio.peaks(samples)}), encoding="utf8")
     shutil.copyfile(demo / "meeting.mp3", web / "meeting.mp3")
+    ev = evaluate_recorded(web / "meeting.json", demo / "script.txt", demo / "meeting.timing.json")
+    truth = json.loads((demo / "meeting.timing.json").read_text(encoding="utf8"))["sentences"]
+    raw_asr = asr_scores(raw, truth)  # the recogniser's own words, before the attendee list corrects names
+    raw_asr.pop("hypothesis")
+    ev["raw_asr"] = raw_asr
+    (ROOT / "results" / "demo_recorded.json").write_text(json.dumps(ev, indent=2), encoding="utf8")
     print(f"recorded {meeting.transcript.model}: rtf {meeting.timings['rtf']}, cpu busy {busy}, "
           f"quiet={bool(meeting.timings['quiet_machine'])}")  # fmt: skip
     subprocess.run([sys.executable, str(ROOT / "scripts" / "build_docs.py")], check=True)

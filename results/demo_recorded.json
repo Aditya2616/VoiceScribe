@@ -1,0 +1,51 @@
+{
+  "asr_model": "faster-whisper/small.en",
+  "reference_words": 336,
+  "wer": 0.002976190476190476,
+  "substitutions": 1,
+  "deletions": 0,
+  "insertions": 0,
+  "boundary_error_ms": {
+    "n": 71,
+    "median_abs": 100.0,
+    "p90_abs": 255.0,
+    "within_250ms": 0.873,
+    "mean_start_signed": -46.0,
+    "mean_end_signed": -169.0
+  },
+  "action_items": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 7,
+    "predicted": 7,
+    "gold": 7
+  },
+  "decisions": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 2,
+    "predicted": 2,
+    "gold": 2
+  },
+  "owner_accuracy": 0.8571428571428571,
+  "due_date_accuracy": 0.8571428571428571,
+  "hypothesis": "Okay, let's get started. This is the Orbit Launch Sync for Halden Labs. First, the beta feedback. We got about 200 responses, and most people love the new calendar view. The main complaint is that the invite flow takes too many steps. I looked at the invite flow yesterday, and we can cut it down to two screens. Great. Rohan, can you ship the shorter invite flow by next Friday? Yes, I'll have it ready for review by then. Next pricing. Finanze wants to know if we keep the free plan after launch. We decided to keep the free plan with a limit of three calendars. That works for me. Theo, please send the final pricing page. Copy to Lena by Tuesday. Sure, I'll do that. On the design side, the onboarding screens still need a final pass. I'll update the onboarding screens and post them in the channel tomorrow. Thanks, Lena. Also, the calendar sync with other providers still drops events about once a week. Do we know why? It looks like a rate limit on the provider side. Rohan, please write up the sync bug with logs and share it with the team by Wednesday. Understood I'll do that. There is one risk. The push notification service is flaky on older phones. How bad is it? About one in twenty notifications fails to arrive. That is not acceptable for launch. Theo, can you ask the vendor for a status report before the 18th? Okay, I will email them this afternoon. Let's push the public launch from the 20th to the 1st of December. That gives us the extra time we need. Should we tell the beta users about the new date? Yes, Lena, write a short announcement and send it to the beta users by the end of the month. Will do. I'll book the launch retro for next week. One more thing, we should really think about Dark Mode at some point. Good idea, but not for this release. That's everything, thanks all.",
+  "extractor": "rules",
+  "raw_asr": {
+    "reference_words": 336,
+    "wer": 0.01488095238095238,
+    "substitutions": 5,
+    "deletions": 0,
+    "insertions": 0,
+    "boundary_error_ms": {
+      "n": 69,
+      "median_abs": 100.0,
+      "p90_abs": 255.0,
+      "within_250ms": 0.87,
+      "mean_start_signed": -51.0,
+      "mean_end_signed": -170.0
+    }
+  }
+}

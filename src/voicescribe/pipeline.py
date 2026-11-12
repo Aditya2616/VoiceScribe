@@ -80,6 +80,7 @@ def process_file(
     synthetic: bool = False,
     people: list[str] | None = None,
     progress: ProgressFn | None = None,
+    on_words: Callable[[list[Word]], None] | None = None,
 ) -> tuple[Meeting, np.ndarray]:
     """Decode, transcribe, (optionally diarise), segment and extract. Returns the meeting and the samples."""
 
@@ -99,6 +100,8 @@ def process_file(
     t0 = time.perf_counter()
     words = transcriber.transcribe(samples, progress=lambda f: tick("transcribe", f))
     asr_s = time.perf_counter() - t0
+    if on_words:
+        on_words(list(words))  # the raw recogniser output, before name correction
 
     turns = None
     diar_s = 0.0

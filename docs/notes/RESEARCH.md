@@ -1,5 +1,10 @@
 # VoiceScribe: research notes
 
+> Status: these are my early research notes. The timings and model behaviour quoted in the measured tables below
+> are single quick checks from the start of the project, made while the CPU was busy, and are kept as a record of how
+> I chose the design. The numbers that describe the finished system are in the README and `results/`, and the
+> design as built is in `SPEC.md`. Where the two differ, the README is right.
+
 Everything marked "measured" was run on my machine (Windows 11, 12 logical cores, CPU only, other jobs running at the
 same time, so timings are noisy and pessimistic). Final numbers are in the README and `results/`.
 
@@ -80,13 +85,12 @@ say the offline summary is extractive.
 
 | Data | Licence | Use |
 |---|---|---|
-| LibriSpeech test-clean (OpenSLR 12) | CC-BY-4.0 | WER set: about 12 utterances, 3+ speakers, a few MB of flac committed with credit; reference is the official transcript. Fetched from openslr.org (346 MB archive, transient), only chosen files kept |
-| AMI Meeting Corpus | CC-BY-4.0 for signals and transcripts (AMI download page) | Real meeting audio but large, far-field and has no action-item labels. Not bundled; optional documented script at most |
+| LibriSpeech test-clean (OpenSLR 12) | CC-BY-4.0 | WER set: 12 utterances, 4 speakers, a few MB of flac committed with credit; reference is the official transcript. Fetched from openslr.org (346 MB archive, transient), only chosen files kept |
+| AMI Meeting Corpus | CC-BY-4.0 for signals and transcripts (AMI download page) | Real meeting audio but large, far-field and has no action-item labels. Not used. |
 | ICSI Meeting Corpus | believed CC-BY-4.0, not verified | not used |
 | MeetingBank | HF mirrors tag CC-BY-NC-SA-4.0, no official statement found | not used (incompatible with an MIT repo) |
 | Kokoro-82M via kokoro-onnx 0.6.1 (int8 model 92 MB, voices 28 MB) | Apache-2.0 | Synthesises the multi-speaker demo meeting. Measured: works, about 1.15x slower than real time, 54 voices. Phonemisation calls espeak-ng (GPL) as a separate tool; the generated audio is ours |
-| Hand-written meeting transcripts with labels | mine, MIT | Precision/recall set: about 8 meetings of 12-25 sentences, labelled for action items (task, owner, deadline) and decisions |
-| JFK clip | US government work, public domain | smoke test only |
+| Hand-written meeting transcripts with labels | mine, MIT | Precision/recall set: 17 meetings of about 15 sentences, labelled for action items (task, owner, deadline) and decisions |
 
 **The demo meeting is synthetic.** No permissively licensed, clean-audio meeting recording of a suitable length is
 practical to bundle, so I write a script and voice it with Kokoro. It is labelled synthetic in the UI and README. It
