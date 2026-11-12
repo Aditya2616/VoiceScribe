@@ -28,6 +28,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from voicescribe import audio  # noqa: E402
 from voicescribe.asr import FasterWhisperTranscriber  # noqa: E402
+from voicescribe.eval.diar_metrics import der  # noqa: E402
 from voicescribe.eval.extract_eval import load_meeting, script_participants  # noqa: E402
 from voicescribe.eval.speech_eval import asr_scores, demo_eval, evaluate_recorded  # noqa: E402
 from voicescribe.extract.base import get_extractor  # noqa: E402
@@ -94,7 +95,8 @@ def main() -> None:
     gold = load_meeting(demo / "script.txt")
     raw: list = []
     meeting, samples = process_file(demo / "meeting.mp3", gold.date, transcriber=tr, extractor=get_extractor("rules"),
-                                    title=gold.title, synthetic=True, on_words=raw.extend,
+                                    title=gold.title, synthetic=True, on_words=raw.extend, diarise=True,
+                                    models_dir=ROOT / "models",
                                     people=script_participants(demo / "script.txt"))  # fmt: skip
     meeting.timings["quiet_machine"] = 1.0 if busy < QUIET_BELOW else 0.0
     meeting.timings["cpu_busy_before"] = busy
@@ -107,6 +109,10 @@ def main() -> None:
     raw_asr = asr_scores(raw, truth)  # the recogniser's own words, before the attendee list corrects names
     raw_asr.pop("hypothesis")
     ev["raw_asr"] = raw_asr
+    ref = [(t["start"], t["end"], t["speaker"]) for t in truth]
+    hyp = [(s.start, s.end, s.speaker) for s in meeting.transcript.sentences if s.speaker]
+    d = der(ref, hyp)  # speaker identification of the recorded run: labels are names where bound, else "Speaker N"
+    ev["diarisation"] = {k: d[k] for k in ("der", "frame_accuracy", "true_speakers", "predicted_speakers")}
     (ROOT / "results" / "demo_recorded.json").write_text(json.dumps(ev, indent=2), encoding="utf8")
     print(f"recorded {meeting.transcript.model}: rtf {meeting.timings['rtf']}, cpu busy {busy}, "
           f"quiet={bool(meeting.timings['quiet_machine'])}")  # fmt: skip

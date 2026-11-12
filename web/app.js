@@ -94,6 +94,7 @@ function loadMeeting(meeting, peaks, pps, audioUrl, opts = {}) {
   // The recorded demo shows a speed figure only when it was measured on a quiet machine (see scripts/rerecord_demo.py).
   if (tm.asr_s != null && (!opts.recorded || tm.quiet_machine)) parts.push(`asr ${tm.asr_s.toFixed(1)} s (${tm.rtf}x real time, cpu int8)`);
   parts.push(`extractor: ${meeting.extractor}`);
+  if (tm.diarize_s > 0) parts.push("speakers identified");
   if (meeting.participants && meeting.participants.length) parts.push(`participants given: ${meeting.participants.join(", ")}`);
   $("#run-info").textContent = $("#run-info-m").textContent = (opts.recorded ? "recorded run · " : "") + parts.join(" · ");
   if (opts.recorded) S.recordedModel = meeting.transcript.model.replace("faster-whisper/", "whisper ");

@@ -1,0 +1,19 @@
+{
+  "method": "sentences",
+  "tuned_on": "dev meetings only",
+  "params": {
+    "embedding": "nemo_en_titanet_small",
+    "threshold": 0.35,
+    "min_seconds": 1.0
+  },
+  "dev_summary": {
+    "der": 0.01370283691243587,
+    "frame_accuracy": 0.9894489756208054,
+    "miss": 0.008338359666208247,
+    "false_alarm": 0.003151812533241118,
+    "confusion": 0.002212664712986504,
+    "meetings": 4,
+    "speaker_count_exact": 0.75,
+    "speaker_count_mean_abs_error": 0.25
+  }
+}

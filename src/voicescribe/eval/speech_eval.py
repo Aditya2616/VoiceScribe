@@ -101,6 +101,7 @@ def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor
     gold = {g.sentence_id: g for g in gold_script.gold}
     tp_a = tp_d = 0
     owner_ok = due_ok = 0
+    owners = {"correct": 0, "wrong": 0, "unassigned": 0}  # over matched action items
     used: set[int] = set()
     for a in meeting.action_items:
         hit = _overlap(a.source.start, a.source.end, truth, {k for k, g in gold.items() if g.kind == "action"} - used)
@@ -108,6 +109,11 @@ def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor
             used.add(hit)
             tp_a += 1
             owner_ok += (a.owner or None) == gold[hit].owner
+            g_owner = gold[hit].owner
+            if a.owner:
+                owners["correct" if a.owner == g_owner else "wrong"] += 1
+            else:
+                owners["unassigned"] += 1
             due_ok += a.deadline_date == gold[hit].due
     used_d: set[int] = set()
     for dcs in meeting.decisions:
@@ -128,6 +134,7 @@ def demo_eval(meeting: Meeting, script: Path, timing: Path, extractor: Extractor
         "action_items": _prf(tp_a, len(meeting.action_items), n_a),
         "decisions": _prf(tp_d, len(meeting.decisions), n_d),
         "owner_accuracy": owner_ok / tp_a if tp_a else None,
+        "owners": {**owners, "n": tp_a},
         "due_date_accuracy": due_ok / tp_a if tp_a else None,
         "hypothesis": asr["hypothesis"],
         "extractor": extractor.method,

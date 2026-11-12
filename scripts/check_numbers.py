@@ -16,6 +16,7 @@ exist, that docs/ is an up-to-date copy of web/, and that the recorded demo agre
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import re
 import sys
@@ -125,20 +126,64 @@ def compute() -> dict[str, str]:
     v["v15_prf"], v["v05_p"] = prf(v1), f2(v05["action_items"]["precision"])
     v["v05_prf"] = prf(v05)
 
-    # --- diarisation
-    dz = load("diarize_demo.json")
-    u, g = dz["speakers_unknown"], dz["speakers_given_4"]
-    v["diar_acc"] = f"{100 * u['accuracy']:.0f}%"
-    v["diar_found"], v["diar_true"] = str(u["predicted_speakers"]), str(u["true_speakers"])
-    v["diar_secs"] = str(int(round((u["seconds"] + g["seconds"]) / 2, -1)))
-    same = abs(u["accuracy"] - g["accuracy"]) < 0.005 and u["predicted_speakers"] == g["predicted_speakers"]
-    v["diar_given"] = "the same" if same else f"{100 * g['accuracy']:.0f}% with {g['predicted_speakers']} speakers"
+    # --- speaker identification
+    from voicescribe.diarize import SENTENCE_DEFAULTS
+
+    chosen = json.loads((RES / "diarize_chosen.json").read_text(encoding="utf8"))
+    for k, want in SENTENCE_DEFAULTS.items():
+        assert chosen["params"][k] == want, f"voicescribe.diarize.SENTENCE_DEFAULTS[{k!r}] differs from results/diarize_chosen.json"
+    from voicescribe.diarize import EMBEDDINGS
+    from voicescribe.eval.diar_metrics import der as _der
+    from voicescribe.extract import rules as _rules
+
+    v["n_embeddings"] = str(len(EMBEDDINGS))
+    v["vote_conf"] = f"{100 * _rules.MIN_NAME_CONFIDENCE:.0f}%"
+    v["vote_secs"] = f"{_rules.MIN_VOTE_SECONDS:g}"
+    v["collar"] = f"{inspect.signature(_der).parameters['collar'].default:g}"
+    v["demo_diar_secs"] = str(round(json.loads((ROOT / "docs/demo/meeting.json").read_text(encoding="utf8"))["timings"]["diarize_s"]))
+    v["diar_embedding"] = {"nemo_en_titanet_small": "NeMo TitaNet small"}.get(chosen["params"]["embedding"], chosen["params"]["embedding"])
+    v["diar_threshold"], v["diar_min_seconds"] = str(chosen["params"]["threshold"]), f"{chosen['params']['min_seconds']:g}"
+    rep = load("diarize_report.json")["splits"]
+    pc = lambda x: f"{100 * x:.1f}%"  # noqa: E731
+    for split in ("dev", "heldout"):
+        for key, tag in (("sentence_estimated", "se"), ("sentence_given", "sg"), ("segmentation_estimated", "ge")):
+            v[f"diar_{split}_{tag}_der"] = pc(rep[split][key]["der"])
+            v[f"diar_{split}_{tag}_acc"] = pc(rep[split][key]["frame_accuracy"])
+        v[f"diar_{split}_n"] = str(rep[split]["sentence_estimated"]["meetings"])
+    se = rep["heldout"]["sentence_estimated"]
+    v["diar_held_exact"] = f"{round(se['speaker_count_exact'] * se['meetings'])} of {se['meetings']}"
+    ao = load("audio_owners.json")["splits"]
+
+    def own(split: str, variant: str) -> str:
+        a_ = ao[split]["variants"][variant]
+        return f"{a_['correct']} / {a_['wrong']} / {a_['unassigned']}"
+
+    for split in ("dev", "heldout"):
+        v[f"ao_{split}_text"], v[f"ao_{split}_diar"] = own(split, "text_only_participants"), own(split, "diarised_estimated_participants")
+        v[f"ao_{split}_text_np"], v[f"ao_{split}_diar_np"] = own(split, "text_only"), own(split, "diarised_estimated")
+        v[f"ao_{split}_oracle"] = own(split, "oracle_speaker_names")
+    v["ao_heldout_n"] = str(sum(ao["heldout"]["variants"]["text_only"][k] for k in ("correct", "wrong", "unassigned")))
+    gain = ao["heldout"]["variants"]["diarised_estimated_participants"]["correct"] - ao["heldout"]["variants"]["text_only_participants"]["correct"]
+    v["ao_heldout_gain"] = str(gain)
+    v["ao_asr"] = load("audio_owners.json")["asr"]
+    dg = demo["diarisation"]
+    v["demo_diar_der"] = pc(dg["der"])
+    v["demo_diar_speakers"] = f"{dg['predicted_speakers']} of {dg['true_speakers']}"
+    # the same recorded words without speaker identification, to show what it adds on the demo
+    from voicescribe.eval.speech_eval import demo_eval
+    from voicescribe.extract.base import RulesExtractor
+    from voicescribe.pipeline import build_meeting
+    from voicescribe.schema import Meeting, Word
+
+    rec = Meeting.model_validate_json((ROOT / "docs/demo/meeting.json").read_text(encoding="utf8"))
+    words = [Word(**w.model_dump()) for s_ in rec.transcript.sentences for w in s_.words]
+    plain = build_meeting(words, rec.transcript.duration, rec.date, RulesExtractor(), people=rec.participants)
+    o2 = demo_eval(plain, ROOT / "data/demo/script.txt", ROOT / "data/demo/meeting.timing.json", RulesExtractor())["owners"]
+    v["demo_owners_plain"] = f"{o2['correct']} of {o2['n']}"
 
     # --- limits and defaults from the code
     v["max_mb"] = str(server.MAX_UPLOAD_BYTES // (1024 * 1024))
     v["max_min"] = str(audio_mod.MAX_DURATION_S // 60)
-    import inspect
-
     w = inspect.signature(local._window).parameters
     v["win_before"], v["win_after"] = str(w["before"].default), str(w["after"].default)
     v["owner_thr"] = str(inspect.signature(local.LocalExtractor.__init__).parameters["owner_threshold"].default)
@@ -179,6 +224,34 @@ def extract_table() -> str:
     return "\n".join(lines)
 
 
+def owners_table() -> str:
+    ao = load("audio_owners.json")["splits"]
+    rows = [("text_only_participants", "rules on the text only, participants given"),
+            ("diarised_estimated_participants", "rules + speaker identification, participants given"),
+            ("text_only", "rules on the text only, no participants"),
+            ("diarised_estimated", "rules + speaker identification, no participants"),
+            ("oracle_speaker_names", "ceiling: true speaker of every sentence, named")]  # fmt: skip
+    lines = ["| Owners from audio | Set (meetings) | Owners ok / wrong / none | Action F1 |", "|---|---|---|---|"]
+    for split, name in (("dev", "dev"), ("heldout", "**held-out**")):
+        for variant, label in rows:
+            a_ = ao[split]["variants"][variant]
+            lines.append(f"| {label} | {name} ({ao[split]['meetings']}) | {a_['correct']} / {a_['wrong']} / {a_['unassigned']} | {f2(a_['f1'])} |")
+    return chr(10).join(lines)
+
+
+def diar_table() -> str:
+    rep = load("diarize_report.json")["splits"]
+    names = {"sentence_estimated": "sentence embeddings (used), speakers estimated", "sentence_given": "sentence embeddings, speakers given",
+             "segmentation_estimated": "sherpa-onnx segmentation pipeline (baseline), estimated", "segmentation_given": "sherpa-onnx segmentation pipeline, speakers given"}  # fmt: skip
+    lines = ["| Method | Set (meetings) | DER | Frame accuracy | Speaker count exact | Mean count error |", "|---|---|---|---|---|---|"]
+    for split, label in (("dev", "dev"), ("heldout", "**held-out**")):
+        for key, nm in names.items():
+            r = rep[split][key]
+            lines.append(f"| {nm} | {label} ({r['meetings']}) | {100 * r['der']:.1f}% | {100 * r['frame_accuracy']:.1f}% | "
+                         f"{100 * r['speaker_count_exact']:.0f}% | {r['speaker_count_mean_abs_error']:.2f} |")  # fmt: skip
+    return chr(10).join(lines)
+
+
 def speech_table(v: dict[str, str]) -> str:
     return "\n".join([
         "| Set | Model | Words | WER |",
@@ -197,7 +270,7 @@ BLOCK = re.compile(r"(<!--b:(\w+)-->\n)(.*?)(\n<!--/b:\2-->)", re.S)
 
 
 def render(text: str, v: dict[str, str]) -> str:
-    blocks = {"speech_table": speech_table(v), "extract_table": extract_table()}
+    blocks = {"speech_table": speech_table(v), "extract_table": extract_table(), "owners_table": owners_table(), "diar_table": diar_table()}
 
     def inline(m: re.Match) -> str:
         key = m.group(1)
@@ -299,7 +372,7 @@ def check_demo_and_results() -> list[str]:
         if re.match(r"extract_(owners|verify)_", p.name) and not {"device", "dtype", "model"} <= r.keys():
             problems.append(f"{p.name} does not record model, device and dtype")
     ui = (ROOT / "web/index.html").read_text(encoding="utf8") + (ROOT / "web/app.js").read_text(encoding="utf8")
-    for needle in ("Synthetic speech", "Kokoro-82M", "extractive", "recorded run", "participants given"):
+    for needle in ("Synthetic speech", "Kokoro-82M", "extractive", "recorded run", "participants given", "speakers identified"):
         if needle not in ui:
             problems.append(f"the UI no longer says {needle!r}")
     return problems

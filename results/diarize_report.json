@@ -1,0 +1,224 @@
+{
+  "tuned_on": "dev",
+  "settings": {
+    "embedding": "nemo_en_titanet_small",
+    "threshold": 0.35,
+    "min_seconds": 1.0
+  },
+  "baseline_settings": {
+    "embedding": "nemo_en_titanet_small",
+    "threshold": 0.5
+  },
+  "splits": {
+    "dev": {
+      "sentence_estimated": {
+        "der": 0.01370283691243587,
+        "frame_accuracy": 0.9894489756208054,
+        "miss": 0.008338359666208247,
+        "false_alarm": 0.003151812533241118,
+        "confusion": 0.002212664712986504,
+        "meetings": 4,
+        "speaker_count_exact": 0.75,
+        "speaker_count_mean_abs_error": 0.25
+      },
+      "sentence_given": {
+        "der": 0.022079353325884777,
+        "frame_accuracy": 0.9810724592073565,
+        "miss": 0.008338359666208247,
+        "false_alarm": 0.003151812533241118,
+        "confusion": 0.010589181126435414,
+        "meetings": 4,
+        "speaker_count_exact": 1.0,
+        "speaker_count_mean_abs_error": 0.0
+      },
+      "segmentation_estimated": {
+        "der": 0.11413785651616871,
+        "frame_accuracy": 0.8862497609703347,
+        "miss": 0.0008070466074744919,
+        "false_alarm": 0.00038761748650341556,
+        "confusion": 0.11294319242219081,
+        "meetings": 4,
+        "speaker_count_exact": 0.0,
+        "speaker_count_mean_abs_error": 1.25
+      },
+      "segmentation_given": {
+        "der": 0.1074067849214781,
+        "frame_accuracy": 0.8929808325650254,
+        "miss": 0.0008070466074744919,
+        "false_alarm": 0.00038761748650341556,
+        "confusion": 0.10621212082750019,
+        "meetings": 4,
+        "speaker_count_exact": 0.25,
+        "speaker_count_mean_abs_error": 1.25
+      }
+    },
+    "test": {
+      "sentence_estimated": {
+        "der": 0.009264822959768547,
+        "frame_accuracy": 0.9923549532374281,
+        "miss": 0.007151876623117007,
+        "false_alarm": 0.0016197761971965092,
+        "confusion": 0.0004931701394550302,
+        "meetings": 4,
+        "speaker_count_exact": 1.0,
+        "speaker_count_mean_abs_error": 0.0
+      },
+      "sentence_given": {
+        "der": 0.009264822959768547,
+        "frame_accuracy": 0.9923549532374281,
+        "miss": 0.007151876623117007,
+        "false_alarm": 0.0016197761971965092,
+        "confusion": 0.0004931701394550302,
+        "meetings": 4,
+        "speaker_count_exact": 1.0,
+        "speaker_count_mean_abs_error": 0.0
+      },
+      "segmentation_estimated": {
+        "der": 0.13701805960732974,
+        "frame_accuracy": 0.8637965775896452,
+        "miss": 0.0032292966460987353,
+        "false_alarm": 0.0008146371969748671,
+        "confusion": 0.13297412576425613,
+        "meetings": 4,
+        "speaker_count_exact": 0.25,
+        "speaker_count_mean_abs_error": 0.75
+      },
+      "segmentation_given": {
+        "der": 0.12303491185336093,
+        "frame_accuracy": 0.8777797253436139,
+        "miss": 0.0032292966460987353,
+        "false_alarm": 0.0008146371969748671,
+        "confusion": 0.11899097801028734,
+        "meetings": 4,
+        "speaker_count_exact": 0.5,
+        "speaker_count_mean_abs_error": 0.5
+      }
+    },
+    "test2": {
+      "sentence_estimated": {
+        "der": 0.011963197343197158,
+        "frame_accuracy": 0.9900332037549091,
+        "miss": 0.009966796245090944,
+        "false_alarm": 0.001996401098106216,
+        "confusion": 0.0,
+        "meetings": 3,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      },
+      "sentence_given": {
+        "der": 0.011963197343197158,
+        "frame_accuracy": 0.9900332037549091,
+        "miss": 0.009966796245090944,
+        "false_alarm": 0.001996401098106216,
+        "confusion": 0.0,
+        "meetings": 3,
+        "speaker_count_exact": 1.0,
+        "speaker_count_mean_abs_error": 0.0
+      },
+      "segmentation_estimated": {
+        "der": 0.2109773314525605,
+        "frame_accuracy": 0.7890226685474395,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.2109773314525605,
+        "meetings": 3,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      },
+      "segmentation_given": {
+        "der": 0.2109773314525605,
+        "frame_accuracy": 0.7890226685474395,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.2109773314525605,
+        "meetings": 3,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      }
+    },
+    "held": {
+      "sentence_estimated": {
+        "der": 0.047815509588508755,
+        "frame_accuracy": 0.9552293106428291,
+        "miss": 0.012136553070631717,
+        "false_alarm": 0.003044820231337866,
+        "confusion": 0.03263413628653917,
+        "meetings": 6,
+        "speaker_count_exact": 0.5,
+        "speaker_count_mean_abs_error": 0.5
+      },
+      "sentence_given": {
+        "der": 0.07364995692237804,
+        "frame_accuracy": 0.9293948633089598,
+        "miss": 0.012136553070631717,
+        "false_alarm": 0.003044820231337866,
+        "confusion": 0.058468583620408444,
+        "meetings": 6,
+        "speaker_count_exact": 1.0,
+        "speaker_count_mean_abs_error": 0.0
+      },
+      "segmentation_estimated": {
+        "der": 0.1459439684361175,
+        "frame_accuracy": 0.855874846836146,
+        "miss": 0.0009307137030196576,
+        "false_alarm": 0.0018188152722635178,
+        "confusion": 0.1431944394608343,
+        "meetings": 6,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      },
+      "segmentation_given": {
+        "der": 0.1459439684361175,
+        "frame_accuracy": 0.855874846836146,
+        "miss": 0.0009307137030196576,
+        "false_alarm": 0.0018188152722635178,
+        "confusion": 0.1431944394608343,
+        "meetings": 6,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      }
+    },
+    "heldout": {
+      "sentence_estimated": {
+        "der": 0.036237324683686574,
+        "frame_accuracy": 0.9664689179267923,
+        "miss": 0.011435849429741825,
+        "false_alarm": 0.0027062426104789263,
+        "confusion": 0.022095232643465818,
+        "meetings": 9,
+        "speaker_count_exact": 0.5555555555555556,
+        "speaker_count_mean_abs_error": 0.4444444444444444
+      },
+      "sentence_given": {
+        "der": 0.05372876735724849,
+        "frame_accuracy": 0.9489774752532305,
+        "miss": 0.011435849429741825,
+        "false_alarm": 0.0027062426104789263,
+        "confusion": 0.03958667531702774,
+        "meetings": 9,
+        "speaker_count_exact": 1.0,
+        "speaker_count_mean_abs_error": 0.0
+      },
+      "segmentation_estimated": {
+        "der": 0.16694591377327683,
+        "frame_accuracy": 0.8342855313069084,
+        "miss": 0.000630148002451139,
+        "false_alarm": 0.0012314450801851717,
+        "confusion": 0.16508432069064052,
+        "meetings": 9,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      },
+      "segmentation_given": {
+        "der": 0.16694591377327683,
+        "frame_accuracy": 0.8342855313069084,
+        "miss": 0.000630148002451139,
+        "false_alarm": 0.0012314450801851717,
+        "confusion": 0.16508432069064052,
+        "meetings": 9,
+        "speaker_count_exact": 0.6666666666666666,
+        "speaker_count_mean_abs_error": 0.3333333333333333
+      }
+    }
+  }
+}

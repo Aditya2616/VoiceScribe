@@ -23,7 +23,19 @@ def trim(a: np.ndarray, thresh: float = 0.01, pad: int = 600) -> tuple[np.ndarra
     return a[lo:hi], lo
 
 
-def synthesize(script: Path, model: Path, voices: Path, out_dir: Path, name: str = "meeting") -> dict:
+VOICE_POOL = ["af_heart", "am_adam", "bf_emma", "bm_george", "af_nova", "am_michael", "bf_isabella", "bm_lewis",
+              "af_sarah", "am_liam"]  # fmt: skip
+
+
+def assign_voices(speakers: list[str], offset: int = 0) -> dict[str, str]:
+    """Distinct Kokoro voices for the speakers of one meeting (steps of 3 through a 10-voice pool never repeat)."""
+    return {s: VOICE_POOL[(offset + 3 * k) % len(VOICE_POOL)] for k, s in enumerate(speakers)}
+
+
+def synthesize(
+    script: Path, model: Path, voices: Path, out_dir: Path, name: str = "meeting",
+    voice_map: dict[str, str] | None = None, threads: int | None = None,
+) -> dict:  # fmt: skip
     from kokoro_onnx import Kokoro
 
     from .eval.extract_eval import load_meeting
@@ -33,7 +45,16 @@ def synthesize(script: Path, model: Path, voices: Path, out_dir: Path, name: str
     for line in script.read_text(encoding="utf8").splitlines():
         if line.startswith("# voices:"):
             header = dict(p.strip().split("=") for p in line.split(":", 1)[1].split(","))
-    kokoro = Kokoro(str(model), str(voices))
+    if voice_map:
+        header = voice_map
+    if threads:
+        import onnxruntime as ort
+
+        opts = ort.SessionOptions()
+        opts.intra_op_num_threads = threads
+        kokoro = Kokoro.from_session(ort.InferenceSession(str(model), opts, providers=["CPUExecutionProvider"]), str(voices))
+    else:
+        kokoro = Kokoro(str(model), str(voices))
     gap_same, gap_turn = int(0.22 * KOKORO_SR), int(0.55 * KOKORO_SR)
     chunks: list[np.ndarray] = []
     timing = []

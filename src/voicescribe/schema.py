@@ -88,6 +88,7 @@ class Meeting(BaseModel):
     audio_name: str | None = None
     speakers: list[str] = Field(default_factory=list)
     participants: list[str] = Field(default_factory=list)  # attendee list supplied by the user (not inferred)
+    speaker_names: dict[str, str] = Field(default_factory=dict)  # diarisation label -> name, only where bound
     name_map: dict[str, str] = Field(default_factory=dict)  # spelling variants rewritten to one name
     transcript: Transcript
     summary: Summary | None = None

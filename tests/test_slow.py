@@ -35,13 +35,15 @@ def test_pipeline_on_the_demo_audio_finds_the_dated_action_item():
     assert "2026-11-20" in due
 
 
-def test_diarisation_finds_multiple_speakers_on_the_demo():
+def test_sentence_diarisation_separates_the_demo_speakers():
     from voicescribe import diarize
+    from voicescribe.diarize import SENTENCE_DEFAULTS, diarize_sentences
+    from voicescribe.eval.diar_metrics import der
 
     models = ROOT / "models"
     if not diarize.available(models):
-        pytest.skip("diarisation models not downloaded")
-    turns = diarize.diarize(audio.decode(ROOT / "data" / "demo" / "meeting.mp3"), models)
-    assert len({t[2] for t in turns}) >= 2
+        pytest.skip("speaker embedding model not downloaded")
     truth = json.loads((ROOT / "data" / "demo" / "meeting.timing.json").read_text())["sentences"]
-    assert len(truth) > 10
+    ref = [(t["start"], t["end"], t["speaker"]) for t in truth]
+    turns = diarize_sentences(audio.decode(ROOT / "data" / "demo" / "meeting.mp3"), [(a, b) for a, b, _ in ref], models, **SENTENCE_DEFAULTS)
+    assert 3 <= len({t[2] for t in turns}) <= 5 and der(ref, turns)["der"] < 0.1  # 4 true speakers

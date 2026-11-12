@@ -1,0 +1,2187 @@
+[
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.1,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.4829614410018653,
+      "frame_accuracy": 0.5174261764846383,
+      "miss": 0.0001550469946013662,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.48241877652076043,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 4.25,
+      "seconds": 44.3
+    },
+    "per_meeting": [
+      {
+        "der": 0.41209302325581393,
+        "frame_accuracy": 0.587906976744186,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.41209302325581393,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.40816901408450706,
+        "frame_accuracy": 0.5932394366197183,
+        "miss": 0.0005633802816901409,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.40619718309859154,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.5846656976744186,
+        "frame_accuracy": 0.4153343023255814,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5846656976744186,
+        "true_speakers": 4,
+        "predicted_speakers": 11,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.5477449455676516,
+        "frame_accuracy": 0.45225505443234837,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5477449455676516,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.2,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.19159639105360216,
+      "frame_accuracy": 0.8087912264329014,
+      "miss": 0.0004842279644846952,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.19072454560261404,
+      "meetings": 4,
+      "speaker_count_exact": 0.75,
+      "speaker_count_mean_abs_error": 0.25,
+      "seconds": 44.6
+    },
+    "per_meeting": [
+      {
+        "der": 0.2062015503875969,
+        "frame_accuracy": 0.7937984496124031,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.2062015503875969,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15859154929577465,
+        "frame_accuracy": 0.8428169014084507,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.1571830985915493,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.1900436046511628,
+        "frame_accuracy": 0.8099563953488372,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.18786337209302326,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.21461897356143078,
+        "frame_accuracy": 0.7853810264385692,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.21461897356143078,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.3,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.12885625549895013,
+      "frame_accuracy": 0.8715313619875534,
+      "miss": 0.0004842279644846952,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.12798441004796202,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 0.75,
+      "seconds": 41.2
+    },
+    "per_meeting": [
+      {
+        "der": 0.12434108527131783,
+        "frame_accuracy": 0.8756589147286822,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12434108527131783,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.12253521126760564,
+        "frame_accuracy": 0.8788732394366198,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.12112676056338029,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.13953488372093023,
+        "frame_accuracy": 0.8604651162790697,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.1373546511627907,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.4,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.1595183562558052,
+      "frame_accuracy": 0.8408692612306983,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.15913073876930178,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.5,
+      "seconds": 44.3
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.22338028169014085,
+        "frame_accuracy": 0.7780281690140846,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.2219718309859155,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.1875,
+        "frame_accuracy": 0.8125,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.1875,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.5,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.15712860050995284,
+      "frame_accuracy": 0.8432590169765507,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.1567409830234494,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.75,
+      "seconds": 46.3
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.22338028169014085,
+        "frame_accuracy": 0.7780281690140846,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.2219718309859155,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.1875,
+        "frame_accuracy": 0.8125,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.1875,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.12130637636080871,
+        "frame_accuracy": 0.8786936236391913,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12130637636080871,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.6,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.1564022585632258,
+      "frame_accuracy": 0.8439853589232776,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.1560146410767224,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 2.0,
+      "seconds": 45.7
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.22338028169014085,
+        "frame_accuracy": 0.7780281690140846,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.2219718309859155,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.1842296511627907,
+        "frame_accuracy": 0.8157703488372093,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.1842296511627907,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.12130637636080871,
+        "frame_accuracy": 0.8786936236391913,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12130637636080871,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_resnet34",
+      "threshold": 0.7,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.4333844813835808,
+      "frame_accuracy": 0.5670031361029227,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.43299686389707737,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 3.0,
+      "seconds": 43.2
+    },
+    "per_meeting": [
+      {
+        "der": 0.39813953488372095,
+        "frame_accuracy": 0.6018604651162791,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.39813953488372095,
+        "true_speakers": 4,
+        "predicted_speakers": 1,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.4723943661971831,
+        "frame_accuracy": 0.5290140845070422,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.47098591549295776,
+        "true_speakers": 4,
+        "predicted_speakers": 1,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.528343023255814,
+        "frame_accuracy": 0.47165697674418605,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.528343023255814,
+        "true_speakers": 4,
+        "predicted_speakers": 1,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.3412130637636081,
+        "frame_accuracy": 0.658786936236392,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.3412130637636081,
+        "true_speakers": 4,
+        "predicted_speakers": 1,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.1,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5652468893207021,
+      "frame_accuracy": 0.4351407281658013,
+      "miss": 0.0015804747949903601,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.5632787970392084,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 6.25,
+      "seconds": 26.9
+    },
+    "per_meeting": [
+      {
+        "der": 0.43968992248062017,
+        "frame_accuracy": 0.5603100775193799,
+        "miss": 0.006201550387596899,
+        "false_alarm": 0.0,
+        "confusion": 0.43348837209302327,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6315492957746479,
+        "frame_accuracy": 0.36985915492957744,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6301408450704226,
+        "true_speakers": 4,
+        "predicted_speakers": 11,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.6133720930232558,
+        "frame_accuracy": 0.3866279069767442,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.6133720930232558,
+        "true_speakers": 4,
+        "predicted_speakers": 13,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.5776049766718507,
+        "frame_accuracy": 0.4223950233281493,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5776049766718507,
+        "true_speakers": 4,
+        "predicted_speakers": 9,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.2,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5206380856572043,
+      "frame_accuracy": 0.4797495318292992,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.5202504681707009,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 4.25,
+      "seconds": 25.9
+    },
+    "per_meeting": [
+      {
+        "der": 0.49023255813953487,
+        "frame_accuracy": 0.5097674418604651,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.49023255813953487,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.5115492957746479,
+        "frame_accuracy": 0.4898591549295775,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.5101408450704226,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.6493459302325582,
+        "frame_accuracy": 0.35065406976744184,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.6493459302325582,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.44665629860031103,
+        "frame_accuracy": 0.5533437013996889,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.44665629860031103,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.3,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5074940514412408,
+      "frame_accuracy": 0.49289356604526263,
+      "miss": 0.0010390750637292525,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.5060673588910081,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 4.5,
+      "seconds": 25.7
+    },
+    "per_meeting": [
+      {
+        "der": 0.5231007751937985,
+        "frame_accuracy": 0.47689922480620156,
+        "miss": 0.0018604651162790699,
+        "false_alarm": 0.0,
+        "confusion": 0.5212403100775194,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.44478873239436617,
+        "frame_accuracy": 0.5566197183098591,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.4433802816901408,
+        "true_speakers": 4,
+        "predicted_speakers": 9,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.6351744186046512,
+        "frame_accuracy": 0.3648255813953488,
+        "miss": 0.002543604651162791,
+        "false_alarm": 0.0,
+        "confusion": 0.6326308139534884,
+        "true_speakers": 4,
+        "predicted_speakers": 11,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.44665629860031103,
+        "frame_accuracy": 0.5533437013996889,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.44665629860031103,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.4,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.37899887848466984,
+      "frame_accuracy": 0.6213887390018337,
+      "miss": 0.0015216221072160165,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.3770896388909504,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 2.75,
+      "seconds": 25.4
+    },
+    "per_meeting": [
+      {
+        "der": 0.5317829457364341,
+        "frame_accuracy": 0.4682170542635659,
+        "miss": 0.0021705426356589145,
+        "false_alarm": 0.0,
+        "confusion": 0.5296124031007752,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.2904225352112676,
+        "frame_accuracy": 0.7109859154929578,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.28901408450704225,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.38372093023255816,
+        "frame_accuracy": 0.6162790697674418,
+        "miss": 0.00436046511627907,
+        "false_alarm": 0.0,
+        "confusion": 0.3793604651162791,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.3160186625194401,
+        "frame_accuracy": 0.6839813374805599,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.3160186625194401,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.5,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.34911315635992846,
+      "frame_accuracy": 0.651274461126575,
+      "miss": 0.000553166178246626,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.3481723726951784,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 1.75,
+      "seconds": 25.7
+    },
+    "per_meeting": [
+      {
+        "der": 0.5317829457364341,
+        "frame_accuracy": 0.4682170542635659,
+        "miss": 0.0021705426356589145,
+        "false_alarm": 0.0,
+        "confusion": 0.5296124031007752,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.19295774647887323,
+        "frame_accuracy": 0.8084507042253521,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.19154929577464788,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.4632994186046512,
+        "frame_accuracy": 0.5367005813953488,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.4632994186046512,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.232348367029549,
+        "frame_accuracy": 0.767651632970451,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.232348367029549,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.6,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.2896082803285414,
+      "frame_accuracy": 0.710779337157962,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.289220662842038,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.5,
+      "seconds": 26.1
+    },
+    "per_meeting": [
+      {
+        "der": 0.29829457364341083,
+        "frame_accuracy": 0.7017054263565892,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.29829457364341083,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.19295774647887323,
+        "frame_accuracy": 0.8084507042253521,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.19154929577464788,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.4632994186046512,
+        "frame_accuracy": 0.5367005813953488,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.4632994186046512,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.232348367029549,
+        "frame_accuracy": 0.767651632970451,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.232348367029549,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++",
+      "threshold": 0.7,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.353929133000285,
+      "frame_accuracy": 0.6464584844862185,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.3535415155137816,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 1.5,
+      "seconds": 25.8
+    },
+    "per_meeting": [
+      {
+        "der": 0.29829457364341083,
+        "frame_accuracy": 0.7017054263565892,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.29829457364341083,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.34169014084507043,
+        "frame_accuracy": 0.6597183098591549,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.3402816901408451,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.528343023255814,
+        "frame_accuracy": 0.47165697674418605,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.528343023255814,
+        "true_speakers": 4,
+        "predicted_speakers": 1,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.26842923794712287,
+        "frame_accuracy": 0.7315707620528772,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.26842923794712287,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.1,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.6184602291299721,
+      "frame_accuracy": 0.3819273883565314,
+      "miss": 0.0003854444751374794,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.6176871671683312,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 7.25,
+      "seconds": 26.1
+    },
+    "per_meeting": [
+      {
+        "der": 0.5581395348837209,
+        "frame_accuracy": 0.4418604651162791,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5581395348837209,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6783098591549296,
+        "frame_accuracy": 0.32309859154929577,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6769014084507042,
+        "true_speakers": 4,
+        "predicted_speakers": 15,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.5650436046511628,
+        "frame_accuracy": 0.43495639534883723,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5650436046511628,
+        "true_speakers": 4,
+        "predicted_speakers": 12,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.6618973561430793,
+        "frame_accuracy": 0.3381026438569207,
+        "miss": 0.0015552099533437014,
+        "false_alarm": 0.0,
+        "confusion": 0.6603421461897356,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.2,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5775181906281663,
+      "frame_accuracy": 0.4228694268583372,
+      "miss": 0.001738522274489396,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.5753920508671735,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 5.75,
+      "seconds": 24.4
+    },
+    "per_meeting": [
+      {
+        "der": 0.5789147286821705,
+        "frame_accuracy": 0.42108527131782947,
+        "miss": 0.006821705426356589,
+        "false_alarm": 0.0,
+        "confusion": 0.5720930232558139,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6487323943661972,
+        "frame_accuracy": 0.3526760563380282,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6473239436619719,
+        "true_speakers": 4,
+        "predicted_speakers": 12,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.517078488372093,
+        "frame_accuracy": 0.482921511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.517078488372093,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.5511664074650078,
+        "frame_accuracy": 0.4488335925349922,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5511664074650078,
+        "true_speakers": 4,
+        "predicted_speakers": 9,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.3,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5266408831927619,
+      "frame_accuracy": 0.4737467342937415,
+      "miss": 0.0020663836804729863,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.5241868820257857,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 3.5,
+      "seconds": 22.8
+    },
+    "per_meeting": [
+      {
+        "der": 0.5162790697674419,
+        "frame_accuracy": 0.48372093023255813,
+        "miss": 0.005891472868217054,
+        "false_alarm": 0.0,
+        "confusion": 0.5103875968992249,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6349295774647887,
+        "frame_accuracy": 0.3664788732394366,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6335211267605634,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.5741279069767442,
+        "frame_accuracy": 0.4258720930232558,
+        "miss": 0.002543604651162791,
+        "false_alarm": 0.0,
+        "confusion": 0.5715843023255814,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.3744945567651633,
+        "frame_accuracy": 0.6255054432348367,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.3744945567651633,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.4,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5395516874496149,
+      "frame_accuracy": 0.46083593003688866,
+      "miss": 0.0011075971063369261,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.5380564728567745,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 3.0,
+      "seconds": 23.4
+    },
+    "per_meeting": [
+      {
+        "der": 0.5537984496124031,
+        "frame_accuracy": 0.4462015503875969,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5537984496124031,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6814084507042254,
+        "frame_accuracy": 0.32,
+        "miss": 0.001971830985915493,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6780281690140845,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.5316133720930233,
+        "frame_accuracy": 0.46838662790697677,
+        "miss": 0.002543604651162791,
+        "false_alarm": 0.0,
+        "confusion": 0.5290697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 7,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.3744945567651633,
+        "frame_accuracy": 0.6255054432348367,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.3744945567651633,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.5,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.5227110272676909,
+      "frame_accuracy": 0.47767659021881254,
+      "miss": 0.0010268924455894767,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.521296517335598,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 2.75,
+      "seconds": 22.7
+    },
+    "per_meeting": [
+      {
+        "der": 0.4077519379844961,
+        "frame_accuracy": 0.5922480620155038,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.4077519379844961,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6814084507042254,
+        "frame_accuracy": 0.32,
+        "miss": 0.001971830985915493,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6780281690140845,
+        "true_speakers": 4,
+        "predicted_speakers": 10,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.5886627906976745,
+        "frame_accuracy": 0.4113372093023256,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.5864825581395349,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.4055987558320373,
+        "frame_accuracy": 0.5944012441679627,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.4055987558320373,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.6,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.47475091429012223,
+      "frame_accuracy": 0.5256367031963812,
+      "miss": 0.0004842279644846952,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.4738790688391341,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 1.0,
+      "seconds": 22.1
+    },
+    "per_meeting": [
+      {
+        "der": 0.4390697674418605,
+        "frame_accuracy": 0.5609302325581396,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.4390697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.5645070422535211,
+        "frame_accuracy": 0.43690140845070424,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.5630985915492958,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.49309593023255816,
+        "frame_accuracy": 0.5069040697674418,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.4909156976744186,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.3953343701399689,
+        "frame_accuracy": 0.6046656298600311,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.3953343701399689,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "wespeaker_en_voxceleb_CAM++_LM",
+      "threshold": 0.7,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.49022030494920427,
+      "frame_accuracy": 0.5101673125372992,
+      "miss": 0.0004842279644846952,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.48934845949821615,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 0.75,
+      "seconds": 22.8
+    },
+    "per_meeting": [
+      {
+        "der": 0.4390697674418605,
+        "frame_accuracy": 0.5609302325581396,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.4390697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.49802816901408453,
+        "frame_accuracy": 0.5033802816901408,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.4966197183098592,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.49309593023255816,
+        "frame_accuracy": 0.5069040697674418,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.4909156976744186,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.5315707620528771,
+        "frame_accuracy": 0.4684292379471229,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5315707620528771,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.1,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.6045329102237087,
+      "frame_accuracy": 0.3958547072627948,
+      "miss": 0.0004842279644846952,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.6036610647727205,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 6.25,
+      "seconds": 18.1
+    },
+    "per_meeting": [
+      {
+        "der": 0.5897674418604651,
+        "frame_accuracy": 0.4102325581395349,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.5897674418604651,
+        "true_speakers": 4,
+        "predicted_speakers": 9,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.6028169014084507,
+        "frame_accuracy": 0.39859154929577467,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.6014084507042253,
+        "true_speakers": 4,
+        "predicted_speakers": 11,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.6137354651162791,
+        "frame_accuracy": 0.3862645348837209,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.6115552325581395,
+        "true_speakers": 4,
+        "predicted_speakers": 12,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.6133748055987558,
+        "frame_accuracy": 0.38662519440124415,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.6133748055987558,
+        "true_speakers": 4,
+        "predicted_speakers": 9,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.2,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.39069530689747717,
+      "frame_accuracy": 0.6096923105890263,
+      "miss": 0.0001550469946013662,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.3901526424163724,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 3.0,
+      "seconds": 18.5
+    },
+    "per_meeting": [
+      {
+        "der": 0.32310077519379843,
+        "frame_accuracy": 0.6768992248062016,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.32310077519379843,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.4876056338028169,
+        "frame_accuracy": 0.5138028169014085,
+        "miss": 0.0005633802816901409,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.4856338028169014,
+        "true_speakers": 4,
+        "predicted_speakers": 9,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.38117732558139533,
+        "frame_accuracy": 0.6188226744186046,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.38117732558139533,
+        "true_speakers": 4,
+        "predicted_speakers": 8,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.3611197511664075,
+        "frame_accuracy": 0.6388802488335925,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.3611197511664075,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.3,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.24056905009675308,
+      "frame_accuracy": 0.7598185673897504,
+      "miss": 0.0006392749590860613,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.23954215765116357,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.5,
+      "seconds": 18.5
+    },
+    "per_meeting": [
+      {
+        "der": 0.2896124031007752,
+        "frame_accuracy": 0.7103875968992248,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.2896124031007752,
+        "true_speakers": 4,
+        "predicted_speakers": 5,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.3346478873239437,
+        "frame_accuracy": 0.6667605633802817,
+        "miss": 0.0005633802816901409,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.33267605633802816,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.1900436046511628,
+        "frame_accuracy": 0.8099563953488372,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.18786337209302326,
+        "true_speakers": 4,
+        "predicted_speakers": 6,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.4,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.11730207411684325,
+      "frame_accuracy": 0.8830855433696602,
+      "miss": 0.0004842279644846952,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.11643022866585515,
+      "meetings": 4,
+      "speaker_count_exact": 0.5,
+      "speaker_count_mean_abs_error": 0.75,
+      "seconds": 18.6
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.13830985915492958,
+        "frame_accuracy": 0.8630985915492958,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.13690140845070423,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.1028343023255814,
+        "frame_accuracy": 0.8971656976744186,
+        "miss": 0.002180232558139535,
+        "false_alarm": 0.0,
+        "confusion": 0.10065406976744186,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.11413785651616871,
+      "frame_accuracy": 0.8862497609703347,
+      "miss": 0.0008070466074744919,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.11294319242219081,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 17.7
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15408450704225352,
+        "frame_accuracy": 0.8473239436619718,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.15267605633802817,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.0690406976744186,
+        "frame_accuracy": 0.9309593023255814,
+        "miss": 0.003633720930232558,
+        "false_alarm": 0.0,
+        "confusion": 0.06540697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.6,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.13081888110628442,
+      "frame_accuracy": 0.8695687363802191,
+      "miss": 0.0008070466074744919,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.1296242170123065,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.75,
+      "seconds": 17.9
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.22338028169014085,
+        "frame_accuracy": 0.7780281690140846,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.2219718309859155,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.0690406976744186,
+        "frame_accuracy": 0.9309593023255814,
+        "miss": 0.003633720930232558,
+        "false_alarm": 0.0,
+        "confusion": 0.06540697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.12130637636080871,
+        "frame_accuracy": 0.8786936236391913,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12130637636080871,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.7,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.13081888110628442,
+      "frame_accuracy": 0.8695687363802191,
+      "miss": 0.0008070466074744919,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.1296242170123065,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.75,
+      "seconds": 18.3
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.22338028169014085,
+        "frame_accuracy": 0.7780281690140846,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.2219718309859155,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.0690406976744186,
+        "frame_accuracy": 0.9309593023255814,
+        "miss": 0.003633720930232558,
+        "false_alarm": 0.0,
+        "confusion": 0.06540697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.12130637636080871,
+        "frame_accuracy": 0.8786936236391913,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12130637636080871,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "min_on": 0.1,
+      "min_off": 0.2,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.11502560778439067,
+      "frame_accuracy": 0.8853620097021127,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.11463799029788725,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 18.6
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15408450704225352,
+        "frame_accuracy": 0.8473239436619718,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.15267605633802817,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.07303779069767442,
+        "frame_accuracy": 0.9269622093023255,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.07303779069767442,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "min_on": 0.1,
+      "min_off": 0.4,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.11502560778439067,
+      "frame_accuracy": 0.8853620097021127,
+      "miss": 0.0,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.11463799029788725,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 17.7
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15408450704225352,
+        "frame_accuracy": 0.8473239436619718,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.15267605633802817,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.07303779069767442,
+        "frame_accuracy": 0.9269622093023255,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.07303779069767442,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "min_on": 0.3,
+      "min_off": 0.2,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.11413785651616871,
+      "frame_accuracy": 0.8862497609703347,
+      "miss": 0.0008070466074744919,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.11294319242219081,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 18.1
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15408450704225352,
+        "frame_accuracy": 0.8473239436619718,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.15267605633802817,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.0690406976744186,
+        "frame_accuracy": 0.9309593023255814,
+        "miss": 0.003633720930232558,
+        "false_alarm": 0.0,
+        "confusion": 0.06540697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "min_on": 0.5,
+      "min_off": 0.4,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.11413785651616871,
+      "frame_accuracy": 0.8862497609703347,
+      "miss": 0.0008070466074744919,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.11294319242219081,
+      "meetings": 4,
+      "speaker_count_exact": 0.0,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 18.2
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15408450704225352,
+        "frame_accuracy": 0.8473239436619718,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.15267605633802817,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.0690406976744186,
+        "frame_accuracy": 0.9309593023255814,
+        "miss": 0.003633720930232558,
+        "false_alarm": 0.0,
+        "confusion": 0.06540697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.13094867807153965,
+        "frame_accuracy": 0.8690513219284604,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.13094867807153965,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "int8": true,
+      "speakers_given": false
+    },
+    "summary": {
+      "der": 0.13791231666972373,
+      "frame_accuracy": 0.8620876833302763,
+      "miss": 0.0,
+      "false_alarm": 0.0,
+      "confusion": 0.13791231666972373,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 17.5
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.15267605633802817,
+        "frame_accuracy": 0.8473239436619718,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.15267605633802817,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.18859011627906977,
+        "frame_accuracy": 0.8114098837209303,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.18859011627906977,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.12130637636080871,
+        "frame_accuracy": 0.8786936236391913,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12130637636080871,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  },
+  {
+    "config": {
+      "embedding": "nemo_en_titanet_small",
+      "threshold": 0.5,
+      "speakers_given": true
+    },
+    "summary": {
+      "der": 0.1074067849214781,
+      "frame_accuracy": 0.8929808325650254,
+      "miss": 0.0008070466074744919,
+      "false_alarm": 0.00038761748650341556,
+      "confusion": 0.10621212082750019,
+      "meetings": 4,
+      "speaker_count_exact": 0.25,
+      "speaker_count_mean_abs_error": 1.25,
+      "seconds": 18.0
+    },
+    "per_meeting": [
+      {
+        "der": 0.09395348837209302,
+        "frame_accuracy": 0.906046511627907,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.09395348837209302,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 40.75,
+        "meeting": "dev1"
+      },
+      {
+        "der": 0.13830985915492958,
+        "frame_accuracy": 0.8630985915492958,
+        "miss": 0.0,
+        "false_alarm": 0.0014084507042253522,
+        "confusion": 0.13690140845070423,
+        "true_speakers": 4,
+        "predicted_speakers": 4,
+        "speech": 44.00500000000002,
+        "meeting": "dev2"
+      },
+      {
+        "der": 0.0690406976744186,
+        "frame_accuracy": 0.9309593023255814,
+        "miss": 0.003633720930232558,
+        "false_alarm": 0.0,
+        "confusion": 0.06540697674418605,
+        "true_speakers": 4,
+        "predicted_speakers": 3,
+        "speech": 35.513000000000005,
+        "meeting": "dev3"
+      },
+      {
+        "der": 0.12130637636080871,
+        "frame_accuracy": 0.8786936236391913,
+        "miss": 0.0,
+        "false_alarm": 0.0,
+        "confusion": 0.12130637636080871,
+        "true_speakers": 4,
+        "predicted_speakers": 2,
+        "speech": 39.629000000000005,
+        "meeting": "dev4"
+      }
+    ]
+  }
+]

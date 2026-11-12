@@ -12,6 +12,7 @@ import numpy as np
 from . import audio as audio_mod
 from .asr import FasterWhisperTranscriber, Transcriber
 from .extract.base import Extractor, get_extractor
+from .extract.rules import name_speakers
 from .extract.summary import extractive_summary
 from .names import apply_map, apply_to_owner, canonical_map
 from .schema import Meeting, Transcript, Word
@@ -42,6 +43,11 @@ def build_meeting(
     if name_map:
         words = apply_map(words, name_map)
         sentences = split_sentences(words, speakers)
+    speaker_names: dict[str, str] = {}
+    if turns:  # name the speakers the dialogue pins down; the rest stay "Speaker N"
+        speaker_names = name_speakers(sentences, people)
+        for s in sentences:
+            s.speaker = speaker_names.get(s.speaker or "", s.speaker)
     transcript = Transcript(duration=duration, model=model, sentences=sentences)
     t1 = time.perf_counter()
     actions, decisions, abstractive = extractor.extract(transcript, meeting_date, people)
@@ -57,6 +63,7 @@ def build_meeting(
         audio_name=audio_name,
         speakers=names,
         participants=list(people or []),
+        speaker_names=speaker_names,
         name_map=name_map,
         transcript=transcript,
         summary=summary,
@@ -106,11 +113,13 @@ def process_file(
     turns = None
     diar_s = 0.0
     if diarise:
-        from .diarize import diarize
+        from .diarize import SENTENCE_DEFAULTS, diarize_sentences
 
         tick("diarize", 0.0)
         t0 = time.perf_counter()
-        turns = diarize(samples, models_dir)
+        spans = [(s.start, s.end) for s in split_sentences(clean_words(words))]
+        # a participants list fixes the number of speakers; otherwise it is estimated from the embeddings
+        turns = diarize_sentences(samples, spans, models_dir, num_speakers=len(people) if people else None, **SENTENCE_DEFAULTS)
         diar_s = time.perf_counter() - t0
         tick("diarize", 1.0)
 

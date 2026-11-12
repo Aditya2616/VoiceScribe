@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from difflib import SequenceMatcher
 
 from .extract.rules import ASSIGN_ADDRESS, ASSIGN_THIRD, NAME, NOT_NAMES
 from .schema import Sentence, Word
@@ -27,7 +28,8 @@ _VOWELS = set("aeiouy")
 
 
 def skeleton(name: str) -> str:
-    n = name.lower()
+    n = name.lower().replace("ph", "f")
+    n = n.translate(str.maketrans("cq", "kk"))  # c, k and q sound alike at the start of a name ("Kwame" / "Quame")
     return n[:1] + "".join(c for c in n[1:] if c not in _VOWELS)
 
 
@@ -83,8 +85,11 @@ def _closest(token: str, participants: list[str]) -> str | None:
             return p
         if similar(p, token):
             s = 1.0 - edit_distance(p.lower(), token.lower()) / max(len(p), len(token))
-            if s > score:
-                best, score = p, s
+        else:  # inside a closed list a looser match is safe: same first letter and mostly the same letters
+            ratio = SequenceMatcher(None, p.lower(), token.lower()).ratio()
+            s = ratio if ratio >= 0.8 or (ratio >= 0.7 and p[:1].lower() == token[:1].lower()) else 0.0
+        if s > score:
+            best, score = p, s
     return best
 
 

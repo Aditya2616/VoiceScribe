@@ -8,6 +8,7 @@ decisions ("we agreed to ..."). Deadlines are resolved against the meeting date 
 from __future__ import annotations
 
 import datetime as dt
+import itertools
 import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -93,7 +94,7 @@ ACK_TAIL = re.compile(
 )
 TRAILING_VOCATIVE = re.compile(rf",\s*(?P<name>{NAME})\s*[?.!]*$")
 THANKS_NAME = re.compile(
-    rf"^{FILLER}(?i:thanks|thank you|great|good|perfect|nice|cool)?[,.!]?\s*(?i:thanks|thank you)?[,\s]*(?P<name>{NAME})[.!]*$"
+    rf"^{FILLER}(?i:thanks|thank you|great|good|perfect|nice|cool)[,.!]?\s*(?i:thanks|thank you)?[,\s]*(?P<name>{NAME})[.!]*$"
 )
 SELF_START = re.compile(rf"^{FILLER}(?:i'll|i will|i can|i'm on it|let me|will do)\b", re.I)
 
@@ -149,23 +150,108 @@ def _strip_deadline(text: str, phrase: str | None) -> str:
     return re.sub(r"\s+,", ",", text)
 
 
-def infer_speaker_names(sentences: list[Sentence]) -> dict[str, str]:
-    """Map diarisation labels to first names from addressing: "Rohan, can you ..." followed by a
-    short acceptance from another speaker means that speaker is Rohan."""
+SELF_INTRO = re.compile(
+    rf"^{FILLER}(?i:hi|hello|hey)?[,.!]?\s*(?i:this is|it's|i'm|i am|my name is)\s+(?P<name>{NAME})\b"
+)
+MIN_NAME_CONFIDENCE = 0.6  # a speaker is only named when this share of its name evidence agrees
+
+
+MIN_VOTE_SECONDS = 1.0  # a sentence shorter than this is too short for its speaker label to be trusted
+
+
+def infer_speaker_names(
+    sentences: list[Sentence], min_confidence: float = MIN_NAME_CONFIDENCE, min_seconds: float = MIN_VOTE_SECONDS
+) -> dict[str, str]:  # fmt: skip
+    """Bind diarisation labels to first names, only where the dialogue is clear.
+
+    Evidence (one vote each): a request addressed to X ("X, can you ...?") answered by a different speaker; "Thanks, X."
+    said right after a speaker's turn; a self-introduction ("I'm X", "this is X"). A label gets a name when at least
+    `min_confidence` of its votes agree, votes only come from sentences of at least `min_seconds` (a one-word "Sure." is
+    often clustered with the wrong speaker), and each name goes to one label only (the stronger claim wins, a tie names
+    neither), so a merged or split cluster leaves speakers unnamed rather than wrongly named.
+    """
     votes: dict[str, Counter] = defaultdict(Counter)
     for i, s in enumerate(sentences):
+        intro = SELF_INTRO.match(s.text.strip())
+        if intro and s.speaker and s.end - s.start >= min_seconds and intro.group("name") not in NOT_NAMES:
+            votes[s.speaker][intro.group("name")] += 1
         t = THANKS_NAME.match(s.text.strip())
-        if t and i and s.speaker and sentences[i - 1].speaker not in (None, s.speaker) and t.group("name") not in NOT_NAMES:
-            votes[sentences[i - 1].speaker][t.group("name")] += 1  # "Thanks, Lena." names the previous speaker
+        prev = sentences[i - 1] if i else None
+        if (t and prev and s.speaker and prev.speaker not in (None, s.speaker) and prev.end - prev.start >= min_seconds
+                and t.group("name") not in NOT_NAMES):  # fmt: skip
+            votes[prev.speaker][t.group("name")] += 1  # "Thanks, Lena." names the previous speaker
         m = ASSIGN_ADDRESS.match(s.text)
-        if not (m and s.speaker and m.group("name") and m.group("name") not in NOT_NAMES):
+        if not (m and s.speaker and (m.group("name") or m.group("name2")) not in NOT_NAMES):
             continue
-        for nxt in sentences[i + 1 : i + 3]:
-            if nxt.speaker and nxt.speaker != s.speaker:
-                if is_ack(nxt.text) or SELF.search(nxt.text):
-                    votes[nxt.speaker][m.group("name")] += 1
+        # the reply is the next sentence (or the one after a one-word "Sure."), said by someone other than the asker
+        for j in (i + 1, i + 2):
+            if j >= len(sentences) or not sentences[j].speaker:
                 break
-    return {label: c.most_common(1)[0][0] for label, c in votes.items()}
+            nxt = sentences[j]
+            if nxt.speaker == s.speaker:
+                break  # the asker kept talking (or a short reply was clustered with them): no reliable evidence
+            if nxt.end - nxt.start < min_seconds and j == i + 1:
+                continue
+            if nxt.end - nxt.start >= min_seconds and (is_ack(nxt.text) or SELF.search(nxt.text)):
+                votes[nxt.speaker][m.group("name") or m.group("name2")] += 1
+            break
+    claims = sorted(((c, label, name) for label, cnt in votes.items() for name, c in cnt.items()
+                     if c / sum(cnt.values()) >= min_confidence), key=lambda x: -x[0])  # fmt: skip
+    out: dict[str, str] = {}
+    taken: dict[str, int] = {}
+    for c, label, name in claims:
+        if label in out or name in taken:
+            if name in taken and taken[name] == c and out.get(label) != name:
+                # a tie between two speakers for one name: name neither
+                for lbl in [k for k, v in out.items() if v == name]:
+                    del out[lbl]
+            continue
+        out[label] = name
+        taken[name] = c
+    return out
+
+
+def ruled_out_names(sentences: list[Sentence]) -> set[tuple[str, str]]:
+    """(speaker, name) pairs the dialogue rules out: someone who addresses X, thanks X or calls out X is not X."""
+    out: set[tuple[str, str]] = set()
+    for s in sentences:
+        if not s.speaker:
+            continue
+        names: set[str] = set()
+        if m := ASSIGN_ADDRESS.match(s.text):
+            names.add(m.group("name") or m.group("name2"))
+        if m := THANKS_NAME.match(s.text.strip()):
+            names.add(m.group("name"))
+        if m := TRAILING_VOCATIVE.search(s.text):
+            names.add(m.group("name"))
+        out |= {(s.speaker, n) for n in names if n and n not in NOT_NAMES}
+    return out
+
+
+def bind_by_elimination(
+    labels: set[str], people: list[str], named: dict[str, str], ruled_out: set[tuple[str, str]], max_labels: int = 8
+) -> dict[str, str]:  # fmt: skip
+    """With as many speakers as participants, bind only what the evidence forces: every one-to-one assignment that keeps
+    the names already bound and breaks no ruled-out pair is tried, and a speaker gets a name only when all the consistent
+    assignments agree. Inconsistent evidence, or a speaker/participant count mismatch, binds nothing."""
+    if not people or len(labels) != len(people) or len(labels) > max_labels:
+        return {}
+    order = sorted(labels)
+    solutions = []
+    for perm in itertools.permutations(people):
+        assign = dict(zip(order, perm, strict=True))
+        if all(assign.get(label) == name for label, name in named.items() if name in people and label in assign) and not any(
+            assign.get(label) == name for label, name in ruled_out
+        ):  # fmt: skip
+            solutions.append(assign)
+    if not solutions:
+        return {}
+    return {label: solutions[0][label] for label in order if all(sol[label] == solutions[0][label] for sol in solutions)}
+
+
+def name_speakers(sentences: list[Sentence], people: list[str] | None = None) -> dict[str, str]:
+    """Diarisation label -> name for the speakers the dialogue (and a participants list) pins down."""
+    return RuleExtractor._speaker_names(sentences, people)
 
 
 class RuleExtractor:
@@ -264,6 +350,10 @@ class RuleExtractor:
     def _speaker_names(sents: list[Sentence], people: list[str] | None) -> dict[str, str]:
         """Speaker label -> display name. Labels that already look like names map to themselves."""
         mapping = infer_speaker_names(sents)
+        labels = {s.speaker for s in sents if s.speaker and not re.fullmatch(NAME, s.speaker)}
+        if people:
+            for label, name in bind_by_elimination(labels, people, mapping, ruled_out_names(sents)).items():
+                mapping.setdefault(label, name)
         for s in sents:
             if s.speaker and re.fullmatch(NAME, s.speaker):
                 mapping[s.speaker] = s.speaker
