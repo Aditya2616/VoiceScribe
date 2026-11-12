@@ -1,0 +1,29 @@
+{
+  "meetings": 4,
+  "sentences": 65,
+  "action_items": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 13,
+    "predicted": 13,
+    "gold": 13
+  },
+  "decisions": {
+    "precision": 0.875,
+    "recall": 1.0,
+    "f1": 0.9333333333333333,
+    "tp": 7,
+    "predicted": 8,
+    "gold": 7
+  },
+  "owner_accuracy": 1.0,
+  "due_date_accuracy": 1.0,
+  "matched_actions": 13,
+  "errors": [
+    "[dev3] FP decision: 'I know, but the freeze is approved.'"
+  ],
+  "extractor": "rules",
+  "split": "dev",
+  "speakers_given": true
+}

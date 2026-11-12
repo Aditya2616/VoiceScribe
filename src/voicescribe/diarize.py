@@ -19,10 +19,11 @@ EMBEDDING_URL = f"{BASE}/speaker-recongition-models/wespeaker_en_voxceleb_resnet
 
 
 def model_paths(models_dir: Path) -> tuple[Path, Path]:
-    return (
-        models_dir / "sherpa-onnx-pyannote-segmentation-3-0" / "model.onnx",
-        models_dir / "wespeaker_en_voxceleb_resnet34.onnx",
-    )
+    folder = models_dir / "sherpa-onnx-pyannote-segmentation-3-0"
+    seg = folder / "model.onnx"
+    if not seg.exists():
+        seg = folder / "model.int8.onnx"
+    return seg, models_dir / "wespeaker_en_voxceleb_resnet34.onnx"
 
 
 def available(models_dir: Path) -> bool:

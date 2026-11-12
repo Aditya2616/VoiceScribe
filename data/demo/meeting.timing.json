@@ -1,6 +1,6 @@
 {
  "sample_rate": 24000,
- "duration": 118.418,
+ "duration": 117.718,
  "voices": {
   "Maya": "af_heart",
   "Rohan": "am_adam",
@@ -171,129 +171,129 @@
   {
    "id": 20,
    "speaker": "Rohan",
-   "text": "Understood, I'll add it to the tracker.",
+   "text": "Understood, I'll do that.",
    "start": 68.845,
-   "end": 70.799,
+   "end": 70.1,
    "label": null
   },
   {
    "id": 21,
    "speaker": "Rohan",
    "text": "There is one risk. The push notification service is flaky on older phones.",
-   "start": 71.019,
-   "end": 75.464,
+   "start": 70.32,
+   "end": 74.764,
    "label": null
   },
   {
    "id": 22,
    "speaker": "Maya",
    "text": "How bad is it?",
-   "start": 76.014,
-   "end": 76.945,
+   "start": 75.314,
+   "end": 76.245,
    "label": null
   },
   {
    "id": 23,
    "speaker": "Rohan",
    "text": "About one in twenty notifications fails to arrive.",
-   "start": 77.495,
-   "end": 80.47,
+   "start": 76.795,
+   "end": 79.77,
    "label": null
   },
   {
    "id": 24,
    "speaker": "Maya",
    "text": "That is not acceptable for launch.",
-   "start": 81.02,
-   "end": 82.873,
+   "start": 80.32,
+   "end": 82.173,
    "label": null
   },
   {
    "id": 25,
    "speaker": "Maya",
    "text": "Theo, can you ask the vendor for a status report before the 18th?",
-   "start": 83.093,
-   "end": 86.935,
+   "start": 82.393,
+   "end": 86.235,
    "label": "action"
   },
   {
    "id": 26,
    "speaker": "Theo",
    "text": "Okay, I will email them this afternoon.",
-   "start": 87.485,
-   "end": 90.159,
+   "start": 86.785,
+   "end": 89.459,
    "label": null
   },
   {
    "id": 27,
    "speaker": "Maya",
    "text": "Let's push the public launch from the twentieth to the first of December.",
-   "start": 90.709,
-   "end": 94.371,
+   "start": 90.009,
+   "end": 93.671,
    "label": "decision"
   },
   {
    "id": 28,
    "speaker": "Rohan",
    "text": "That gives us the extra time we need.",
-   "start": 94.921,
-   "end": 96.882,
+   "start": 94.221,
+   "end": 96.182,
    "label": null
   },
   {
    "id": 29,
    "speaker": "Lena",
    "text": "Should we tell the beta users about the new date?",
-   "start": 97.432,
-   "end": 99.759,
+   "start": 96.732,
+   "end": 99.059,
    "label": null
   },
   {
    "id": 30,
    "speaker": "Maya",
    "text": "Yes. Lena, write a short announcement and send it to the beta users by the end of the month.",
-   "start": 100.309,
-   "end": 105.374,
+   "start": 99.609,
+   "end": 104.674,
    "label": "action"
   },
   {
    "id": 31,
    "speaker": "Lena",
    "text": "Will do.",
-   "start": 105.924,
-   "end": 106.925,
+   "start": 105.224,
+   "end": 106.225,
    "label": null
   },
   {
    "id": 32,
    "speaker": "Maya",
    "text": "I'll book the launch retro for next week.",
-   "start": 107.475,
-   "end": 109.46,
+   "start": 106.775,
+   "end": 108.76,
    "label": "action"
   },
   {
    "id": 33,
    "speaker": "Rohan",
    "text": "One more thing. We should really think about dark mode at some point.",
-   "start": 110.01,
-   "end": 113.372,
+   "start": 109.31,
+   "end": 112.672,
    "label": null
   },
   {
    "id": 34,
    "speaker": "Maya",
    "text": "Good idea, but not for this release.",
-   "start": 113.922,
-   "end": 115.936,
+   "start": 113.222,
+   "end": 115.237,
    "label": null
   },
   {
    "id": 35,
    "speaker": "Maya",
    "text": "That's everything. Thanks, all.",
-   "start": 116.156,
-   "end": 117.818,
+   "start": 115.457,
+   "end": 117.118,
    "label": null
   }
  ]

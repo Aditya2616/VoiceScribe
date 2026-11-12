@@ -187,6 +187,8 @@ class RuleExtractor:
                     last.deadline_text, last.deadline_date = dl
                 last.confidence = min(0.95, last.confidence + 0.1)
                 continue
+            if is_ack(text) and not DECISION.search(text):
+                continue  # a bare acceptance with no request before it carries no task of its own
             owner, rest, strength = self._owner_and_rest(s, idx, speaker_names)
             if DECISION.search(text) and not (owner and strength >= 0.8) and not QUESTION_START.match(text):
                 if last and last.kind == "decision" and len(text.split()) <= 8 and CONFIRM.search(text):

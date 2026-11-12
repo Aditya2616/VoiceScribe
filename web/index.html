@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VoiceScribe · meetings in, clean action items out</title>
+<meta name="description" content="Whisper word timestamps and structured action-item extraction, shown on a real audio timeline.">
+<meta name="theme-color" content="#07080a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307080a'/%3E%3Cpath d='M6 16h2M11 11v10M16 6v20M21 10v12M26 14v4' stroke='%23d7ff3f' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#transcript">Skip to transcript</a>
+
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M5 16h2M11 11v10M16 6v20M21 10v12M26 14v4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>
+    <span class="mono label">VoiceScribe</span>
+  </div>
+  <nav class="modes" aria-label="Mode">
+    <button class="mode on" data-mode="demo" type="button">Demo</button>
+    <button class="mode" data-mode="upload" type="button">Upload</button>
+    <button class="mode" data-mode="record" type="button">Record</button>
+  </nav>
+  <div class="mono label env" id="env" role="status">checking backend</div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Meetings in, <em>clean action items</em> out.</h1>
+    <p class="lede">Real Whisper word timestamps drive the transcript; owners, deadlines and decisions are pulled out of each sentence as the audio passes the playhead.</p>
+  </section>
+
+  <section class="stage" aria-label="Audio timeline">
+    <div class="stage-top mono label">
+      <span id="source-tag" class="tag tag-lime">Synthetic speech · Kokoro-82M</span>
+      <span id="run-info" class="muted"></span>
+    </div>
+    <div class="wave-wrap">
+      <canvas id="wave" aria-label="Waveform streaming past the playhead"></canvas>
+      <div class="wave-msg mono" id="wave-msg" hidden></div>
+    </div>
+    <div class="transport" id="transport">
+      <button id="play" class="play" type="button" aria-label="Play" disabled>
+        <svg class="i-play" viewBox="0 0 24 24" width="20" height="20"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+        <svg class="i-pause" viewBox="0 0 24 24" width="20" height="20"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>
+      </button>
+      <div class="time mono"><span id="t-cur">0:00</span><span class="muted"> / </span><span id="t-dur">0:00</span></div>
+      <input id="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek" disabled>
+      <button id="rate" class="rate mono" type="button" aria-label="Playback speed">1x</button>
+    </div>
+  </section>
+
+  <section class="panel intake" id="intake" hidden>
+    <div class="intake-row" id="upload-ui" hidden>
+      <label class="file">
+        <input type="file" id="file" accept="audio/*,video/webm,.wav,.mp3,.m4a,.ogg,.flac,.webm">
+        <span class="btn" id="file-btn">Choose audio file</span>
+        <span class="mono muted" id="file-name">no file chosen</span>
+      </label>
+    </div>
+    <div class="intake-row" id="record-ui" hidden>
+      <button class="btn rec" id="rec" type="button"><span class="dot"></span><span id="rec-label">Start recording</span></button>
+      <canvas id="meter" width="160" height="28" aria-hidden="true"></canvas>
+      <span class="mono muted" id="rec-time">0:00</span>
+    </div>
+    <div class="intake-row fields" id="fields" hidden>
+      <label class="field"><span class="mono label">Meeting date</span><input type="date" id="date"></label>
+      <label class="field"><span class="mono label">Extractor</span>
+        <select id="extractor"><option value="rules">rules (offline)</option><option value="local">rules + local model</option><option value="openai">openai (needs key)</option><option value="anthropic">anthropic (needs key)</option></select>
+      </label>
+      <label class="check" id="diar-wrap"><input type="checkbox" id="diar"><span>Identify speakers</span></label>
+      <button class="btn primary" id="process" type="button" disabled>Transcribe and extract</button>
+    </div>
+    <div class="pipe" id="pipe" hidden>
+      <div class="steps mono"><span data-s="decode">decode</span><i></i><span data-s="transcribe">transcribe</span><i></i><span data-s="diarize">speakers</span><i></i><span data-s="extract">segment + extract</span></div>
+      <div class="bar"><div id="pipe-bar"></div></div>
+      <div class="mono muted" id="pipe-msg"></div>
+    </div>
+    <p class="note" id="intake-note"></p>
+  </section>
+
+  <div class="cols">
+    <section class="panel transcript" aria-label="Transcript">
+      <div class="panel-head"><h2 class="mono label">Transcript</h2><span class="mono muted" id="tr-meta"></span></div>
+      <div id="transcript" class="tr-scroll" tabindex="0"></div>
+    </section>
+
+    <section class="panel items" aria-label="Extracted items">
+      <div class="panel-head"><h2 class="mono label">Structured output</h2><span class="mono muted" id="it-meta"></span></div>
+      <div class="group">
+        <h3 class="mono label sub">Action items <b id="n-act">0</b></h3>
+        <ol id="actions" class="cards"></ol>
+        <p class="empty mono" id="actions-empty">Items appear as each sentence ends.</p>
+      </div>
+      <div class="group">
+        <h3 class="mono label sub">Decisions <b id="n-dec">0</b></h3>
+        <ol id="decisions" class="cards"></ol>
+        <p class="empty mono" id="decisions-empty">Decisions appear the same way.</p>
+      </div>
+      <div class="group">
+        <h3 class="mono label sub">Summary <span class="tag" id="sum-kind">extractive</span></h3>
+        <p id="summary" class="summary"></p>
+        <p class="empty mono" id="summary-empty">The summary appears when the meeting ends.</p>
+      </div>
+      <div class="exports">
+        <span class="mono label">Export</span>
+        <button class="btn sm" data-fmt="md" type="button">Markdown</button>
+        <button class="btn sm" data-fmt="json" type="button">JSON</button>
+        <button class="btn sm" data-fmt="srt" type="button">SRT</button>
+        <button class="btn sm" data-fmt="vtt" type="button">VTT</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="mono label">Built by <a href="https://adityajain16.vercel.app" rel="noopener">Aditya Jain</a> · <a href="https://github.com/Aditya2616/VoiceScribe" rel="noopener">GitHub</a></div>
+  <div class="mono muted small" id="run-info-m"></div>
+  <div class="mono muted small" id="credits">Demo audio is synthetic speech generated with Kokoro-82M (Apache-2.0). Transcript, timestamps and items are the output of a real run of this code. Recorded run, not live.</div>
+</footer>
+
+<audio id="audio" preload="auto" playsinline></audio>
+<script type="module" src="app.js"></script>
+</body>
+</html>

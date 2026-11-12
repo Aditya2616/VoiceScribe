@@ -33,7 +33,7 @@ def main() -> None:
             parts = member.name.split("/")
             if len(parts) < 4:
                 continue
-            speaker, chapter = parts[-3], parts[-2]
+            speaker = parts[-3]
             data = tar.extractfile(member).read()
             if name.endswith(".trans.txt"):
                 for line in data.decode().splitlines():

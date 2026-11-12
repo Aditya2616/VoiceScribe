@@ -167,3 +167,37 @@ def run_demo_eval(
     )
     assert isinstance(meeting.date, dt.date)
     return demo_eval(meeting, script, timing, extractor), meeting
+
+
+def speaker_accuracy(truth: list[tuple[float, float, str]], pred: list[tuple[float, float, str]], step: float = 0.01) -> dict:
+    """Frame-level speaker accuracy over frames where the truth has speech, after the best one-to-one
+    mapping of predicted labels to true speakers (brute force; fine for a handful of speakers)."""
+    import itertools
+
+    end = max(t[1] for t in truth)
+    frames = int(end / step) + 1
+    true_lab = [None] * frames
+    for s0, e0, spk in truth:
+        for f in range(int(s0 / step), min(frames, int(e0 / step) + 1)):
+            true_lab[f] = spk
+    pred_lab = [None] * frames
+    for s0, e0, spk in pred:
+        for f in range(int(s0 / step), min(frames, int(e0 / step) + 1)):
+            pred_lab[f] = spk
+    true_names = sorted({t[2] for t in truth})
+    pred_names = sorted({p[2] for p in pred})
+    speech = [f for f in range(frames) if true_lab[f] is not None]
+    best, best_map = -1, {}
+    k = min(len(true_names), len(pred_names))
+    for chosen in itertools.permutations(true_names, k):
+        mapping = dict(zip(pred_names, chosen, strict=False))
+        hit = sum(1 for f in speech if pred_lab[f] is not None and mapping.get(pred_lab[f]) == true_lab[f])
+        if hit > best:
+            best, best_map = hit, mapping
+    return {
+        "frames_with_speech": len(speech),
+        "accuracy": best / len(speech) if speech else 0.0,
+        "true_speakers": len(true_names),
+        "predicted_speakers": len(pred_names),
+        "mapping": best_map,
+    }

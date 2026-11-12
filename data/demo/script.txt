@@ -22,7 +22,7 @@ Rohan: Also, the calendar sync with other providers still drops events about onc
 Maya: Do we know why?
 Rohan: It looks like a rate limit on the provider side.
 Maya: Rohan, please write up the sync bug with logs and share it with the team by Wednesday. => ACTION owner=Rohan due=2026-11-18
-Rohan: Understood, I'll add it to the tracker.
+Rohan: Understood, I'll do that.
 Rohan: There is one risk. The push notification service is flaky on older phones.
 Maya: How bad is it?
 Rohan: About one in twenty notifications fails to arrive.
