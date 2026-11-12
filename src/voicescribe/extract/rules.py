@@ -91,6 +91,10 @@ ACK_TAIL = re.compile(
     r"by \w+(?: \w+)?|before \w+(?: \w+)?|on \w+|at \w+))*[\s,.!]*$",
     re.I,
 )
+TRAILING_VOCATIVE = re.compile(rf",\s*(?P<name>{NAME})\s*[?.!]*$")
+THANKS_NAME = re.compile(
+    rf"^{FILLER}(?i:thanks|thank you|great|good|perfect|nice|cool)?[,.!]?\s*(?i:thanks|thank you)?[,\s]*(?P<name>{NAME})[.!]*$"
+)
 SELF_START = re.compile(rf"^{FILLER}(?:i'll|i will|i can|i'm on it|let me|will do)\b", re.I)
 
 
@@ -150,6 +154,9 @@ def infer_speaker_names(sentences: list[Sentence]) -> dict[str, str]:
     short acceptance from another speaker means that speaker is Rohan."""
     votes: dict[str, Counter] = defaultdict(Counter)
     for i, s in enumerate(sentences):
+        t = THANKS_NAME.match(s.text.strip())
+        if t and i and s.speaker and sentences[i - 1].speaker not in (None, s.speaker) and t.group("name") not in NOT_NAMES:
+            votes[sentences[i - 1].speaker][t.group("name")] += 1  # "Thanks, Lena." names the previous speaker
         m = ASSIGN_ADDRESS.match(s.text)
         if not (m and s.speaker and m.group("name") and m.group("name") not in NOT_NAMES):
             continue
@@ -211,7 +218,23 @@ class RuleExtractor:
                 Candidate("action", [s.id], task, owner, dl[0] if dl else None, dl[1] if dl else None, strength,
                           self._ctx(sents, idx))
             )  # fmt: skip
+        self._bind_thanked_owner(out, sents)
         return out
+
+    @staticmethod
+    def _bind_thanked_owner(cands: list[Candidate], sents: list[Sentence]) -> None:
+        """A first-person commitment with no known speaker, answered by "Thanks, Mei.", belongs to Mei: the
+        reply is addressed to whoever just made the commitment."""
+        by_id = {s.id: s for s in sents}
+        for c in cands:
+            if c.kind != "action" or c.owner:
+                continue
+            if not any(SELF.search(by_id[i].text) or SELF_START.match(by_id[i].text) for i in c.sentence_ids):
+                continue
+            nxt = by_id.get(c.sentence_ids[-1] + 1)
+            m = THANKS_NAME.match(nxt.text.strip()) if nxt and len(nxt.text.split()) <= 4 else None
+            if m and m.group("name") not in NOT_NAMES:
+                c.owner = m.group("name")
 
     def extract(
         self, transcript: Transcript, meeting_date: dt.date, people: list[str] | None = None
@@ -282,6 +305,9 @@ class RuleExtractor:
         if m and not QUESTION_START.match(text):
             rest = text[m.end() :]
             if re.search(VERB, rest, re.I):
+                tail = TRAILING_VOCATIVE.search(rest)  # "Could you pull the numbers, Sam?" is addressed to Sam
+                if tail and tail.group("name") not in NOT_NAMES:
+                    return tail.group("name"), rest[: tail.start()], 0.85
                 return None, rest, 0.6
         m = OBLIGATION.search(text)
         if m:

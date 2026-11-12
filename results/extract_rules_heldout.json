@@ -1,0 +1,51 @@
+{
+  "meetings": 9,
+  "sentences": 130,
+  "action_items": {
+    "precision": 0.9310344827586207,
+    "recall": 0.84375,
+    "f1": 0.8852459016393444,
+    "tp": 27,
+    "predicted": 29,
+    "gold": 32
+  },
+  "decisions": {
+    "precision": 0.8888888888888888,
+    "recall": 0.8888888888888888,
+    "f1": 0.8888888888888888,
+    "tp": 8,
+    "predicted": 9,
+    "gold": 9
+  },
+  "owner_accuracy": 0.6666666666666666,
+  "owners": {
+    "correct": 17,
+    "wrong": 0,
+    "unassigned": 9,
+    "n": 26
+  },
+  "due_date_accuracy": 0.9629629629629629,
+  "matched_actions": 27,
+  "errors": [
+    "[held1] wrong field: owner None vs 'Marcus', due 2026-06-03 vs 2026-06-03: \"I'll send you the survey draft tomorrow.\"",
+    "[held2] wrong field: owner None vs 'Tobias', due 2026-07-09 vs 2026-07-09: 'I can fix that by tomorrow. Okay, Tobias, thanks.'",
+    "[held3] wrong field: owner None vs 'Sol', due None vs None: \"I'll write the email copy for launch day.\"",
+    "[held3] FN action: 'Lovely. Bram, would you mind sending the final palette to the printers by the 25th?'",
+    "[held4] FP action: \"I'll look into it today.\" -> 'Look into it'",
+    "[held4] wrong field: owner None vs 'Wen', due 2026-12-31 vs None: \"Sometime in December, I'll confirm the date soon. Okay, thank you all.\"",
+    "[held4] FN action: 'Someone needs to survey the front desk staff about evening availability.'",
+    "[held5] wrong field: owner None vs 'Amara', due 2026-12-02 vs 2026-12-02: \"I'll set up a call with them on Wednesday.\"",
+    "[held5] wrong field: owner None vs 'Sven', due 2026-12-04 vs 2026-12-04: \"I'll update the forecast spreadsheet with the new steel numbers by Friday.\"",
+    "[held5] FN action: 'Amara, can you renegotiate the steel contract before the end of the month?'",
+    "[held5] FN decision: 'Agreed, no contractors until March.'",
+    "[held6] wrong field: owner None vs 'Jonas', due 2027-01-14 vs 2027-01-14: \"I can take that, I'll re-export it tomorrow.\"",
+    "[test5] wrong field: owner None vs 'Ines', due 2026-04-24 vs 2026-04-24: \"I'll sort out the travel bookings for the site visits by the end of next week.\"",
+    "[test5] FP action: \"I'll ping them tomorrow.\" -> 'Ping them'",
+    "[test5] FN action: 'Can someone ping legal about the contract terms?'",
+    "[test6] FN action: 'We agreed that Tomas handles the load test follow-ups.'",
+    "[test6] FP decision: 'We agreed that Tomas handles the load test follow-ups.'",
+    "[test7] wrong field: owner None vs 'Dmitri', due 2026-12-10 vs 2026-12-10: \"I'll book the room for the launch review on the 10th.\""
+  ],
+  "extractor": "rules",
+  "split": "heldout"
+}

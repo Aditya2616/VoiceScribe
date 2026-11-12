@@ -1,0 +1,17 @@
+# title: Winter campaign kickoff (Marigold and Pine)
+# date: 2026-09-16
+# split: held
+Ingrid: Welcome everyone, let's plan the winter campaign.
+Celeste: The mood boards are done and the client loved the green palette.
+Ingrid: Lovely. Bram, would you mind sending the final palette to the printers by the 25th? => ACTION owner=Bram due=2026-09-25
+Bram: Absolutely, I'll do it on Monday.
+Nadia: I wonder if we should add a loyalty offer.
+Ingrid: Let's go with the free gift wrapping instead of a discount. => DECISION
+Celeste: I'll ask the photographer about availability and report back on Friday. => ACTION owner=Celeste due=2026-09-18
+Ingrid: Perfect, Celeste.
+Sol: Budget is tight for paid social.
+Ingrid: Nadia, can you pull last year's ad spend numbers? => ACTION owner=Nadia due=
+Nadia: Sure.
+Sol: I'll write the email copy for launch day. => ACTION owner=Sol due=
+Ingrid: Thanks.
+Ingrid: Next meeting is in two weeks.

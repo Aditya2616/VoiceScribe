@@ -1,0 +1,41 @@
+{
+  "meetings": 4,
+  "sentences": 65,
+  "action_items": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 13,
+    "predicted": 13,
+    "gold": 13
+  },
+  "decisions": {
+    "precision": 0.875,
+    "recall": 1.0,
+    "f1": 0.9333333333333333,
+    "tp": 7,
+    "predicted": 8,
+    "gold": 7
+  },
+  "owner_accuracy": 0.6923076923076923,
+  "owners": {
+    "correct": 8,
+    "wrong": 0,
+    "unassigned": 4,
+    "n": 12
+  },
+  "due_date_accuracy": 1.0,
+  "matched_actions": 13,
+  "errors": [
+    "[dev1] wrong field: owner None vs 'Ben', due 2026-03-06 vs 2026-03-06: \"I'll write up the rollback plan by Friday.\"",
+    "[dev2] wrong field: owner None vs 'Hugo', due 2026-05-15 vs 2026-05-15: \"I'll look into the crash reports and send a summary by tomorrow.\"",
+    "[dev3] wrong field: owner None vs 'Dev', due 2026-09-10 vs 2026-09-10: \"I'll draft a cost reduction proposal and share it with finance by the 10th.\"",
+    "[dev3] FP decision: 'I know, but the freeze is approved.'",
+    "[dev4] wrong field: owner None vs 'Farid', due 2026-01-23 vs 2026-01-23: \"I'll mock up the side panel and post it in the channel tomorrow.\""
+  ],
+  "extractor": "owners_0.5B",
+  "split": "dev",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16"
+}

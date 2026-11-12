@@ -7,7 +7,7 @@ from conftest import MEETING_DATE, transcript_from_lines
 from voicescribe.extract.anthropic_adapter import TOOL, AnthropicExtractor
 from voicescribe.extract.base import get_extractor
 from voicescribe.extract.hosted import to_results
-from voicescribe.extract.local import LocalExtractor, parse_label
+from voicescribe.extract.local import LocalExtractor
 from voicescribe.extract.openai_adapter import AdapterError, OpenAIExtractor
 
 LINES = [
@@ -23,61 +23,82 @@ def transcript():
     return transcript_from_lines(LINES)
 
 
-# ---- local verifier -----------------------------------------------------------------------------
+# ---- local model (closed-choice owner resolution and verification) ---------------------------------
 
 
-def test_parse_label_is_lenient_and_enforces_closed_owner_list():
-    people = ["Ben", "Maya"]
-    assert parse_label('{"label": "action", "task": "send it", "owner": "ben"}', people) == {
-        "label": "action", "task": "send it", "owner": "Ben",
-    }  # fmt: skip
-    assert parse_label('{"label": "action", "task": "x", "owner": "Zed"}', people)["owner"] is None
-    assert parse_label('{"label": "decision", "task": "go", "owner": null', people)["label"] == "decision"  # truncated
-    assert parse_label('{"label": "maybe"}', people) is None
-    assert parse_label("no json here", people) is None
+def chooser(answers: dict[str, str], seen: list | None = None):
+    """Fake model: answers[key] is chosen when key is in the final user message, else the last option."""
 
-
-def test_local_extractor_uses_model_labels_and_falls_back_on_garbage():
-    calls = []
-
-    def fake(messages, prefill):
-        calls.append(messages[-1]["content"])
+    def choose(messages, options):
         user = messages[-1]["content"]
-        if "free plan" in user:
-            return prefill + 'decision", "task": "keep the free plan", "owner": null}'
-        if "invite flow" in user:
-            return prefill + 'action", "task": "ship invite flow", "owner": "Rohan"}'
-        return "garbage"
+        if seen is not None:
+            seen.append((user, options))
+        for key, ans in answers.items():
+            if key in user and ans in options:
+                return {o: (0.9 if o == ans else 0.1 / (len(options) - 1)) for o in options}
+        return {o: (0.9 if o == options[-1] else 0.1 / (len(options) - 1)) for o in options}
 
-    actions, decisions, summary = LocalExtractor(generate=fake).extract(transcript(), MEETING_DATE)
-    assert summary is None
-    assert [a.owner for a in actions] == ["Rohan"] and actions[0].method == "local"
-    assert actions[0].deadline_date.isoformat() == "2026-11-20"  # always from the date resolver
-    assert [d.text for d in decisions] == ["Keep the free plan"] or decisions[0].text.lower().startswith("keep the free plan")
-    assert all("People:" in c for c in calls)
+    return choose
 
 
-def test_local_extractor_drops_candidates_the_model_calls_none_and_keeps_rule_answer_on_error():
-    def none_model(messages, prefill):
-        return prefill + 'none", "task": "", "owner": null}'
+OWNER_LINES = [
+    (None, "Someone needs to send out a survey."),
+    (None, "I'll do it this week."),
+    (None, "Is that fine, Maya?"),
+    (None, "Rohan, can you ship the invite flow by next Friday?"),
+    (None, "Sure, I'll do that."),
+    (None, "Good."),
+]
 
-    actions, decisions, _ = LocalExtractor(generate=none_model).extract(transcript(), MEETING_DATE)
-    assert actions == [] and decisions == []
 
-    def broken(messages, prefill):
+def test_owner_resolution_fills_only_unassigned_items_from_the_closed_list():
+    seen: list = []
+    t = transcript_from_lines(OWNER_LINES)
+    ex = LocalExtractor(choose=chooser({"survey": "Maya"}, seen), owners=True)
+    actions, _, _ = ex.extract(t, MEETING_DATE, ["Maya", "Rohan"])
+    assert any(a.owner == "Maya" and a.method == "local" for a in actions)
+    invite = next(a for a in actions if "invite" in a.task.lower())
+    assert invite.owner == "Rohan" and invite.method == "rules"  # rule owners are never overridden
+    options = seen[0][1]
+    assert options[-1] == "unknown" and set(options[:-1]) <= {"Maya", "Rohan"}
+
+
+def test_owner_resolution_respects_unknown_threshold_and_mention_guard():
+    t = transcript_from_lines(OWNER_LINES)
+    unknown = LocalExtractor(choose=chooser({}), owners=True).extract(t, MEETING_DATE, ["Maya", "Rohan"])[0]
+    assert all(a.owner in (None, "Rohan") for a in unknown)
+
+    def weak(messages, options):
+        return {o: (0.5 if o == "Maya" else 0.5 / (len(options) - 1)) for o in options}
+
+    low = LocalExtractor(choose=weak, owners=True, owner_threshold=0.6).extract(t, MEETING_DATE, ["Maya", "Rohan"])[0]
+    assert all(a.owner != "Maya" for a in low)
+
+    def invents(messages, options):
+        return {o: 1.0 if o == "Rohan" else 0.0 for o in options}
+
+    far = transcript_from_lines([(None, "Rohan, can you ship it?")] + [(None, f"Filler sentence number {i} here.") for i in range(9)]
+                                + [(None, "I'll write the report tomorrow.")])
+    acts = LocalExtractor(choose=invents, owners=True).extract(far, MEETING_DATE)[0]
+    assert [a.owner for a in acts if "report" in a.task.lower()] == [None]  # Rohan is not mentioned near it
+
+
+def test_verify_mode_uses_model_labels_and_survives_model_failure():
+    def labeller(messages, options):
+        marked = " ".join(ln for ln in messages[-1]["content"].splitlines() if ln.startswith(">>"))
+        want = "decision" if "free plan" in marked else "action" if "invite flow" in marked else "none"
+        return {o: 1.0 if o == want else 0.0 for o in options}
+
+    actions, decisions, summary = LocalExtractor(choose=labeller, owners=False, verify=True).extract(transcript(), MEETING_DATE)
+    assert summary is None and len(actions) == 1 and "invite" in actions[0].task.lower()
+    assert len(decisions) == 1 and actions[0].deadline_date.isoformat() == "2026-11-20"  # dates from the resolver
+
+    def broken(messages, options):
         raise RuntimeError("model missing")
 
-    actions, decisions, _ = LocalExtractor(generate=broken).extract(transcript(), MEETING_DATE)
-    assert len(actions) == 1 and actions[0].method == "rules" and len(decisions) == 1
+    actions, decisions, _ = LocalExtractor(choose=broken, owners=True, verify=True).extract(transcript(), MEETING_DATE)
+    assert len(actions) == 1 and actions[0].method == "local" and len(decisions) == 1  # rule labels kept
 
-
-def test_local_extractor_ignores_invented_owner_and_task():
-    def liar(messages, prefill):
-        return prefill + 'action", "task": "launch the rocket to mars", "owner": "Zed"}'
-
-    actions, _, _ = LocalExtractor(generate=liar).extract(transcript(), MEETING_DATE)
-    assert all(a.owner != "Zed" for a in actions)
-    assert all("rocket" not in a.task for a in actions)
 
 
 # ---- hosted adapters (stub transport, never the live API) -----------------------------------------

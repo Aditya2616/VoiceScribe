@@ -1,0 +1,16 @@
+# title: Quarterly budget check (Ferrous Works)
+# date: 2026-12-01
+# split: held
+Gustav: Let's go through the numbers.
+Leila: Materials are over budget by about six percent.
+Sven: Steel prices went up again in November.
+Gustav: Amara, can you renegotiate the steel contract before the end of the month? => ACTION owner=Amara due=2026-12-31
+Amara: I'll set up a call with them on Wednesday. => ACTION owner=Amara due=2026-12-02
+Leila: We should not hire contractors this quarter.
+Gustav: Agreed, no contractors until March. => DECISION
+Sven: I'll update the forecast spreadsheet with the new steel numbers by Friday. => ACTION owner=Sven due=2026-12-04
+Leila: Gustav, could you also book the review meeting with the plant managers for next week? => ACTION owner=Gustav due=2026-12-11
+Gustav: Yes, will do.
+Amara: Is the overtime budget affected?
+Sven: Not yet.
+Gustav: Alright, thanks everyone.

@@ -1,0 +1,42 @@
+{
+  "meetings": 3,
+  "sentences": 45,
+  "action_items": {
+    "precision": 0.875,
+    "recall": 0.7777777777777778,
+    "f1": 0.823529411764706,
+    "tp": 7,
+    "predicted": 8,
+    "gold": 9
+  },
+  "decisions": {
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571,
+    "tp": 3,
+    "predicted": 4,
+    "gold": 3
+  },
+  "owner_accuracy": 0.7142857142857143,
+  "owners": {
+    "correct": 4,
+    "wrong": 0,
+    "unassigned": 2,
+    "n": 6
+  },
+  "due_date_accuracy": 1.0,
+  "matched_actions": 7,
+  "errors": [
+    "[test5] wrong field: owner None vs 'Ines', due 2026-04-24 vs 2026-04-24: \"I'll sort out the travel bookings for the site visits by the end of next week.\"",
+    "[test5] FP action: \"I'll ping them tomorrow.\" -> 'Ping them'",
+    "[test5] FN action: 'Can someone ping legal about the contract terms?'",
+    "[test6] FN action: 'We agreed that Tomas handles the load test follow-ups.'",
+    "[test6] FP decision: 'We agreed that Tomas handles the load test follow-ups.'",
+    "[test7] wrong field: owner None vs 'Dmitri', due 2026-12-10 vs 2026-12-10: \"I'll book the room for the launch review on the 10th.\""
+  ],
+  "extractor": "owners_0.5B",
+  "split": "test2",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16"
+}

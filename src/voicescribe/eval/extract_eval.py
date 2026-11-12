@@ -80,7 +80,8 @@ def load_meeting(path: Path, with_speakers: bool = False) -> EvalMeeting:
 
 def load_all(directory: Path, split: str | None = None, with_speakers: bool = False) -> list[EvalMeeting]:
     meetings = [load_meeting(p, with_speakers) for p in sorted(directory.glob("*.txt"))]
-    return [m for m in meetings if split in (None, m.split)]
+    wanted = set(split.split(",")) if split else None
+    return [m for m in meetings if wanted is None or m.split in wanted]
 
 
 def _prf(tp: int, pred: int, gold: int) -> dict[str, float]:
@@ -93,6 +94,7 @@ def _prf(tp: int, pred: int, gold: int) -> dict[str, float]:
 def score(meetings: list[EvalMeeting], extractor: Extractor, people_from_speakers: bool = False) -> dict:
     counts = {"action": [0, 0, 0], "decision": [0, 0, 0]}  # tp, pred, gold
     owner_ok = owner_n = due_ok = due_n = 0
+    own = {"correct": 0, "wrong": 0, "unassigned": 0}  # over matched items: a wrong name is worse than unassigned
     errors: list[str] = []
     for m in meetings:
         people = sorted({s.speaker for s in m.transcript.sentences if s.speaker}) if people_from_speakers else None
@@ -113,6 +115,10 @@ def score(meetings: list[EvalMeeting], extractor: Extractor, people_from_speaker
             g = gold_a[hit]
             owner_n += 1
             owner_ok += (a.owner or None) == g.owner
+            if g.owner:
+                own["correct" if a.owner == g.owner else "unassigned" if not a.owner else "wrong"] += 1
+            elif a.owner:  # a name where the gold has none is also a wrong owner
+                own["wrong"] += 1
             due_n += 1
             due_ok += a.deadline_date == g.due
             if (a.owner or None) != g.owner or a.deadline_date != g.due:
@@ -144,6 +150,7 @@ def score(meetings: list[EvalMeeting], extractor: Extractor, people_from_speaker
         "action_items": _prf(*counts["action"]),
         "decisions": _prf(*counts["decision"]),
         "owner_accuracy": owner_ok / owner_n if owner_n else None,
+        "owners": {**own, "n": sum(own.values())},
         "due_date_accuracy": due_ok / due_n if due_n else None,
         "matched_actions": owner_n,
         "errors": errors,

@@ -35,10 +35,14 @@ def get_extractor(name: str | None = None) -> Extractor:
     name = (name or os.environ.get("VOICESCRIBE_EXTRACTOR") or "rules").lower()
     if name == "rules":
         return RulesExtractor()
-    if name == "local":
+    if name in ("local", "local-owners"):  # rules + small model that resolves unassigned owners
         from .local import LocalExtractor
 
-        return LocalExtractor()
+        return LocalExtractor(owners=True, verify=False, owner_threshold=float(os.environ.get("VOICESCRIBE_OWNER_THRESHOLD", "0.8")))
+    if name == "local-verify":  # rules + small model that relabels candidates (measured: not better than rules)
+        from .local import LocalExtractor
+
+        return LocalExtractor(owners=False, verify=True)
     if name == "openai":
         from .openai_adapter import OpenAIExtractor
 
@@ -47,4 +51,4 @@ def get_extractor(name: str | None = None) -> Extractor:
         from .anthropic_adapter import AnthropicExtractor
 
         return AnthropicExtractor()
-    raise ValueError(f"unknown extractor {name!r}; choose rules, local, openai or anthropic")
+    raise ValueError(f"unknown extractor {name!r}; choose rules, local, local-verify, openai or anthropic")

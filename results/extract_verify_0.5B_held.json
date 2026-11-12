@@ -1,0 +1,55 @@
+{
+  "meetings": 6,
+  "sentences": 85,
+  "action_items": {
+    "precision": 0.8636363636363636,
+    "recall": 0.8260869565217391,
+    "f1": 0.8444444444444444,
+    "tp": 19,
+    "predicted": 22,
+    "gold": 23
+  },
+  "decisions": {
+    "precision": 0.6,
+    "recall": 0.5,
+    "f1": 0.5454545454545454,
+    "tp": 3,
+    "predicted": 5,
+    "gold": 6
+  },
+  "owner_accuracy": 0.631578947368421,
+  "owners": {
+    "correct": 12,
+    "wrong": 0,
+    "unassigned": 7,
+    "n": 19
+  },
+  "due_date_accuracy": 0.9473684210526315,
+  "matched_actions": 19,
+  "errors": [
+    "[held1] wrong field: owner None vs 'Marcus', due 2026-06-03 vs 2026-06-03: \"I'll send you the survey draft tomorrow.\"",
+    "[held2] wrong field: owner None vs 'Tobias', due 2026-07-09 vs 2026-07-09: 'I can fix that by tomorrow. Okay, Tobias, thanks.'",
+    "[held2] FN action: 'Yusuf, please update the runbook with the rollback steps before the freeze.'",
+    "[held2] FP decision: 'Yusuf, please update the runbook with the rollback steps before the freeze. Got it.'",
+    "[held3] FP action: \"Let's go with the free gift wrapping instead of a discount.\" -> \"Let's go with the free gift wrapping instead of a discount\"",
+    "[held3] wrong field: owner None vs 'Sol', due None vs None: \"I'll write the email copy for launch day.\"",
+    "[held3] FN action: 'Lovely. Bram, would you mind sending the final palette to the printers by the 25th?'",
+    "[held3] FN decision: \"Let's go with the free gift wrapping instead of a discount.\"",
+    "[held4] FP action: \"I'll look into it today.\" -> 'Look into it'",
+    "[held4] wrong field: owner None vs 'Marta', due 2026-10-28 vs 2026-10-28: \"Someone needs to survey the front desk staff about evening availability. Okay, I'll do that on Wednesday.\"",
+    "[held4] wrong field: owner None vs 'Wen', due 2026-12-31 vs None: \"Sometime in December, I'll confirm the date soon. Okay, thank you all.\"",
+    "[held5] wrong field: owner None vs 'Sven', due 2026-12-04 vs 2026-12-04: \"I'll update the forecast spreadsheet with the new steel numbers by Friday.\"",
+    "[held5] FN action: 'Amara, can you renegotiate the steel contract before the end of the month?'",
+    "[held5] FN action: \"I'll set up a call with them on Wednesday.\"",
+    "[held5] FP decision: \"I'll set up a call with them on Wednesday.\"",
+    "[held5] FN decision: 'Agreed, no contractors until March.'",
+    "[held6] wrong field: owner None vs 'Jonas', due 2027-01-14 vs 2027-01-14: \"I can take that, I'll re-export it tomorrow.\"",
+    "[held6] FP action: \"Let's keep the weekly schedule, no more bonus episodes.\" -> \"Let's keep the weekly schedule, no more bonus episodes\"",
+    "[held6] FN decision: \"Let's keep the weekly schedule, no more bonus episodes.\""
+  ],
+  "extractor": "verify_0.5B",
+  "split": "held",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16"
+}

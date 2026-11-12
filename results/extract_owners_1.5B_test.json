@@ -1,0 +1,41 @@
+{
+  "meetings": 4,
+  "sentences": 61,
+  "action_items": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 12,
+    "predicted": 12,
+    "gold": 12
+  },
+  "decisions": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 5,
+    "predicted": 5,
+    "gold": 5
+  },
+  "owner_accuracy": 0.6666666666666666,
+  "owners": {
+    "correct": 8,
+    "wrong": 0,
+    "unassigned": 4,
+    "n": 12
+  },
+  "due_date_accuracy": 0.9166666666666666,
+  "matched_actions": 12,
+  "errors": [
+    "[test1] wrong field: owner None vs 'Maria', due 2026-02-12 vs 2026-02-12: \"I'll update the welcome email template and send it round on Thursday.\"",
+    "[test2] wrong field: owner None vs 'Sam', due 2026-06-25 vs 2026-06-25: 'I will renew the certificate and rotate the keys before the 25th.'",
+    "[test3] wrong field: owner None vs 'Jo', due 2026-08-28 vs 2026-08-28: \"I'm going to add schema validation to the ingest step, hopefully tomorrow.\"",
+    "[test3] wrong field: owner 'Kofi' vs 'Kofi', due 2026-08-27 vs None: \"Kofi, can you talk to the upstream team about change notifications? Yes, I'll message them this afternoon.\"",
+    "[test4] wrong field: owner None vs 'Ahmed', due 2026-10-12 vs 2026-10-12: \"I'll research venues and put together three options by Monday.\""
+  ],
+  "extractor": "owners_1.5B",
+  "split": "test",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16"
+}

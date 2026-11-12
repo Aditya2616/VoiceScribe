@@ -113,7 +113,7 @@ def test_wer_matches_jiwer_when_available():
 
 def test_labelled_meetings_load_and_scoring_counts():
     meetings = load_all(ROOT / "data" / "eval" / "extract")
-    assert {m.split for m in meetings} == {"dev", "test", "test2"}
+    assert {m.split for m in meetings} == {"dev", "test", "test2", "held"}
     m = load_meeting(ROOT / "data" / "eval" / "extract" / "dev1.txt", with_speakers=True)
     assert m.date == dt.date(2026, 3, 4) and m.transcript.sentences[3].speaker == "Ben"
     assert [g.kind for g in m.gold].count("action") == 3

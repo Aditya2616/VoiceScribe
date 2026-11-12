@@ -17,17 +17,26 @@
     "predicted": 4,
     "gold": 3
   },
-  "owner_accuracy": 0.8571428571428571,
+  "owner_accuracy": 0.7142857142857143,
+  "owners": {
+    "correct": 4,
+    "wrong": 1,
+    "unassigned": 1,
+    "n": 6
+  },
   "due_date_accuracy": 1.0,
   "matched_actions": 7,
   "errors": [
+    "[test5] wrong field: owner 'Noor' vs 'Ines', due 2026-04-24 vs 2026-04-24: \"I'll sort out the travel bookings for the site visits by the end of next week.\"",
     "[test5] FP action: \"I'll ping them tomorrow.\" -> 'Ping them'",
     "[test5] FN action: 'Can someone ping legal about the contract terms?'",
-    "[test6] wrong field: owner 'Tomas' vs None, due 2026-07-14 vs 2026-07-14: 'Please send me the draft report by Tuesday. Understood.'",
     "[test6] FN action: 'We agreed that Tomas handles the load test follow-ups.'",
-    "[test6] FP decision: 'We agreed that Tomas handles the load test follow-ups.'"
+    "[test6] FP decision: 'We agreed that Tomas handles the load test follow-ups.'",
+    "[test7] wrong field: owner None vs 'Dmitri', due 2026-12-10 vs 2026-12-10: \"I'll book the room for the launch review on the 10th.\""
   ],
-  "extractor": "rules",
+  "extractor": "owners_1.5B",
   "split": "test2",
-  "speakers_given": true
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16"
 }

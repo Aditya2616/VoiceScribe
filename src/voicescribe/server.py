@@ -26,6 +26,7 @@ from . import audio as audio_mod
 from .asr import FasterWhisperTranscriber, Transcriber
 from .export import export
 from .extract.base import get_extractor
+from .names import parse_people
 from .pipeline import process_file
 from .schema import Meeting
 
@@ -86,7 +87,7 @@ def create_app(transcriber: Transcriber | None = None) -> FastAPI:
             holder["transcriber"] = FasterWhisperTranscriber()
         return holder["transcriber"]
 
-    def run_job(job: Job, path: Path, tmp: Path, date: dt.date, diarise: bool, extractor: str | None, title: str | None) -> None:
+    def run_job(job: Job, path: Path, tmp: Path, date: dt.date, diarise: bool, extractor: str | None, title: str | None, people: list[str] | None = None) -> None:
         job.state = "running"
         try:
             def progress(stage: str, frac: float) -> None:
@@ -94,7 +95,7 @@ def create_app(transcriber: Transcriber | None = None) -> FastAPI:
 
             meeting, samples = process_file(
                 path, date, transcriber=get_transcriber(), extractor=get_extractor(extractor), diarise=diarise,
-                models_dir=MODELS_DIR, title=title, progress=progress,
+                models_dir=MODELS_DIR, title=title, people=people, progress=progress,
             )  # fmt: skip
             job.meeting = meeting
             job.peaks = audio_mod.peaks(samples)
@@ -126,12 +127,13 @@ def create_app(transcriber: Transcriber | None = None) -> FastAPI:
         title: str | None = Form(None),
         diarize: bool = Form(False),
         extractor: str | None = Form(None),
+        participants: str | None = Form(None),
     ) -> JobStatus:
         try:
             meeting_date = dt.date.fromisoformat(date) if date else dt.date.today()
         except ValueError as exc:
             raise HTTPException(422, "date must be YYYY-MM-DD") from exc
-        if extractor and extractor not in {"rules", "local", "openai", "anthropic"}:
+        if extractor and extractor not in {"rules", "local", "local-verify", "openai", "anthropic"}:
             raise HTTPException(422, "unknown extractor")
         tmp = Path(tempfile.mkdtemp(prefix="voicescribe-"))
         path = tmp / "upload.bin"
@@ -153,7 +155,7 @@ def create_app(transcriber: Transcriber | None = None) -> FastAPI:
             jobs[job.id] = job
             while len(jobs) > MAX_JOBS:
                 jobs.popitem(last=False)
-        pool.submit(run_job, job, path, tmp, meeting_date, diarize, extractor, (title or Path(file.filename or "meeting").stem)[:80])
+        pool.submit(run_job, job, path, tmp, meeting_date, diarize, extractor, (title or Path(file.filename or "meeting").stem)[:80], parse_people(participants))
         return job.status()
 
     def find(job_id: str) -> Job:

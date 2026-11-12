@@ -1,0 +1,48 @@
+{
+  "meetings": 6,
+  "sentences": 85,
+  "action_items": {
+    "precision": 0.9523809523809523,
+    "recall": 0.8695652173913043,
+    "f1": 0.909090909090909,
+    "tp": 20,
+    "predicted": 21,
+    "gold": 23
+  },
+  "decisions": {
+    "precision": 1.0,
+    "recall": 0.8333333333333334,
+    "f1": 0.9090909090909091,
+    "tp": 5,
+    "predicted": 5,
+    "gold": 6
+  },
+  "owner_accuracy": 0.65,
+  "owners": {
+    "correct": 13,
+    "wrong": 1,
+    "unassigned": 6,
+    "n": 20
+  },
+  "due_date_accuracy": 0.95,
+  "matched_actions": 20,
+  "errors": [
+    "[held1] wrong field: owner None vs 'Marcus', due 2026-06-03 vs 2026-06-03: \"I'll send you the survey draft tomorrow.\"",
+    "[held2] wrong field: owner None vs 'Tobias', due 2026-07-09 vs 2026-07-09: 'I can fix that by tomorrow. Okay, Tobias, thanks.'",
+    "[held3] wrong field: owner 'Nadia' vs 'Sol', due None vs None: \"I'll write the email copy for launch day.\"",
+    "[held3] FN action: 'Lovely. Bram, would you mind sending the final palette to the printers by the 25th?'",
+    "[held4] FP action: \"I'll look into it today.\" -> 'Look into it'",
+    "[held4] wrong field: owner None vs 'Wen', due 2026-12-31 vs None: \"Sometime in December, I'll confirm the date soon. Okay, thank you all.\"",
+    "[held4] FN action: 'Someone needs to survey the front desk staff about evening availability.'",
+    "[held5] wrong field: owner None vs 'Amara', due 2026-12-02 vs 2026-12-02: \"I'll set up a call with them on Wednesday.\"",
+    "[held5] wrong field: owner None vs 'Sven', due 2026-12-04 vs 2026-12-04: \"I'll update the forecast spreadsheet with the new steel numbers by Friday.\"",
+    "[held5] FN action: 'Amara, can you renegotiate the steel contract before the end of the month?'",
+    "[held5] FN decision: 'Agreed, no contractors until March.'",
+    "[held6] wrong field: owner None vs 'Jonas', due 2027-01-14 vs 2027-01-14: \"I can take that, I'll re-export it tomorrow.\""
+  ],
+  "extractor": "owners_1.5B",
+  "split": "held",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16"
+}

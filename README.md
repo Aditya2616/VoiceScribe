@@ -36,7 +36,7 @@ Transcribe your own file (any format PyAV can decode; no ffmpeg install needed):
 voicescribe run meeting.wav --date 2026-11-12 --out outputs
 ```
 
-Upload and microphone recording exist only in this local mode (50 MB and 30 minute caps; audio goes to a temp file
+Upload and microphone recording exist only in this local mode (with an optional participants field) (50 MB and 30 minute caps; audio goes to a temp file
 that is deleted after processing). The static demo only plays the bundled recording.
 
 Optional extras: `pip install -e ".[diarize]"` plus `voicescribe fetch-models --diarize` (speaker labels),
@@ -54,7 +54,7 @@ flowchart LR
   D --> E
   E --> F{extractor}
   F -->|default| G[rules]
-  F -->|optional| H[rules + small local model]
+  F -->|optional| H[rules + small local model: owners]
   F -->|optional| I[OpenAI / Anthropic adapters]
   G --> J[Pydantic schema + span check]
   H --> J
@@ -66,9 +66,10 @@ flowchart LR
 - **Decode and ASR.** PyAV decodes (so no ffmpeg), faster-whisper runs int8 with word timestamps. `av>=15,<17` is
   pinned because av 19 breaks faster-whisper 1.2.
 - **Segmentation.** Sentences from punctuation with a pause fallback; topics with a TextTiling-style cohesion score.
-- **Extraction.** An extractor ladder behind one interface (`VOICESCRIBE_EXTRACTOR`): rules; rules plus a small local
-  model that only verifies and normalises the rule-found candidates (the owner is chosen from a closed list of names);
-  and OpenAI/Anthropic adapters.
+- **Extraction.** An extractor ladder behind one interface (`VOICESCRIBE_EXTRACTOR`): `rules` (default);
+  `local`, rules plus a small model that picks an owner from a closed list of names for unassigned items;
+  `local-verify`, rules plus a model that relabels candidates; and OpenAI/Anthropic adapters. Measured, only
+  the rules are good enough to be the default (see Results).
 - **Validation.** Every item carries a source span that is checked against the transcript; items whose quote is not
   in the transcript are rejected. Deadlines such as "by next Friday" or "end of the month" are resolved to real
   dates relative to the meeting date.
@@ -89,8 +90,13 @@ treat differences of a few points as noise.
 | Synthetic demo meeting (Kokoro speech, scored against its script) | small.en | 336 | 1.49% (5 substitutions) |
 
 Commands: `voicescribe eval wer --model small.en` and `voicescribe eval demo --model small.en`. Both are read or
-synthetic speech, not real far-field meetings, so they say little about real meeting audio. Transcription (CPU, int8, 3 threads, machine heavily loaded by other jobs) ran at 0.84x
-real time for small.en on the LibriSpeech clips (`results/wer_small.en.json`).
+synthetic speech, not real far-field meetings, so they say little about real meeting audio.
+
+**Speed.** I do not publish a transcription speed yet: the figures I have were taken while the CPU was busy with other
+jobs, so they describe the load, not the model. `python scripts/rerecord_demo.py` measures tiny.en, base.en and small.en
+on the CPU (int8, 3 threads), records the CPU busy fraction before each run, re-records the demo and only marks a figure
+as clean when the CPU was under 25% busy. Its output goes to `results/speed_cpu.json`, and the demo banner shows the
+number only when it is clean.
 
 **Word-timestamp accuracy** on the demo meeting (sentence first and last word against the TTS segment timings, 69
 boundaries): median absolute error 100 ms, 90th percentile 255 ms, 87% within 250 ms. Sentence ends run about 170 ms
@@ -99,38 +105,72 @@ start time is at or before `audio.currentTime` (checked by `scripts/screenshots.
 
 ### Action-item extraction
 
-Matching: a predicted item counts when it shares a sentence with a gold item of the same kind. There are 11
-hand-labelled meetings that I wrote (about 15 sentences each): `dev` = 4, `test` = 4, `test2` = 3. The rules were
-developed on `dev` and I looked at `test` while debugging, so both are optimistic. **`test2` (3 meetings, 9 gold
-action items, 3 gold decisions) was written after the rules were frozen and is the only clean held-out number.**
+Matching: a predicted item counts when it shares a sentence with a gold item of the same kind. All meetings are
+hand-labelled, written by me, invented names and companies, about 15 sentences each. `dev` has 4 meetings and is where
+the rules were developed. **The held-out set is 9 meetings** (`test2`, 3 meetings, plus `held`, 6 meetings with 85
+sentences, 23 action items and 6 decisions). The 6 `held` meetings were written after the rules were frozen, in
+varied styles (terse stand-ups, chatty marketing calls, trailing and leading names, items with no owner), and I did
+not tune on them. The 3 `test2` meetings I had already seen. One bug was fixed after the `held` run: the "Good, Rina."
+reply rule was case-sensitive. A further 4 `test` meetings were looked at while debugging, so I do not use them as
+evidence (they are in `results/` for completeness). Owner columns are correct / wrong / unassigned among matched items;
+a wrong name counts against a method more than an unassigned item.
 
-| Extractor | Set (meetings) | Action P / R / F1 | Decision F1 |
-|---|---|---|---|
-| rules | dev (4) | 1.00 / 1.00 / 1.00 | 0.93 |
-| rules | test (4) | 1.00 / 1.00 / 1.00 | 1.00 |
-| rules | **test2 (3)** | 0.88 / 0.78 / 0.82 | 0.86 |
-| rules + Qwen2.5-0.5B | dev (4) | 0.62 / 1.00 / 0.76 | 0.44 |
-| rules + Qwen2.5-0.5B | test (4) | 0.80 / 1.00 / 0.89 | 0.57 |
-| rules + Qwen2.5-0.5B | **test2 (3)** | 0.67 / 0.89 / 0.76 | 0.50 |
-| rules + Qwen2.5-1.5B | dev (4) | 1.00 / 0.69 / 0.82 | 0.70 |
-| rules + Qwen2.5-1.5B | test (4) | 1.00 / 0.75 / 0.86 | 0.77 |
-| rules + Qwen2.5-1.5B | **test2 (3)** | 0.00 / 0.00 / 0.00 | 0.43 |
+| Extractor | Set (meetings) | Action P / R / F1 | Decision F1 | Owners ok / wrong / none |
+|---|---|---|---|---|
+| rules (default) | dev (4) | 1.00 / 1.00 / 1.00 | 0.93 | 8 / 0 / 4 |
+| rules (default) | **held-out** (9) | 0.93 / 0.84 / 0.89 | 0.89 | 17 / 0 / 9 |
+| rules (default) | held (new 6 only) (6) | 0.95 / 0.87 / 0.91 | 0.91 | 13 / 0 / 7 |
+| rules + 0.5B owner resolution | dev (4) | 1.00 / 1.00 / 1.00 | 0.93 | 8 / 0 / 4 |
+| rules + 0.5B owner resolution | **held-out** (9) | 0.93 / 0.84 / 0.89 | 0.89 | 17 / 0 / 9 |
+| rules + 0.5B owner resolution | held (new 6 only) (6) | 0.95 / 0.87 / 0.91 | 0.91 | 13 / 0 / 7 |
+| rules + 1.5B owner resolution | dev (4) | 1.00 / 1.00 / 1.00 | 0.93 | 8 / 0 / 4 |
+| rules + 1.5B owner resolution | **held-out** (9) | 0.93 / 0.84 / 0.89 | 0.89 | 17 / 2 / 7 |
+| rules + 1.5B owner resolution | held (new 6 only) (6) | 0.95 / 0.87 / 0.91 | 0.91 | 13 / 1 / 6 |
+| rules + 0.5B verifier | dev (4) | 0.65 / 1.00 / 0.79 | 0.40 | 8 / 0 / 4 |
+| rules + 0.5B verifier | **held-out** (9) | 0.82 / 0.84 / 0.83 | 0.63 | 16 / 0 / 10 |
+| rules + 0.5B verifier | held (new 6 only) (6) | 0.86 / 0.83 / 0.84 | 0.55 | 12 / 0 / 7 |
+| rules + 1.5B verifier | dev (4) | 1.00 / 1.00 / 1.00 | 0.88 | 8 / 0 / 4 |
+| rules + 1.5B verifier | **held-out** (9) | 0.90 / 0.81 / 0.85 | 0.70 | 16 / 0 / 9 |
+| rules + 1.5B verifier | held (new 6 only) (6) | 0.90 / 0.83 / 0.86 | 0.67 | 13 / 0 / 6 |
 
-Command: `voicescribe eval extract --extractor rules --split test2`, and `--extractor local` with
-`VOICESCRIBE_LOCAL_MODEL=Qwen/Qwen2.5-0.5B-Instruct` or `Qwen/Qwen2.5-1.5B-Instruct`. All model rows ran on the
-GPU in float16 (greedy decoding; the device and dtype are recorded in each `results/*.json`); the extractor picks
-the device automatically and also runs on CPU in float32 (`--device cpu`), where my earlier runs agreed except for
-1.5B on `test2`, which is unstable between devices.
+Every row comes from `python scripts/run_extract_matrix.py` (raw files `results/extract_<method>_<split>.json`). Model
+rows ran on the GPU in float16 with greedy scoring; the device and dtype are stored in each file, and the extractors
+choose the device automatically and also run on a CPU in float32 (`--device cpu`).
 
-**The rules alone win, so they are the default.** The 0.5B model finds the same items but adds false positives
-(precision 10 to 40 points lower). The 1.5B model is more conservative and loses recall; on `test2` it found no
-correct action items. The local model stays as an optional extractor, not a recommended one. Owner accuracy is the weak spot of
-every variant (0.56 to 0.71 on matched items): without speaker labels, "I'll do it" has no owner. On the demo
-meeting the rules find 7 of 7 action items and 2 of 2 decisions with no false positives, but only 3 of 7 owners and
-6 of 7 deadline dates are right (`results/demo_small.en.json`).
+**The rules alone are the default and are the best measured configuration.** On the 9 held-out meetings they find 0.93
+precision / 0.84 recall for action items and 17 of 26 owners with no wrong name. The misses are vocabulary gaps ("renegotiate",
+"survey" are not in the verb list; "would you mind ..."), and about a third of owners are unassigned because
+a bare "I'll do X" does not say who is speaking when no diarisation is used.
+
+*Owner resolution with a model.* The model sees the item, five sentences before and two after, and the closed list of
+names, and may answer only a name or "unknown". The 0.5B model resolves nothing (it says unknown); the 1.5B model resolves
+two items and gets both wrong, so it is worse than leaving owners unassigned. Looking at the probabilities, the 1.5B model
+is confident and wrong on exactly the cases that cannot be resolved from text ("Nadia" for a sentence spoken by
+Sol, because Nadia answered the line before): without speaker turns the transcript simply does not contain the
+answer. The deterministic cues that do exist (an addressed request followed by an acceptance, a trailing name in a
+request, "Thanks, Mei." after a commitment) are in the rules, which resolved the demo's "Lena" and "Rohan" items.
+
+*The 1.5B "collapse" in the first version was a defect, not a finding.* My first verifier asked the model for a JSON label and
+the 1.5B model answered "decision" for 11 of 13 candidates, including plain requests, and once with an invalid label
+("discussion"); an owner "Almost" also came from a name-detection bug. I replaced free generation with closed-choice
+scoring (each allowed answer is scored by its log-probability, so the model can only answer from the list) and fixed the
+name detection. The repaired 1.5B verifier scores 0.90 / 0.81 / 0.85 on the held-out set against the rules' 0.93 / 0.84 / 0.89.
+Its errors are action versus decision confusion: it calls commitments ("I can take that, I'll re-export it tomorrow",
+"Sofia will own the runbook") decisions, and calls one decision an action. The 0.5B verifier adds false positives
+(precision 0.82). Neither beats the rules, so neither is the default.
 
 The hosted adapters (OpenAI, Anthropic) are written and unit-tested against stubbed HTTP transports only. I have
 **not** run them against the live APIs, so there are no numbers for them.
+
+### Names
+
+Recognition spells unusual names inconsistently ("Rohan" and "Rohen"), which in an earlier version of the demo
+showed up as two different owners. Names the dialogue marks as names (an addressed request, "Thanks, X.", "X will ...")
+are clustered by consonant skeleton and edit distance and rewritten to one spelling, in the transcript and in the owners.
+With a participants list (`--participants "Ana, Ben"`, the API field `participants`, or the Participants field in
+Upload/Record) that list is the closed set: names map to the nearest participant and an owner outside it becomes
+unassigned. Without one, the most frequent spelling wins, which is not necessarily the right one (the demo's "Lena" is
+heard mostly as "Lina" and shows as Lina). The labelled meetings contain no spelling variants, so the effect is covered by unit tests, not by a score.
 
 ### Speaker diarisation (optional, off by default)
 

@@ -18,6 +18,12 @@
     "gold": 3
   },
   "owner_accuracy": 0.7142857142857143,
+  "owners": {
+    "correct": 4,
+    "wrong": 0,
+    "unassigned": 2,
+    "n": 6
+  },
   "due_date_accuracy": 1.0,
   "matched_actions": 7,
   "errors": [
@@ -29,6 +35,5 @@
     "[test7] wrong field: owner None vs 'Dmitri', due 2026-12-10 vs 2026-12-10: \"I'll book the room for the launch review on the 10th.\""
   ],
   "extractor": "rules",
-  "split": "test2",
-  "speakers_given": false
+  "split": "test2"
 }

@@ -89,9 +89,12 @@ function loadMeeting(meeting, peaks, pps, audioUrl, opts = {}) {
   const tm = meeting.timings || {};
   const parts = [meeting.transcript.model.replace("faster-whisper/", "whisper ")];
   if (tm.audio_s) parts.push(`${tm.audio_s.toFixed(0)} s audio`);
-  if (tm.asr_s != null) parts.push(`asr ${tm.asr_s.toFixed(1)} s (${tm.rtf}x real time)`);
+  // The recorded demo shows a speed figure only when it was measured on a quiet machine (see scripts/rerecord_demo.py).
+  if (tm.asr_s != null && (!opts.recorded || tm.quiet_machine)) parts.push(`asr ${tm.asr_s.toFixed(1)} s (${tm.rtf}x real time, cpu int8)`);
   parts.push(`extractor: ${meeting.extractor}`);
   $("#run-info").textContent = $("#run-info-m").textContent = (opts.recorded ? "recorded run · " : "") + parts.join(" · ");
+  if (opts.recorded) S.recordedModel = meeting.transcript.model.replace("faster-whisper/", "whisper ");
+  renderEnv();
   $("#credits").textContent = meeting.synthetic
     ? "Demo audio is synthetic speech generated with Kokoro-82M (Apache-2.0). The transcript, word timestamps and items are the output of a real run of this code on that audio. This page replays that recorded run; it is not live."
     : "Your audio was processed on the machine running this server and was not stored.";
@@ -409,10 +412,29 @@ function jumpToItem(it) {
   play();
 }
 
+/* Phone: the stage is pinned at the top and the player bar at the bottom. Size the transcript to the space
+   between them and bring it into view on the first tap of play, so no sentence sits under the bar. */
+const phone = window.matchMedia("(max-width: 759px)");
+function measureChrome() {
+  const root = document.documentElement.style;
+  root.setProperty("--stage-h", `${Math.ceil($(".stage").getBoundingClientRect().height)}px`);
+  root.setProperty("--bar-h", `${Math.ceil($("#transport").getBoundingClientRect().height)}px`);
+}
+new ResizeObserver(measureChrome).observe($(".stage"));
+new ResizeObserver(measureChrome).observe($("#transport"));
+function bringTranscriptIntoView() {
+  if (!phone.matches) return;
+  const panel = $(".transcript");
+  const top = panel.getBoundingClientRect().top;
+  const want = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--stage-h")) + 8;
+  if (Math.abs(top - want) > 6) window.scrollBy({ top: top - want, behavior: reduce ? "auto" : "smooth" });
+}
+
 async function play() {
   try {
     if (audio.ended || S.lastT >= S.dur - 0.05) seek(0);
     await audio.play();
+    bringTranscriptIntoView();
   } catch (e) {
     setNote("The browser blocked playback. Tap play again.", true);
   }
@@ -489,6 +511,7 @@ document.querySelectorAll(".exports [data-fmt]").forEach((b) =>
 /* ---------- modes ---------- */
 function setMode(mode) {
   S.mode = mode;
+  renderEnv();
   document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("on", b.dataset.mode === mode));
   const intake = $("#intake");
   intake.hidden = mode === "demo";
@@ -502,7 +525,7 @@ function setMode(mode) {
   }
   audio.pause();
   if (!S.backend) {
-    setNote("Upload and record need the local server. Run `voicescribe serve` and open http://127.0.0.1:8107. This static page only replays the bundled recorded run.", true);
+    setNote("Upload and record work when you run VoiceScribe on your own machine (`voicescribe serve`, then open http://127.0.0.1:8107). This page only replays the bundled recorded run.", true);
     $("#process").disabled = true;
     return;
   }
@@ -608,6 +631,7 @@ $("#process").addEventListener("click", async () => {
   fd.append("date", $("#date").value || new Date().toISOString().slice(0, 10));
   fd.append("diarize", $("#diar").checked ? "true" : "false");
   fd.append("extractor", $("#extractor").value);
+  if ($("#participants").value.trim()) fd.append("participants", $("#participants").value.trim());
   $("#process").disabled = true;
   setNote("");
   showPipe({ stage: "decode", progress: 0 });
@@ -666,6 +690,20 @@ async function poll(id) {
 }
 
 /* ---------- boot ---------- */
+/* The top bar describes what is on screen: the recorded run in Demo, the local server in Upload and Record. */
+function renderEnv() {
+  const env = $("#env");
+  env.textContent = "";
+  if (S.mode === "demo") {
+    env.append(S.backend ? "recorded run" : "static demo · recorded run", S.recordedModel ? " · " : "");
+    if (S.recordedModel) env.append(Object.assign(el("b", null, S.recordedModel)));
+  } else if (S.backend) {
+    env.append("local server · ", Object.assign(el("b", null, `whisper ${S.backend.whisper_model}`)), ` · extractor ${S.backend.extractor}`);
+  } else {
+    env.textContent = "upload and record: run it locally";
+  }
+}
+
 async function boot() {
   $("#date").value = new Date().toISOString().slice(0, 10);
   const staticSite = !!document.querySelector('meta[name="voicescribe-static"]'); // set by scripts/build_docs.py
@@ -674,18 +712,15 @@ async function boot() {
     const r = await fetch("api/health", { headers: { accept: "application/json" } });
     if (r.ok && (r.headers.get("content-type") || "").includes("json")) S.backend = await r.json();
   } catch (e) { /* static hosting: no backend */ }
-  const env = $("#env");
   if (S.backend) {
-    env.innerHTML = "";
-    env.append("local server · ", Object.assign(el("b", null, `whisper ${S.backend.whisper_model}`)), ` · extractor ${S.backend.extractor}`);
     $("#diar").disabled = !S.backend.diarization_available;
     $("#diar-wrap").classList.toggle("off", !S.backend.diarization_available);
     if (!S.backend.diarization_available) $("#diar-wrap").title = "Run: voicescribe fetch-models --diarize";
   } else {
-    env.textContent = "static demo · replays a recorded run";
     $("#diar").disabled = true;
     $("#diar-wrap").classList.add("off");
   }
+  renderEnv();
   setMode("demo");
 }
 boot();

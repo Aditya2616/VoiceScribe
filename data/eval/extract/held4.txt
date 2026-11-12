@@ -1,0 +1,18 @@
+# title: Clinic scheduling pilot (Hollis Health)
+# date: 2026-10-27
+# split: held
+Wen: Thanks for coming, we're reviewing the scheduling pilot.
+Abena: No-shows dropped from twelve percent to eight percent.
+Wen: That is encouraging, though the sample is small.
+Wen: Abena will write up the pilot results for the board by next Friday. => ACTION owner=Abena due=2026-11-06
+Abena: Fine.
+Ravi: The reminder texts are failing for numbers with country codes.
+Wen: Ravi, could you look into that and let me know by Thursday? => ACTION owner=Ravi due=2026-10-29
+Ravi: I'll look into it today.
+Marta: Patients keep asking about evening slots.
+Wen: Someone needs to survey the front desk staff about evening availability. => ACTION owner=Marta due=2026-10-28
+Marta: Okay, I'll do that on Wednesday.
+Wen: We have decided to extend the pilot to the second clinic. => DECISION
+Ravi: When does that start?
+Wen: Sometime in December, I'll confirm the date soon. => ACTION owner=Wen due=
+Wen: Okay, thank you all.

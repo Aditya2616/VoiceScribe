@@ -20,6 +20,7 @@ def cmd_run(a: argparse.Namespace) -> int:
     from .asr import FasterWhisperTranscriber
     from .export import export
     from .extract.base import get_extractor
+    from .names import parse_people
     from .pipeline import process_file
 
     meeting, _ = process_file(
@@ -29,6 +30,7 @@ def cmd_run(a: argparse.Namespace) -> int:
         extractor=get_extractor(a.extractor),
         diarise=a.diarize,
         models_dir=Path(a.models_dir),
+        people=parse_people(a.participants),
         progress=lambda stage, f: print(f"\r{stage:<10} {f * 100:5.1f}%", end="", file=sys.stderr, flush=True),
     )
     print(file=sys.stderr)
@@ -134,7 +136,7 @@ def cmd_eval(a: argparse.Namespace) -> int:
         ms = extract_eval.load_all(data / "eval" / "extract", a.split, with_speakers=a.speakers)
         ex = get_extractor(a.extractor)
         r = extract_eval.score(ms, ex, people_from_speakers=a.speakers)
-        gen = getattr(getattr(ex, "_generate", None), "__self__", None) or getattr(ex, "_generate", None)
+        gen = getattr(ex, "_choose", None)
         if hasattr(gen, "device"):  # local model: record where and how it ran
             r["model"], r["device"], r["dtype"] = gen.model_name, gen.device, gen.dtype
         r["extractor"], r["split"], r["speakers_given"] = a.extractor, a.split or "all", a.speakers
@@ -165,8 +167,9 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("audio")
     r.add_argument("--date", type=_date, help="meeting date, YYYY-MM-DD (default: today)")
     r.add_argument("--model", default=None, help="tiny.en | base.en | small.en (default: VOICESCRIBE_WHISPER or base.en)")
-    r.add_argument("--extractor", default=None, help="rules | local | openai | anthropic")
+    r.add_argument("--extractor", default=None, help="rules | local | local-verify | openai | anthropic")
     r.add_argument("--diarize", action="store_true")
+    r.add_argument("--participants", default=None, help="comma-separated first names: the closed set for owners")
     r.add_argument("--models-dir", default="models")
     r.add_argument("--out", default="outputs")
     r.set_defaults(fn=cmd_run)

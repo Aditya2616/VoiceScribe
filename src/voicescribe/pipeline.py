@@ -13,6 +13,7 @@ from . import audio as audio_mod
 from .asr import FasterWhisperTranscriber, Transcriber
 from .extract.base import Extractor, get_extractor
 from .extract.summary import extractive_summary
+from .names import apply_map, apply_to_owner, canonical_map
 from .schema import Meeting, Transcript, Word
 from .segment import assign_speakers, clean_words, split_sentences, topic_boundaries
 
@@ -37,9 +38,15 @@ def build_meeting(
     words = clean_words(words)
     speakers = assign_speakers(words, turns) if turns else None
     sentences = split_sentences(words, speakers)
+    name_map = canonical_map(sentences, people)  # one person, one spelling (closed set when participants are given)
+    if name_map:
+        words = apply_map(words, name_map)
+        sentences = split_sentences(words, speakers)
     transcript = Transcript(duration=duration, model=model, sentences=sentences)
     t1 = time.perf_counter()
     actions, decisions, abstractive = extractor.extract(transcript, meeting_date, people)
+    for a in actions:
+        a.owner = apply_to_owner(a.owner, people)
     t2 = time.perf_counter()
     summary = abstractive or extractive_summary(transcript)
     names = sorted({s.speaker for s in sentences if s.speaker})
@@ -49,6 +56,7 @@ def build_meeting(
         synthetic=synthetic,
         audio_name=audio_name,
         speakers=names,
+        name_map=name_map,
         transcript=transcript,
         summary=summary,
         topics=topic_boundaries(sentences),
@@ -69,6 +77,7 @@ def process_file(
     models_dir: Path = Path("models"),
     title: str | None = None,
     synthetic: bool = False,
+    people: list[str] | None = None,
     progress: ProgressFn | None = None,
 ) -> tuple[Meeting, np.ndarray]:
     """Decode, transcribe, (optionally diarise), segment and extract. Returns the meeting and the samples."""
@@ -110,6 +119,7 @@ def process_file(
         title=title or path.stem.replace("_", " ").title(),
         model=getattr(transcriber, "name", "unknown"),
         turns=turns,
+        people=people,
         synthetic=synthetic,
         audio_name=path.name,
     )

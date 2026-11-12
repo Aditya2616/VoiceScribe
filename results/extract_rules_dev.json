@@ -18,6 +18,12 @@
     "gold": 7
   },
   "owner_accuracy": 0.6923076923076923,
+  "owners": {
+    "correct": 8,
+    "wrong": 0,
+    "unassigned": 4,
+    "n": 12
+  },
   "due_date_accuracy": 1.0,
   "matched_actions": 13,
   "errors": [
@@ -28,6 +34,5 @@
     "[dev4] wrong field: owner None vs 'Farid', due 2026-01-23 vs 2026-01-23: \"I'll mock up the side panel and post it in the channel tomorrow.\""
   ],
   "extractor": "rules",
-  "split": "dev",
-  "speakers_given": false
+  "split": "dev"
 }

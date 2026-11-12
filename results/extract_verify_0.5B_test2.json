@@ -2,40 +2,43 @@
   "meetings": 3,
   "sentences": 45,
   "action_items": {
-    "precision": 0.6666666666666666,
+    "precision": 0.7272727272727273,
     "recall": 0.8888888888888888,
-    "f1": 0.761904761904762,
+    "f1": 0.7999999999999999,
     "tp": 8,
-    "predicted": 12,
+    "predicted": 11,
     "gold": 9
   },
   "decisions": {
     "precision": 1.0,
-    "recall": 0.3333333333333333,
-    "f1": 0.5,
-    "tp": 1,
-    "predicted": 1,
+    "recall": 0.6666666666666666,
+    "f1": 0.8,
+    "tp": 2,
+    "predicted": 2,
     "gold": 3
   },
   "owner_accuracy": 0.625,
+  "owners": {
+    "correct": 4,
+    "wrong": 0,
+    "unassigned": 3,
+    "n": 7
+  },
   "due_date_accuracy": 1.0,
   "matched_actions": 8,
   "errors": [
     "[test5] wrong field: owner None vs 'Ines', due 2026-04-24 vs 2026-04-24: \"I'll sort out the travel bookings for the site visits by the end of next week.\"",
-    "[test5] FP action: \"We've settled on the second vendor, pending the contract review.\" -> 'Settle on the second vendor'",
     "[test5] FP action: \"I'll ping them tomorrow.\" -> 'Ping them'",
     "[test5] FN action: 'Can someone ping legal about the contract terms?'",
-    "[test5] FN decision: \"We've settled on the second vendor, pending the contract review.\"",
     "[test6] wrong field: owner None vs 'Tomas', due None vs None: 'We agreed that Tomas handles the load test follow-ups.'",
-    "[test6] FP action: \"Let's push the customer demo to August.\" -> 'Push the customer demo to August'",
+    "[test6] FP action: \"Let's push the customer demo to August.\" -> \"Let's push the customer demo to August\"",
     "[test6] FN decision: \"Let's push the customer demo to August.\"",
     "[test7] wrong field: owner None vs 'Dmitri', due 2026-12-10 vs 2026-12-10: \"I'll book the room for the launch review on the 10th.\"",
-    "[test7] FP action: 'I can see why that takes a while. Okay, we are done.' -> 'See why it takes a while'"
+    "[test7] FP action: 'I can see why that takes a while. Okay, we are done.' -> 'See why that takes a while'"
   ],
+  "extractor": "verify_0.5B",
+  "split": "test2",
   "model": "Qwen/Qwen2.5-0.5B-Instruct",
   "device": "cuda",
-  "dtype": "float16",
-  "extractor": "local",
-  "split": "test2",
-  "speakers_given": false
+  "dtype": "float16"
 }

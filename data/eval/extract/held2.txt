@@ -1,0 +1,18 @@
+# title: Platform migration standup (Quillon Cloud)
+# date: 2026-07-08
+# split: held
+Dana: Right, migration status.
+Tobias: The database cutover is scheduled for the 18th.
+Dana: Rina to follow up with the cloud vendor about the quota increase on Monday. => ACTION owner=Rina due=2026-07-13
+Rina: Noted.
+Yusuf: The load balancer config still has the old hostnames.
+Tobias: I can fix that by tomorrow. => ACTION owner=Tobias due=2026-07-09
+Dana: Okay, Tobias, thanks.
+Yusuf: Should we freeze deploys during the cutover?
+Dana: Yes, we decided to freeze all deploys from the 17th to the 19th. => DECISION
+Dana: Yusuf, please update the runbook with the rollback steps before the freeze. => ACTION owner=Yusuf due=
+Yusuf: Got it.
+Tobias: Someone should check the backup restore times.
+Rina: I'll test the restore on staging this week. => ACTION owner=Rina due=2026-07-10
+Dana: Good, Rina.
+Dana: That's it from me.

@@ -2,42 +2,44 @@
   "meetings": 4,
   "sentences": 61,
   "action_items": {
-    "precision": 0.8,
+    "precision": 0.8571428571428571,
     "recall": 1.0,
-    "f1": 0.888888888888889,
+    "f1": 0.923076923076923,
     "tp": 12,
-    "predicted": 15,
+    "predicted": 14,
     "gold": 12
   },
   "decisions": {
     "precision": 1.0,
-    "recall": 0.4,
-    "f1": 0.5714285714285715,
-    "tp": 2,
-    "predicted": 2,
+    "recall": 0.6,
+    "f1": 0.7499999999999999,
+    "tp": 3,
+    "predicted": 3,
     "gold": 5
   },
-  "owner_accuracy": 0.5833333333333334,
+  "owner_accuracy": 0.6666666666666666,
+  "owners": {
+    "correct": 8,
+    "wrong": 0,
+    "unassigned": 4,
+    "n": 12
+  },
   "due_date_accuracy": 0.9166666666666666,
   "matched_actions": 12,
   "errors": [
     "[test1] wrong field: owner None vs 'Maria', due 2026-02-12 vs 2026-02-12: \"I'll update the welcome email template and send it round on Thursday.\"",
-    "[test1] FP action: \"Let's drop the video and use annotated screenshots instead.\" -> 'Drop the video'",
+    "[test1] FP action: \"Let's drop the video and use annotated screenshots instead.\" -> \"Let's drop the video and use annotated screenshots instead\"",
     "[test1] FN decision: \"Let's drop the video and use annotated screenshots instead.\"",
     "[test2] wrong field: owner None vs 'Sam', due 2026-06-25 vs 2026-06-25: 'I will renew the certificate and rotate the keys before the 25th.'",
-    "[test2] FP action: \"We've decided to run the next audit in December rather than January.\" -> \"We've decided to run the next audit in December rather than January\"",
-    "[test2] FN decision: \"We've decided to run the next audit in December rather than January.\"",
-    "[test3] wrong field: owner 'Kofi' vs 'Jo', due 2026-08-28 vs 2026-08-28: \"I'm going to add schema validation to the ingest step, hopefully tomorrow.\"",
+    "[test3] wrong field: owner None vs 'Jo', due 2026-08-28 vs 2026-08-28: \"I'm going to add schema validation to the ingest step, hopefully tomorrow.\"",
     "[test3] wrong field: owner 'Kofi' vs 'Kofi', due 2026-08-27 vs None: \"Kofi, can you talk to the upstream team about change notifications? Yes, I'll message them this afternoon.\"",
     "[test3] FP action: 'We are going with the managed scheduler instead of building our own.' -> 'We are going with the managed scheduler instead of building our own'",
     "[test3] FN decision: 'We are going with the managed scheduler instead of building our own.'",
-    "[test4] wrong field: owner None vs 'Ahmed', due 2026-10-12 vs 2026-10-12: \"I'll research venues and put together three options by Monday.\"",
-    "[test4] wrong field: owner None vs 'Mei', due 2026-10-09 vs 2026-10-09: \"Someone needs to send out a survey about dietary requirements. I'll do it this week.\""
+    "[test4] wrong field: owner None vs 'Ahmed', due 2026-10-12 vs 2026-10-12: \"I'll research venues and put together three options by Monday.\""
   ],
+  "extractor": "verify_0.5B",
+  "split": "test",
   "model": "Qwen/Qwen2.5-0.5B-Instruct",
   "device": "cuda",
-  "dtype": "float16",
-  "extractor": "local",
-  "split": "test",
-  "speakers_given": false
+  "dtype": "float16"
 }

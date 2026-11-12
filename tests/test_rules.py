@@ -84,3 +84,26 @@ def test_infer_speaker_names_from_the_reply():
 def test_deadline_in_the_acceptance_is_used_when_the_request_has_none():
     (a,), _ = run([(None, "Chloe, can you check the lag before the cutover?"), ("Chloe", "Sure, I can do that tomorrow.")])
     assert a.deadline_date.isoformat() == "2026-11-13"
+
+
+def test_trailing_vocative_names_the_owner_of_a_request():
+    (a,) = run([(None, "Could you pull the latest numbers together by Monday, Sam?"), (None, "Sure, will do.")])[0]
+    assert a.owner == "Sam" and "Sam" not in a.task
+
+
+def test_thanks_after_a_first_person_commitment_names_the_speaker():
+    actions, _ = run([(None, "Someone needs to send out a survey."), (None, "I'll do it this week."), (None, "Thanks, Mei.")])
+    assert [a.owner for a in actions] == ["Mei"]
+    # but not when the next sentence is not a bare vocative reply, or the commitment is not first person
+    actions, _ = run([(None, "I'll book the room."), (None, "Thanks, that helps a lot.")])
+    assert [a.owner for a in actions] == [None]
+
+
+def test_thanks_votes_name_a_diarised_speaker():
+    from voicescribe.schema import Sentence
+
+    sents = [
+        Sentence(id=0, start=0, end=1, text="I'll update the screens tomorrow.", speaker="Speaker 2"),
+        Sentence(id=1, start=1, end=2, text="Thanks, Lena.", speaker="Speaker 1"),
+    ]
+    assert infer_speaker_names(sents) == {"Speaker 2": "Lena"}

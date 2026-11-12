@@ -26,7 +26,7 @@
     <button class="mode" data-mode="upload" type="button">Upload</button>
     <button class="mode" data-mode="record" type="button">Record</button>
   </nav>
-  <div class="mono label env" id="env" role="status">checking backend</div>
+  <div class="mono label env" id="env" role="status"></div>
 </header>
 
 <main>
@@ -71,8 +71,9 @@
     <div class="intake-row fields" id="fields" hidden>
       <label class="field"><span class="mono label">Meeting date</span><input type="date" id="date"></label>
       <label class="field"><span class="mono label">Extractor</span>
-        <select id="extractor"><option value="rules">rules (offline)</option><option value="local">rules + local model</option><option value="openai">openai (needs key)</option><option value="anthropic">anthropic (needs key)</option></select>
+        <select id="extractor"><option value="rules">rules (offline)</option><option value="local">rules + local model (owners)</option><option value="openai">openai (needs key)</option><option value="anthropic">anthropic (needs key)</option></select>
       </label>
+      <label class="field grow"><span class="mono label">Participants (optional)</span><input type="text" id="participants" placeholder="Ana, Ben, Chloe" maxlength="200" autocomplete="off" autocapitalize="words"></label>
       <label class="check" id="diar-wrap"><input type="checkbox" id="diar"><span>Identify speakers</span></label>
       <button class="btn primary" id="process" type="button" disabled>Transcribe and extract</button>
     </div>

@@ -1,0 +1,15 @@
+# title: Podcast production sync (Tidepool Audio)
+# date: 2027-01-13
+# split: held
+Mireille: Okay, episode forty is out and the numbers look good.
+Jonas: Downloads are up twenty percent on last month.
+Mireille: Nice. So, Kwame, the guest booking for February is still open.
+Kwame: Yeah, I'm gonna email the three shortlisted guests today. => ACTION owner=Kwame due=2027-01-13
+Mireille: Great, thanks Kwame.
+Ayesha: Can someone fix the audio levels on the intro? It's too loud.
+Jonas: I can take that, I'll re-export it tomorrow. => ACTION owner=Jonas due=2027-01-14
+Mireille: Let's keep the weekly schedule, no more bonus episodes. => DECISION
+Kwame: Ayesha, could you share the sponsor read script with me by Friday? => ACTION owner=Ayesha due=2027-01-15
+Ayesha: Yep.
+Jonas: I think we should maybe redo the logo at some point.
+Mireille: Ha, maybe. Anyway, that's it for today.

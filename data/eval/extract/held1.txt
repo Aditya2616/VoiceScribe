@@ -1,0 +1,19 @@
+# title: Support rota review (Brightwell Logistics)
+# date: 2026-06-02
+# split: held
+Priya: Morning all, quick review of the support rota.
+Marcus: Ticket volume went up fifteen percent after the pricing change.
+Priya: Joao, could you pull the weekly ticket breakdown together by Friday? => ACTION owner=Joao due=2026-06-05
+Joao: Will do.
+Elena: The weekend cover is still thin.
+Elena: I'll draft a new weekend rota and circulate it on Thursday. => ACTION owner=Elena due=2026-06-04
+Priya: Thanks, Elena.
+Marcus: We should look at hiring a part time agent at some point.
+Priya: We agreed to keep the current vendor for chat support. => DECISION
+Priya: Can you run the customer satisfaction survey by the 20th, Marcus? => ACTION owner=Marcus due=2026-06-20
+Marcus: Yes, no problem.
+Joao: What about the refund backlog?
+Priya: Let's tackle that next month.
+Marcus: I'll send you the survey draft tomorrow. => ACTION owner=Marcus due=2026-06-03
+Priya: Great.
+Priya: Okay, that's all for today.
