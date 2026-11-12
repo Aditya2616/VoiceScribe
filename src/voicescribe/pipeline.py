@@ -54,7 +54,7 @@ def build_meeting(
         topics=topic_boundaries(sentences),
         decisions=decisions,
         action_items=sorted(actions, key=lambda a: a.source.start),
-        extractor=extractor.method,
+        extractor=getattr(extractor, "last_method", extractor.method),
         timings={"segment_s": round(t1 - t0, 3), "extract_s": round(t2 - t1, 3)},
     )
 

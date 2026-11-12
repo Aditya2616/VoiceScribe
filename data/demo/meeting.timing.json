@@ -1,0 +1,300 @@
+{
+ "sample_rate": 24000,
+ "duration": 118.418,
+ "voices": {
+  "Maya": "af_heart",
+  "Rohan": "am_adam",
+  "Lena": "bf_emma",
+  "Theo": "bm_george"
+ },
+ "sentences": [
+  {
+   "id": 0,
+   "speaker": "Maya",
+   "text": "Okay, let's get started. This is the Orbit launch sync for Halden Labs.",
+   "start": 0.0,
+   "end": 4.203,
+   "label": null
+  },
+  {
+   "id": 1,
+   "speaker": "Maya",
+   "text": "First, the beta feedback.",
+   "start": 4.423,
+   "end": 5.914,
+   "label": null
+  },
+  {
+   "id": 2,
+   "speaker": "Lena",
+   "text": "We got about two hundred responses, and most people love the new calendar view.",
+   "start": 6.464,
+   "end": 10.726,
+   "label": null
+  },
+  {
+   "id": 3,
+   "speaker": "Lena",
+   "text": "The main complaint is that the invite flow takes too many steps.",
+   "start": 10.946,
+   "end": 14.144,
+   "label": null
+  },
+  {
+   "id": 4,
+   "speaker": "Rohan",
+   "text": "I looked at the invite flow yesterday, and we can cut it down to two screens.",
+   "start": 14.694,
+   "end": 18.706,
+   "label": null
+  },
+  {
+   "id": 5,
+   "speaker": "Maya",
+   "text": "Great. Rohan, can you ship the shorter invite flow by next Friday?",
+   "start": 19.256,
+   "end": 23.352,
+   "label": "action"
+  },
+  {
+   "id": 6,
+   "speaker": "Rohan",
+   "text": "Yes, I'll have it ready for review by then.",
+   "start": 23.902,
+   "end": 26.069,
+   "label": null
+  },
+  {
+   "id": 7,
+   "speaker": "Maya",
+   "text": "Next, pricing.",
+   "start": 26.619,
+   "end": 27.6,
+   "label": null
+  },
+  {
+   "id": 8,
+   "speaker": "Theo",
+   "text": "Finance wants to know if we keep the free plan after launch.",
+   "start": 28.15,
+   "end": 32.076,
+   "label": null
+  },
+  {
+   "id": 9,
+   "speaker": "Maya",
+   "text": "We decided to keep the free plan, with a limit of three calendars.",
+   "start": 32.626,
+   "end": 36.108,
+   "label": "decision"
+  },
+  {
+   "id": 10,
+   "speaker": "Theo",
+   "text": "That works for me.",
+   "start": 36.658,
+   "end": 37.828,
+   "label": null
+  },
+  {
+   "id": 11,
+   "speaker": "Maya",
+   "text": "Theo, please send the final pricing page copy to Lena by Tuesday.",
+   "start": 38.378,
+   "end": 42.515,
+   "label": "action"
+  },
+  {
+   "id": 12,
+   "speaker": "Theo",
+   "text": "Sure, I'll do that.",
+   "start": 43.065,
+   "end": 44.409,
+   "label": null
+  },
+  {
+   "id": 13,
+   "speaker": "Lena",
+   "text": "On the design side, the onboarding screens still need a final pass.",
+   "start": 44.959,
+   "end": 48.474,
+   "label": null
+  },
+  {
+   "id": 14,
+   "speaker": "Lena",
+   "text": "I'll update the onboarding screens and post them in the channel tomorrow.",
+   "start": 48.694,
+   "end": 52.171,
+   "label": "action"
+  },
+  {
+   "id": 15,
+   "speaker": "Maya",
+   "text": "Thanks, Lena.",
+   "start": 52.721,
+   "end": 53.546,
+   "label": null
+  },
+  {
+   "id": 16,
+   "speaker": "Rohan",
+   "text": "Also, the calendar sync with other providers still drops events about once a week.",
+   "start": 54.096,
+   "end": 58.698,
+   "label": null
+  },
+  {
+   "id": 17,
+   "speaker": "Maya",
+   "text": "Do we know why?",
+   "start": 59.248,
+   "end": 60.079,
+   "label": null
+  },
+  {
+   "id": 18,
+   "speaker": "Rohan",
+   "text": "It looks like a rate limit on the provider side.",
+   "start": 60.629,
+   "end": 63.06,
+   "label": null
+  },
+  {
+   "id": 19,
+   "speaker": "Maya",
+   "text": "Rohan, please write up the sync bug with logs and share it with the team by Wednesday.",
+   "start": 63.61,
+   "end": 68.295,
+   "label": "action"
+  },
+  {
+   "id": 20,
+   "speaker": "Rohan",
+   "text": "Understood, I'll add it to the tracker.",
+   "start": 68.845,
+   "end": 70.799,
+   "label": null
+  },
+  {
+   "id": 21,
+   "speaker": "Rohan",
+   "text": "There is one risk. The push notification service is flaky on older phones.",
+   "start": 71.019,
+   "end": 75.464,
+   "label": null
+  },
+  {
+   "id": 22,
+   "speaker": "Maya",
+   "text": "How bad is it?",
+   "start": 76.014,
+   "end": 76.945,
+   "label": null
+  },
+  {
+   "id": 23,
+   "speaker": "Rohan",
+   "text": "About one in twenty notifications fails to arrive.",
+   "start": 77.495,
+   "end": 80.47,
+   "label": null
+  },
+  {
+   "id": 24,
+   "speaker": "Maya",
+   "text": "That is not acceptable for launch.",
+   "start": 81.02,
+   "end": 82.873,
+   "label": null
+  },
+  {
+   "id": 25,
+   "speaker": "Maya",
+   "text": "Theo, can you ask the vendor for a status report before the 18th?",
+   "start": 83.093,
+   "end": 86.935,
+   "label": "action"
+  },
+  {
+   "id": 26,
+   "speaker": "Theo",
+   "text": "Okay, I will email them this afternoon.",
+   "start": 87.485,
+   "end": 90.159,
+   "label": null
+  },
+  {
+   "id": 27,
+   "speaker": "Maya",
+   "text": "Let's push the public launch from the twentieth to the first of December.",
+   "start": 90.709,
+   "end": 94.371,
+   "label": "decision"
+  },
+  {
+   "id": 28,
+   "speaker": "Rohan",
+   "text": "That gives us the extra time we need.",
+   "start": 94.921,
+   "end": 96.882,
+   "label": null
+  },
+  {
+   "id": 29,
+   "speaker": "Lena",
+   "text": "Should we tell the beta users about the new date?",
+   "start": 97.432,
+   "end": 99.759,
+   "label": null
+  },
+  {
+   "id": 30,
+   "speaker": "Maya",
+   "text": "Yes. Lena, write a short announcement and send it to the beta users by the end of the month.",
+   "start": 100.309,
+   "end": 105.374,
+   "label": "action"
+  },
+  {
+   "id": 31,
+   "speaker": "Lena",
+   "text": "Will do.",
+   "start": 105.924,
+   "end": 106.925,
+   "label": null
+  },
+  {
+   "id": 32,
+   "speaker": "Maya",
+   "text": "I'll book the launch retro for next week.",
+   "start": 107.475,
+   "end": 109.46,
+   "label": "action"
+  },
+  {
+   "id": 33,
+   "speaker": "Rohan",
+   "text": "One more thing. We should really think about dark mode at some point.",
+   "start": 110.01,
+   "end": 113.372,
+   "label": null
+  },
+  {
+   "id": 34,
+   "speaker": "Maya",
+   "text": "Good idea, but not for this release.",
+   "start": 113.922,
+   "end": 115.936,
+   "label": null
+  },
+  {
+   "id": 35,
+   "speaker": "Maya",
+   "text": "That's everything. Thanks, all.",
+   "start": 116.156,
+   "end": 117.818,
+   "label": null
+  }
+ ]
+}

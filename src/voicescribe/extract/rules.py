@@ -60,7 +60,8 @@ HEDGE = re.compile(r"\b(?:probably|maybe|might|perhaps|possibly|i guess|i was th
 LIGHT_VERBS = {"do", "take", "handle", "get", "make", "ask"}
 ASSIGN_ADDRESS = re.compile(
     rf"^{FILLER}(?P<name>{NAME})\s*,?\s+(?:can|could|would|will|should|please|if you|do you mind|you(?:'ll| will)|"
-    rf"you can|you could|you should|you need to|you might want to)\b",
+    rf"you can|you could|you should|you need to|you might want to)\b|"
+    rf"^{FILLER}(?P<name2>{NAME})\s*,\s+(?={VERB})",
 )
 ASSIGN_THIRD = re.compile(
     rf"\b(?P<name>{NAME})\s+(?:will|is going to|'s going to|can|should|needs to|has to|to|owns|is taking|takes|"
@@ -78,6 +79,7 @@ DECISION = re.compile(
     r"\bis approved\b|\bit's a go\b",
     re.I,
 )
+CONFIRM = re.compile(r"\b(?:approved|agreed|settled|decided|it's a go)\b", re.I)
 QUESTION_START = re.compile(r"^\s*(?:should|shall|do|does|did|is|are|what|why|how|when|which|who|where)\b", re.I)
 NEGATED = re.compile(r"\b(?:i can't|i cannot|i won't|i will not|i couldn't|we can't|not going to|no need to)\b", re.I)
 
@@ -187,7 +189,8 @@ class RuleExtractor:
                 continue
             owner, rest, strength = self._owner_and_rest(s, idx, speaker_names)
             if DECISION.search(text) and not (owner and strength >= 0.8) and not QUESTION_START.match(text):
-                if last and last.kind == "decision":  # restating the previous decision
+                if last and last.kind == "decision" and len(text.split()) <= 8 and CONFIRM.search(text):
+                    # a short confirmation ("Yes, that is approved.") belongs to the decision before it
                     last.sentence_ids.append(s.id)
                     continue
                 dl = find_deadline(text, meeting_date)

@@ -29,6 +29,20 @@ SYSTEM = (
     "otherwise null. For a decision, task is the decision in a few words."
 )
 PREFILL = '{"label": "'
+FEW_SHOT = [
+    (
+        "People: Ana, Ben\n>> Ben, can you send the report by Friday?",
+        '{"label": "action", "task": "send the report", "owner": "Ben"}',
+    ),
+    (
+        "People: Ana, Ben\n>> We decided to keep the old server for a month.",
+        '{"label": "decision", "task": "keep the old server for a month", "owner": null}',
+    ),
+    (
+        "People: Ana, Ben\n>> The meeting went well and people were happy.",
+        '{"label": "none", "task": "", "owner": null}',
+    ),
+]
 
 
 class LocalGenerator:
@@ -146,10 +160,20 @@ class LocalExtractor:
             f"Transcript (the sentence(s) marked >> are the ones to label):\n{lines}"
         )
         try:
-            raw = self._generate([{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}], PREFILL)
+            messages = [{"role": "system", "content": SYSTEM}]
+            for q, a in FEW_SHOT:
+                messages += [{"role": "user", "content": q}, {"role": "assistant", "content": a}]
+            messages.append({"role": "user", "content": user})
+            raw = self._generate(messages, PREFILL)
         except Exception:  # model missing or generation failure: caller falls back to the rule answer
             return None
-        return parse_label(raw, names)
+        verdict = parse_label(raw, names)
+        if verdict and verdict["owner"]:
+            # an owner the model names must actually be mentioned near the sentence (no invented owners)
+            near = " ".join(by_id[i].text for i in _window(c, by_id))
+            if not re.search(rf"\b{re.escape(verdict['owner'])}\b", near):
+                verdict["owner"] = None
+        return verdict
 
 
 def _window(c: Candidate, by_id: dict) -> list[int]:
