@@ -160,7 +160,9 @@ Its errors are action versus decision confusion: it calls commitments ("I can ta
 (precision 0.82). Neither beats the rules, so neither is the default.
 
 The hosted adapters (OpenAI, Anthropic) are written and unit-tested against stubbed HTTP transports only. I have
-**not** run them against the live APIs, so there are no numbers for them.
+**not** run them against the live APIs, so there are no numbers for them. To use one, set `OPENAI_API_KEY` and
+`OPENAI_MODEL`, or `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL`, and choose it with `VOICESCRIBE_EXTRACTOR`. There is no default
+model id: the adapter raises a configuration error if the model variable is not set.
 
 ### Names
 

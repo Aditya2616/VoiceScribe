@@ -17,13 +17,19 @@ class AdapterError(RuntimeError):
     pass
 
 
+class ConfigError(AdapterError):
+    """A required setting (such as the model id) is missing."""
+
+
 class OpenAIExtractor:
     method = "openai"
 
     def __init__(self, client: httpx.Client | None = None, api_key: str | None = None, model: str | None = None,
                  base_url: str | None = None, fallback: bool = True):  # fmt: skip
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
-        self.model = model or os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+        self.model = model or os.environ.get("OPENAI_MODEL", "")
+        if not self.model:
+            raise ConfigError("set OPENAI_MODEL (or pass model=) to the model id you want to use")
         self.base_url = (base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")).rstrip("/")
         self.client = client or httpx.Client(timeout=60)
         self.fallback = fallback

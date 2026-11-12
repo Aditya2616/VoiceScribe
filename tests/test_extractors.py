@@ -134,7 +134,7 @@ def test_openai_adapter_request_and_parse():
         seen["body"] = json.loads(request.content)
         return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(PAYLOAD)}}]})
 
-    ex = OpenAIExtractor(client=make_client(handler), api_key="sk-test", model="m")
+    ex = OpenAIExtractor(client=make_client(handler), api_key="sk-test", model="test-model")
     actions, decisions, summary = ex.extract(transcript(), MEETING_DATE)
     assert seen["url"].endswith("/chat/completions") and seen["auth"] == "Bearer sk-test"
     assert seen["body"]["response_format"]["json_schema"]["strict"] is True
@@ -148,13 +148,13 @@ def test_openai_adapter_request_and_parse():
      httpx.Response(200, json={"unexpected": True})],
 )  # fmt: skip
 def test_openai_adapter_falls_back_to_rules_on_failure(response):
-    ex = OpenAIExtractor(client=make_client(lambda r: response), api_key="k")
+    ex = OpenAIExtractor(client=make_client(lambda r: response), api_key="k", model="test-model")
     actions, decisions, summary = ex.extract(transcript(), MEETING_DATE)
     assert actions and actions[0].method == "rules" and summary is None
 
 
 def test_openai_adapter_without_key_or_with_fallback_off_raises():
-    ex = OpenAIExtractor(client=make_client(lambda r: httpx.Response(200)), api_key="", fallback=False)
+    ex = OpenAIExtractor(client=make_client(lambda r: httpx.Response(200)), api_key="", model="test-model", fallback=False)
     with pytest.raises(AdapterError):
         ex.extract(transcript(), MEETING_DATE)
 
@@ -163,7 +163,7 @@ def test_openai_adapter_network_error_falls_back():
     def handler(request):
         raise httpx.ConnectError("offline")
 
-    actions, _, _ = OpenAIExtractor(client=make_client(handler), api_key="k").extract(transcript(), MEETING_DATE)
+    actions, _, _ = OpenAIExtractor(client=make_client(handler), api_key="k", model="test-model").extract(transcript(), MEETING_DATE)
     assert actions[0].method == "rules"
 
 
@@ -178,7 +178,7 @@ def test_anthropic_adapter_forces_the_tool_and_parses_tool_use():
             json={"content": [{"type": "text", "text": "ok"}, {"type": "tool_use", "name": TOOL, "input": PAYLOAD}]},
         )
 
-    ex = AnthropicExtractor(client=make_client(handler), api_key="ak-test", model="m")
+    ex = AnthropicExtractor(client=make_client(handler), api_key="ak-test", model="test-model")
     actions, decisions, summary = ex.extract(transcript(), MEETING_DATE)
     assert seen["headers"]["x-api-key"] == "ak-test" and seen["headers"]["anthropic-version"]
     assert seen["body"]["tool_choice"] == {"type": "tool", "name": TOOL}
@@ -186,7 +186,7 @@ def test_anthropic_adapter_forces_the_tool_and_parses_tool_use():
 
 
 def test_anthropic_adapter_fallback_when_no_tool_block():
-    ex = AnthropicExtractor(client=make_client(lambda r: httpx.Response(200, json={"content": []})), api_key="k")
+    ex = AnthropicExtractor(client=make_client(lambda r: httpx.Response(200, json={"content": []})), api_key="k", model="test-model")
     actions, _, _ = ex.extract(transcript(), MEETING_DATE)
     assert actions[0].method == "rules"
 
@@ -194,6 +194,18 @@ def test_anthropic_adapter_fallback_when_no_tool_block():
 def test_registry(monkeypatch):
     assert get_extractor("rules").method == "rules"
     monkeypatch.setenv("VOICESCRIBE_EXTRACTOR", "openai")
+    monkeypatch.setenv("OPENAI_MODEL", "test-model")
     assert get_extractor().method == "openai"
     with pytest.raises(ValueError):
         get_extractor("nope")
+
+
+@pytest.mark.parametrize("cls,var", [(OpenAIExtractor, "OPENAI_MODEL"), (AnthropicExtractor, "ANTHROPIC_MODEL")])
+def test_hosted_adapters_have_no_default_model(monkeypatch, cls, var):
+    from voicescribe.extract.openai_adapter import ConfigError
+
+    monkeypatch.delenv(var, raising=False)
+    with pytest.raises(ConfigError, match=var):
+        cls(api_key="k")
+    monkeypatch.setenv(var, "test-model")
+    assert cls(api_key="k").model == "test-model"
