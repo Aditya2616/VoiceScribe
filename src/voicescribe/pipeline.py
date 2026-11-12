@@ -56,6 +56,7 @@ def build_meeting(
         synthetic=synthetic,
         audio_name=audio_name,
         speakers=names,
+        participants=list(people or []),
         name_map=name_map,
         transcript=transcript,
         summary=summary,

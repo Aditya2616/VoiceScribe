@@ -73,3 +73,10 @@ def test_parse_people():
 def test_labelled_meetings_are_left_untouched():
     for m in extract_eval.load_all(Path(ROOT / "data" / "eval" / "extract")):
         assert canonical_map(m.transcript.sentences) == {}, m.name
+
+
+def test_meeting_records_the_participants_it_was_given():
+    text = "Okay. Lena, can you ship the invite flow by Friday? Sure, I will. Thanks, Lina."
+    m = build_meeting(words_from_text(text), 20.0, MEETING_DATE, RulesExtractor(), people=["Maya", "Lena"])
+    assert m.participants == ["Maya", "Lena"] and "Lina" not in m.transcript.text() and m.name_map == {"Lina": "Lena"}
+    assert build_meeting(words_from_text(text), 20.0, MEETING_DATE, RulesExtractor()).participants == []

@@ -155,3 +155,11 @@ def score(meetings: list[EvalMeeting], extractor: Extractor, people_from_speaker
         "matched_actions": owner_n,
         "errors": errors,
     }
+
+
+def script_participants(path: Path) -> list[str]:
+    """Names from a script's "# voices: Maya=af_heart, Rohan=..." header (the attendee list for the demo meeting)."""
+    for line in path.read_text(encoding="utf8").splitlines():
+        if line.startswith("# voices:"):
+            return [kv.split("=")[0].strip() for kv in line.split(":", 1)[1].split(",") if "=" in kv]
+    return []

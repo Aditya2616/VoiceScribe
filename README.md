@@ -148,7 +148,7 @@ two items and gets both wrong, so it is worse than leaving owners unassigned. Lo
 is confident and wrong on exactly the cases that cannot be resolved from text ("Nadia" for a sentence spoken by
 Sol, because Nadia answered the line before): without speaker turns the transcript simply does not contain the
 answer. The deterministic cues that do exist (an addressed request followed by an acceptance, a trailing name in a
-request, "Thanks, Mei." after a commitment) are in the rules, which resolved the demo's "Lena" and "Rohan" items.
+request, "Thanks, Mei." after a commitment) are in the rules, which resolved the demo's "Lena" and "Rohan" items (6 of its 7 owners).
 
 *The 1.5B "collapse" in the first version was a defect, not a finding.* My first verifier asked the model for a JSON label and
 the 1.5B model answered "decision" for 11 of 13 candidates, including plain requests, and once with an invalid label
@@ -169,8 +169,10 @@ showed up as two different owners. Names the dialogue marks as names (an address
 are clustered by consonant skeleton and edit distance and rewritten to one spelling, in the transcript and in the owners.
 With a participants list (`--participants "Ana, Ben"`, the API field `participants`, or the Participants field in
 Upload/Record) that list is the closed set: names map to the nearest participant and an owner outside it becomes
-unassigned. Without one, the most frequent spelling wins, which is not necessarily the right one (the demo's "Lena" is
-heard mostly as "Lina" and shows as Lina). The labelled meetings contain no spelling variants, so the effect is covered by unit tests, not by a score.
+unassigned. Without one, the most frequent spelling wins, which is not necessarily the right one: on the demo, recognition hears "Lena"
+mostly as "Lina", so without a list it would show as Lina. The recorded demo run is made with the attendee list from the
+script (Maya, Rohan, Lena, Theo), and the UI shows it as "participants given: ..." so it is clear the names were supplied, not inferred.
+The labelled meetings contain no spelling variants, so the effect is covered by unit tests, not by a score.
 
 ### Speaker diarisation (optional, off by default)
 

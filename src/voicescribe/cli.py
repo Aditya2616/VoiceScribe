@@ -103,7 +103,7 @@ def cmd_build_demo(a: argparse.Namespace) -> int:
     """Run the real pipeline on the bundled synthetic meeting and write the recorded run for the web UI."""
     from . import audio
     from .asr import FasterWhisperTranscriber
-    from .eval.extract_eval import load_meeting
+    from .eval.extract_eval import load_meeting, script_participants
     from .extract.base import get_extractor
     from .pipeline import process_file
 
@@ -112,7 +112,7 @@ def cmd_build_demo(a: argparse.Namespace) -> int:
     meeting, samples = process_file(
         demo / "meeting.mp3", gold.date, transcriber=FasterWhisperTranscriber(a.model),
         extractor=get_extractor(a.extractor), diarise=a.diarize, models_dir=Path(a.models_dir),
-        title=gold.title, synthetic=True,
+        title=gold.title, synthetic=True, people=script_participants(demo / "script.txt"),
     )  # fmt: skip
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

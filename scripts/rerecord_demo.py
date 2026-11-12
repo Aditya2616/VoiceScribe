@@ -28,7 +28,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from voicescribe import audio  # noqa: E402
 from voicescribe.asr import FasterWhisperTranscriber  # noqa: E402
-from voicescribe.eval.extract_eval import load_meeting  # noqa: E402
+from voicescribe.eval.extract_eval import load_meeting, script_participants  # noqa: E402
 from voicescribe.eval.speech_eval import demo_eval  # noqa: E402
 from voicescribe.extract.base import get_extractor  # noqa: E402
 from voicescribe.pipeline import process_file  # noqa: E402
@@ -92,7 +92,8 @@ def main() -> None:
     busy = cpu_busy()
     gold = load_meeting(demo / "script.txt")
     meeting, samples = process_file(demo / "meeting.mp3", gold.date, transcriber=tr, extractor=get_extractor("rules"),
-                                    title=gold.title, synthetic=True)  # fmt: skip
+                                    title=gold.title, synthetic=True,
+                                    people=script_participants(demo / "script.txt"))  # fmt: skip
     meeting.timings["quiet_machine"] = 1.0 if busy < QUIET_BELOW else 0.0
     meeting.timings["cpu_busy_before"] = busy
     web = ROOT / "web" / "demo"

@@ -87,6 +87,7 @@ class Meeting(BaseModel):
     synthetic: bool = False
     audio_name: str | None = None
     speakers: list[str] = Field(default_factory=list)
+    participants: list[str] = Field(default_factory=list)  # attendee list supplied by the user (not inferred)
     name_map: dict[str, str] = Field(default_factory=dict)  # spelling variants rewritten to one name
     transcript: Transcript
     summary: Summary | None = None
