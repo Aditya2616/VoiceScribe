@@ -14,6 +14,7 @@ dependencies = [
   "faster-whisper>=1.1,<2",
   "av>=15,<17",          # av 17+ breaks faster-whisper 1.2.x (metadata_errors kwarg)
   "numpy>=1.26",
+  "scipy>=1.11",          # optimal speaker mapping in the diarisation metrics
   "pydantic>=2.5",
   "fastapi>=0.110",
   "uvicorn>=0.29",
