@@ -120,15 +120,14 @@ CI: GitHub Actions with ruff and fast tests on Python 3.12 and 3.13.
 5. Real numbers for WER, extraction P/R/F1, speed (real-time factor) in the README with the commands.
 6. Clear README statement of which paths were exercised for real (Whisper, rules, local model, diarisation) and which
    are stub-tested adapters (OpenAI, Anthropic).
-7. Clean git history, only Aditya's identity, no AI-tool mentions, no weights or secrets, `git status` clean, repo
-   size reported.
+7. Clean git history, no weights or secrets, `git status` clean.
 
 ## 8. Risks
 
 - `av` version drift breaks faster-whisper: pinned (`>=15,<17`) and covered by a slow test.
-- CPU contention and small-model quality: the local model only verifies rule candidates; honest numbers either way.
+- A busy CPU and small-model quality: the local model only verifies rule candidates; honest numbers either way.
 - Browser mic output is WebM/Opus: decoded by PyAV; tested with a generated WebM fixture.
 - Whisper DTW word times can be loose: clamped, measured on the synthetic meeting.
 - Kokoro voices can mispronounce names; choose simple names and check the Whisper transcript.
 - Download budget (3 GB): Whisper small.en 485 MB + base.en 145 MB + Kokoro 120 MB + sherpa about 35 MB + Qwen 0.5B about 1 GB
-  is about 1.8 GB. Qwen 1.5B (3 GB) would exceed it and is only an optional comparison.
+  is about 1.8 GB. Qwen 1.5B (3 GB) is only an optional comparison.

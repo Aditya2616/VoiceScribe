@@ -515,11 +515,13 @@ document.querySelectorAll(".mode").forEach((b) => b.addEventListener("click", ()
 async function loadDemo() {
   setNote("");
   try {
-    const [m, p] = await Promise.all([
+    // The recording is under 1 MB: load it as a blob so seeking works even on static hosts without Range support.
+    const [m, p, blob] = await Promise.all([
       fetch("demo/meeting.json").then((r) => r.json()),
       fetch("demo/peaks.json").then((r) => r.json()),
+      fetch("demo/meeting.mp3").then((r) => r.blob()),
     ]);
-    loadMeeting(m, p.peaks, p.per_second, "demo/meeting.mp3", { recorded: true });
+    loadMeeting(m, p.peaks, p.per_second, URL.createObjectURL(blob), { recorded: true });
   } catch (e) {
     $("#wave-msg").hidden = false;
     $("#wave-msg").textContent = "Could not load the bundled demo run.";
@@ -666,7 +668,9 @@ async function poll(id) {
 /* ---------- boot ---------- */
 async function boot() {
   $("#date").value = new Date().toISOString().slice(0, 10);
+  const staticSite = !!document.querySelector('meta[name="voicescribe-static"]'); // set by scripts/build_docs.py
   try {
+    if (staticSite) throw new Error("static demo");
     const r = await fetch("api/health", { headers: { accept: "application/json" } });
     if (r.ok && (r.headers.get("content-type") || "").includes("json")) S.backend = await r.json();
   } catch (e) { /* static hosting: no backend */ }

@@ -1,0 +1,39 @@
+{
+  "meetings": 4,
+  "sentences": 61,
+  "action_items": {
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571428571428571,
+    "tp": 9,
+    "predicted": 9,
+    "gold": 12
+  },
+  "decisions": {
+    "precision": 0.625,
+    "recall": 1.0,
+    "f1": 0.7692307692307693,
+    "tp": 5,
+    "predicted": 8,
+    "gold": 5
+  },
+  "owner_accuracy": 0.5555555555555556,
+  "due_date_accuracy": 0.8888888888888888,
+  "matched_actions": 9,
+  "errors": [
+    "[test1] wrong field: owner None vs 'Maria', due 2026-02-12 vs 2026-02-12: \"I'll update the welcome email template and send it round on Thursday.\"",
+    "[test2] wrong field: owner None vs 'Sam', due 2026-06-25 vs 2026-06-25: 'I will renew the certificate and rotate the keys before the 25th.'",
+    "[test2] FN action: 'Nina, can you add rate limiting to the login endpoint by next Wednesday?'",
+    "[test2] FP decision: 'Nina, can you add rate limiting to the login endpoint by next Wednesday? I can take that, yes.'",
+    "[test3] wrong field: owner 'Kofi' vs 'Jo', due 2026-08-28 vs 2026-08-28: \"I'm going to add schema validation to the ingest step, hopefully tomorrow.\"",
+    "[test3] wrong field: owner 'Kofi' vs 'Kofi', due 2026-08-27 vs None: \"Kofi, can you talk to the upstream team about change notifications? Yes, I'll message them this afternoon.\"",
+    "[test4] wrong field: owner 'Rosa' vs 'Ahmed', due 2026-10-12 vs 2026-10-12: \"I'll research venues and put together three options by Monday.\"",
+    "[test4] FN action: 'Rosa, you could also ask finance whether the budget includes travel.'",
+    "[test4] FN action: \"I'll do it this week.\"",
+    "[test4] FP decision: \"Rosa, you could also ask finance whether the budget includes travel. Good idea, I'll check with them.\"",
+    "[test4] FP decision: \"Someone needs to send out a survey about dietary requirements. I'll do it this week.\""
+  ],
+  "extractor": "local",
+  "split": "test",
+  "speakers_given": false
+}

@@ -1,0 +1,26 @@
+{
+  "speakers_unknown": {
+    "frames_with_speech": 10020,
+    "accuracy": 0.8196606786427145,
+    "true_speakers": 4,
+    "predicted_speakers": 3,
+    "mapping": {
+      "Speaker 1": "Maya",
+      "Speaker 2": "Rohan",
+      "Speaker 3": "Theo"
+    },
+    "seconds": 49.7
+  },
+  "speakers_given_4": {
+    "frames_with_speech": 10020,
+    "accuracy": 0.8196606786427145,
+    "true_speakers": 4,
+    "predicted_speakers": 3,
+    "mapping": {
+      "Speaker 1": "Maya",
+      "Speaker 2": "Rohan",
+      "Speaker 3": "Theo"
+    },
+    "seconds": 48.4
+  }
+}

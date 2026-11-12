@@ -71,6 +71,22 @@ def main() -> int:
                 page.screenshot(path=str(out / f"{name}-end.png"), full_page=True)
                 overflow = page.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth")
                 print(f"{name}: horizontal overflow = {overflow}")
+                small = page.evaluate(
+                    """() => [...document.querySelectorAll('button, .mode, input[type=range], label.btn, a.btn')]
+                    .filter(e => e.offsetParent !== null).map(e => [e.id || e.className || e.tagName, e.getBoundingClientRect()])
+                    .filter(([n, r]) => r.height < 44 || (r.width < 44 && !/scrub/.test(n))).map(([n, r]) => n + ' ' + Math.round(r.width) + 'x' + Math.round(r.height))"""
+                )
+                print(f"{name}: controls under 44 px in a dimension: {small or 'none'}")
+                if touch:  # reveal stays locked to the audio clock: words shown == words whose start <= currentTime
+                    page.evaluate("document.querySelector('#audio').pause()")
+                    seek(page, 61.3)
+                    page.wait_for_timeout(500)
+                    res = page.evaluate(
+                        """async () => { const m = await (await fetch('demo/meeting.json')).json(); const t = document.querySelector('#audio').currentTime;
+                        const want = m.transcript.sentences.flatMap(s => s.words).filter(w => w.start <= t).length;
+                        return [want, document.querySelectorAll('#transcript .w.on').length, t]; }"""
+                    )
+                    print(f"{name}: reveal sync (expected words, shown words, t) = {res}")
                 ctx.close()
             browser.close()
     finally:

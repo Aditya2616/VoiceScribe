@@ -1,7 +1,7 @@
 # VoiceScribe: research notes
 
-Everything marked "measured" was run on this machine (Windows 11, 12 logical cores, CPU only, shared with eight other
-builds, so timings are noisy and pessimistic).
+Everything marked "measured" was run on my machine (Windows 11, 12 logical cores, CPU only, other jobs running at the
+same time, so timings are noisy and pessimistic). Final numbers are in the README and `results/`.
 
 ## 1. Speech recognition with word timestamps
 
@@ -21,7 +21,7 @@ fixes it; the pin goes in `pyproject.toml`. Browser recordings (WebM/Opus) also 
 will additionally offer 16 kHz WAV encoding as a safe path.
 
 **Measured** on an 11 s clip (JFK "ask not", public domain, from the openai/whisper tests), int8, 6 threads, word
-timestamps on, CPU shared with other jobs:
+timestamps on, CPU busy with other jobs:
 
 | Model | Disk | Load | Decode (11 s audio) | Notes |
 |---|---|---|---|---|
@@ -29,7 +29,7 @@ timestamps on, CPU shared with other jobs:
 | base.en | 145 MB | 36 s cold (download) | 6.4 s | good |
 | small.en | 485 MB | 34 s cold (download) | 14.4 s | best, splits the two sentences correctly |
 
-Decode times are inflated by contention (tiny vs base is not really 9x); the ordering is the useful part. Plan:
+Decode times are inflated by a busy CPU (tiny vs base is not really 9x); the ordering is the useful part. Plan:
 `base.en` default, `small.en` for the evaluation numbers, `tiny.en` for fast tests. Word timestamps come from attention
 alignment and can stretch over pauses, so I will clamp and smooth them (a word never ends after the next one starts)
 and check timing sanity on the synthetic meeting where onsets are known.
@@ -43,8 +43,8 @@ and check timing sanity on the synthetic meeting where onsets are known.
   `wespeaker_en_voxceleb_resnet34.onnx` (26 MB, toolkit Apache-2.0, VoxCeleb-trained weights CC-BY-4.0, credit needed) or
   NeMo TitaNet-small (40 MB, CC-BY-4.0). All are plain GitHub release URLs, no HF token. The upstream
   pyannote/speaker-diarization-3.1 pipeline is gated; Rev reverb-diarization is non-commercial. Neither is used.
-- Diarisation is optional. Not yet measured: its accuracy. It will be scored on the synthetic meeting, where speaker
-  turns are known exactly.
+- Diarisation is optional and off by default. Its accuracy is scored on the synthetic meeting, where speaker turns are
+  known exactly (`scripts/eval_diarize.py`; result in the README).
 
 ## 3. Summarisation and extraction
 
@@ -73,8 +73,7 @@ only a candidate fallback.
 3. `openai` and `anthropic`: adapters over `httpx` (no SDK, avoids version drift), JSON-schema structured output and
    tool use respectively; tested with `httpx.MockTransport`. Not run for real (no keys).
 
-**Summary.** The offline default is extractive (sentence embeddings from the cached all-MiniLM-L6-v2, MIT, ranked
-centrality plus position, re-ordered chronologically). The LLM adapters give abstractive summaries. The README will
+**Summary.** The offline default is extractive (TF-IDF sentence centrality plus a position prior, re-ordered chronologically). The LLM adapters give abstractive summaries. The README will
 say the offline summary is extractive.
 
 ## 4. Data and licences

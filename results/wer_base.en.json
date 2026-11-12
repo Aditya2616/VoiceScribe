@@ -1,0 +1,82 @@
+{
+  "model": "faster-whisper/base.en",
+  "utterances": 12,
+  "reference_words": 278,
+  "wer": 0.06115107913669065,
+  "audio_seconds": 97.8,
+  "rtf": 0.864,
+  "per_utterance": [
+    {
+      "id": "6930-75918-0000",
+      "wer": 0.125,
+      "ref": "concord returned to its place amidst the tents",
+      "hyp": "Concorde  returned  to  its  place  amidst  the  tents."
+    },
+    {
+      "id": "6930-75918-0007",
+      "wer": 0.0,
+      "ref": "you will be frank with me i always am",
+      "hyp": "You  will  be  frank  with  me.  I  always  am."
+    },
+    {
+      "id": "6930-75918-0006",
+      "wer": 0.0,
+      "ref": "this has indeed been a harassing day continued the young man his eyes fixed upon his friend",
+      "hyp": "This  has  indeed  been  a  harassing  day  continued  the  young  man  his  eyes  fixed  upon  his  friend"
+    },
+    {
+      "id": "1320-122617-0003",
+      "wer": 0.0,
+      "ref": "there was something in his air and manner that betrayed to the scout the utter confusion of the state of his mind",
+      "hyp": "There  was  something  in  his  air  and  manner  that  betrayed  to  the  scout  the  utter  confusion  of  the  state  of  his  mind."
+    },
+    {
+      "id": "1320-122617-0012",
+      "wer": 0.0385,
+      "ref": "four or five of the latter only lingered about the door of the prison of uncas wary but close observers of the manner of their captive",
+      "hyp": "Four  or  five  of  the  latter  only  lingered  about  the  door  of  the  prison  of  Unkus,  wary  but  close  observers  of  the  manner  of  their  captive."
+    },
+    {
+      "id": "1320-122617-0026",
+      "wer": 0.0667,
+      "ref": "well what can't be done by main courage in war must be done by circumvention",
+      "hyp": "Well,  what  can't  be  done  by  main  courage  and  war  must  be  done  by  circumvention."
+    },
+    {
+      "id": "5639-40744-0032",
+      "wer": 0.0545,
+      "ref": "for god's sake my lady mother give me a wife who would be an agreeable companion not one who will disgust me so that we may both bear evenly and with mutual good will the yoke imposed on us by heaven instead of pulling this way and that way and fretting each other to death",
+      "hyp": "For  God's  sake,  my  lady  mother,  give  me  a  wife  who  would  be  an  agreeable  companion.  Not  one  who  will  disgust  me  so  that  we  may  both  bear  evenly  and  with  mutual  goodwill,  the  yoke  imposed  on  us  by  heaven,  instead  of  pulling  this  way  and  that  way  and  fretting  each  other  to  death.  Yes."
+    },
+    {
+      "id": "5639-40744-0002",
+      "wer": 0.0833,
+      "ref": "rodolfo and his companions with their faces muffled in their cloaks stared rudely and insolently at the mother the daughter and the servant maid",
+      "hyp": "Rudolfo  and  his  companions,  with  their  faces  muffled  in  their  cloaks,  stared  rudely  and  insolently  at  the  mother,  the  daughter  and  the  servant  made."
+    },
+    {
+      "id": "5639-40744-0030",
+      "wer": 0.1228,
+      "ref": "just then leocadia came to herself and embracing the cross seemed changed into a sea of tears and the gentleman remained in utter bewilderment until his wife had repeated to him from beginning to end leocadia's whole story and he believed it through the blessed dispensation of heaven which had confirmed it by so many convincing testimonies",
+      "hyp": "Just  then  Leokeria  came  to  herself,  and  embracing  the  cross  seemed  changed  into  a  sea  of  tears,  and  the  gentleman  remaining  in  out  of  a  wilderness  until  his  wife  had  repeated  to  him  from  beginning  to  end,  Leokeria's  whole  story,  and  he  believed  it,  through  the  blessed  dispensation  of  heaven  which  had  confirmed  it  by  so  many  convincing  testimonies."
+    },
+    {
+      "id": "260-123440-0018",
+      "wer": 0.0,
+      "ref": "i am very tired of swimming about here o mouse",
+      "hyp": "I  am  very  tired  of  swimming  about  here.  O  mouse!"
+    },
+    {
+      "id": "260-123440-0004",
+      "wer": 0.0606,
+      "ref": "alice took up the fan and gloves and as the hall was very hot she kept fanning herself all the time she went on talking dear dear how queer everything is to day",
+      "hyp": "Alice  took  up  the  fan  and  gloves.  And  as  the  hall  was  very  hot,  she  kept  fanning  herself  all  the  time  she  went  on  talking.  Dear,  dear,  how  queer  everything  is  today.  I"
+    },
+    {
+      "id": "260-123440-0001",
+      "wer": 0.0,
+      "ref": "poor alice",
+      "hyp": "Poor  Alice"
+    }
+  ]
+}

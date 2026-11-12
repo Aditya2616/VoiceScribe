@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB, DOCS = ROOT / "web", ROOT / "docs"
+STATIC_META = '<head>\n  <meta name="voicescribe-static" content="1">'
 
 
 def main() -> None:
@@ -16,6 +17,8 @@ def main() -> None:
             dst = DOCS / src.relative_to(WEB)
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(src, dst)
+    page = DOCS / "index.html"  # the static copy never probes for a backend
+    page.write_text(page.read_text(encoding="utf8").replace("<head>", STATIC_META, 1), encoding="utf8")
     (DOCS / ".nojekyll").write_text("", encoding="utf8")
     print(f"copied {WEB} -> {DOCS}")
 
