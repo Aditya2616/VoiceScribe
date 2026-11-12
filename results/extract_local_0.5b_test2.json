@@ -32,6 +32,9 @@
     "[test7] wrong field: owner None vs 'Dmitri', due 2026-12-10 vs 2026-12-10: \"I'll book the room for the launch review on the 10th.\"",
     "[test7] FP action: 'I can see why that takes a while. Okay, we are done.' -> 'See why it takes a while'"
   ],
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16",
   "extractor": "local",
   "split": "test2",
   "speakers_given": false

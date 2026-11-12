@@ -39,6 +39,9 @@
     "[dev4] FN decision: \"Agreed, let's move the filters into a side panel.\"",
     "[dev4] FN decision: \"Let's go with internal testers for this round.\""
   ],
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16",
   "extractor": "local",
   "split": "dev",
   "speakers_given": false

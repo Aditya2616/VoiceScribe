@@ -46,7 +46,8 @@ FEW_SHOT = [
 
 
 class LocalGenerator:
-    """transformers causal LM, greedy decoding, CPU, thread-capped."""
+    """transformers causal LM, greedy decoding. Device: VOICESCRIBE_DEVICE, else cuda when available, else cpu
+    (float16 on cuda, float32 on cpu). CPU threads are capped."""
 
     def __init__(self, model: str | None = None, threads: int | None = None, max_new_tokens: int = 48):
         self.model_name = model or os.environ.get("VOICESCRIBE_LOCAL_MODEL", "Qwen/Qwen2.5-0.5B-Instruct")
@@ -54,6 +55,8 @@ class LocalGenerator:
         self.max_new_tokens = max_new_tokens
         self._tok = None
         self._model = None
+        self.device = "cpu"
+        self.dtype = "float32"
 
     def _load(self):
         if self._model is None:
@@ -61,8 +64,13 @@ class LocalGenerator:
             from transformers import AutoModelForCausalLM, AutoTokenizer
 
             torch.set_num_threads(self.threads)
+            want = os.environ.get("VOICESCRIBE_DEVICE") or ("cuda" if torch.cuda.is_available() else "cpu")
+            self.device = want
+            self.dtype = "float16" if want.startswith("cuda") else "float32"
             self._tok = AutoTokenizer.from_pretrained(self.model_name)
-            self._model = AutoModelForCausalLM.from_pretrained(self.model_name, dtype=torch.float32)
+            self._model = AutoModelForCausalLM.from_pretrained(
+                self.model_name, dtype=torch.float16 if want.startswith("cuda") else torch.float32
+            ).to(want)
             self._model.eval()
         return self._tok, self._model
 
@@ -71,10 +79,10 @@ class LocalGenerator:
 
         tok, model = self._load()
         prompt = tok.apply_chat_template(messages, add_generation_prompt=True, tokenize=False) + prefill
-        enc = tok(prompt, return_tensors="pt")
+        enc = tok(prompt, return_tensors="pt").to(model.device)
         with torch.no_grad():
             out = model.generate(**enc, max_new_tokens=self.max_new_tokens, do_sample=False)
-        return prefill + tok.decode(out[0][enc["input_ids"].shape[1] :], skip_special_tokens=True)
+        return prefill + tok.decode(out[0][enc["input_ids"].shape[1] :].cpu(), skip_special_tokens=True)
 
 
 def parse_label(raw: str, people: list[str]) -> dict | None:

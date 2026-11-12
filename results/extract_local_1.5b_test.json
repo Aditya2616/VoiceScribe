@@ -25,7 +25,7 @@
     "[test2] wrong field: owner None vs 'Sam', due 2026-06-25 vs 2026-06-25: 'I will renew the certificate and rotate the keys before the 25th.'",
     "[test2] FN action: 'Nina, can you add rate limiting to the login endpoint by next Wednesday?'",
     "[test2] FP decision: 'Nina, can you add rate limiting to the login endpoint by next Wednesday? I can take that, yes.'",
-    "[test3] wrong field: owner 'Kofi' vs 'Jo', due 2026-08-28 vs 2026-08-28: \"I'm going to add schema validation to the ingest step, hopefully tomorrow.\"",
+    "[test3] wrong field: owner None vs 'Jo', due 2026-08-28 vs 2026-08-28: \"I'm going to add schema validation to the ingest step, hopefully tomorrow.\"",
     "[test3] wrong field: owner 'Kofi' vs 'Kofi', due 2026-08-27 vs None: \"Kofi, can you talk to the upstream team about change notifications? Yes, I'll message them this afternoon.\"",
     "[test4] wrong field: owner 'Rosa' vs 'Ahmed', due 2026-10-12 vs 2026-10-12: \"I'll research venues and put together three options by Monday.\"",
     "[test4] FN action: 'Rosa, you could also ask finance whether the budget includes travel.'",
@@ -33,6 +33,9 @@
     "[test4] FP decision: \"Rosa, you could also ask finance whether the budget includes travel. Good idea, I'll check with them.\"",
     "[test4] FP decision: \"Someone needs to send out a survey about dietary requirements. I'll do it this week.\""
   ],
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16",
   "extractor": "local",
   "split": "test",
   "speakers_given": false

@@ -34,6 +34,9 @@
     "[test4] wrong field: owner None vs 'Ahmed', due 2026-10-12 vs 2026-10-12: \"I'll research venues and put together three options by Monday.\"",
     "[test4] wrong field: owner None vs 'Mei', due 2026-10-09 vs 2026-10-09: \"Someone needs to send out a survey about dietary requirements. I'll do it this week.\""
   ],
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16",
   "extractor": "local",
   "split": "test",
   "speakers_given": false

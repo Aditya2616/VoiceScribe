@@ -35,6 +35,9 @@
     "[dev4] FP decision: 'Hugo needs to send the usability test results before the next review.'",
     "[dev4] FP decision: 'Please remember to log your feedback in the tracker.'"
   ],
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "cuda",
+  "dtype": "float16",
   "extractor": "local",
   "split": "dev",
   "speakers_given": false

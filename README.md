@@ -89,8 +89,8 @@ treat differences of a few points as noise.
 | Synthetic demo meeting (Kokoro speech, scored against its script) | small.en | 336 | 1.49% (5 substitutions) |
 
 Commands: `voicescribe eval wer --model small.en` and `voicescribe eval demo --model small.en`. Both are read or
-synthetic speech, not real far-field meetings, so they say little about real meeting audio. Transcription ran at 0.84x
-real time for small.en on the LibriSpeech clips while other jobs were using the CPU (`results/wer_small.en.json`).
+synthetic speech, not real far-field meetings, so they say little about real meeting audio. Transcription (CPU, int8, 3 threads, machine heavily loaded by other jobs) ran at 0.84x
+real time for small.en on the LibriSpeech clips (`results/wer_small.en.json`).
 
 **Word-timestamp accuracy** on the demo meeting (sentence first and last word against the TTS segment timings, 69
 boundaries): median absolute error 100 ms, 90th percentile 255 ms, 87% within 250 ms. Sentence ends run about 170 ms
@@ -114,14 +114,17 @@ action items, 3 gold decisions) was written after the rules were frozen and is t
 | rules + Qwen2.5-0.5B | **test2 (3)** | 0.67 / 0.89 / 0.76 | 0.50 |
 | rules + Qwen2.5-1.5B | dev (4) | 1.00 / 0.69 / 0.82 | 0.70 |
 | rules + Qwen2.5-1.5B | test (4) | 1.00 / 0.75 / 0.86 | 0.77 |
-| rules + Qwen2.5-1.5B | **test2 (3)** | 0.50 / 0.11 / 0.18 | 0.46 |
+| rules + Qwen2.5-1.5B | **test2 (3)** | 0.00 / 0.00 / 0.00 | 0.43 |
 
 Command: `voicescribe eval extract --extractor rules --split test2`, and `--extractor local` with
-`VOICESCRIBE_LOCAL_MODEL=Qwen/Qwen2.5-0.5B-Instruct` or `Qwen/Qwen2.5-1.5B-Instruct`.
+`VOICESCRIBE_LOCAL_MODEL=Qwen/Qwen2.5-0.5B-Instruct` or `Qwen/Qwen2.5-1.5B-Instruct`. All model rows ran on the
+GPU in float16 (greedy decoding; the device and dtype are recorded in each `results/*.json`); the extractor picks
+the device automatically and also runs on CPU in float32 (`--device cpu`), where my earlier runs agreed except for
+1.5B on `test2`, which is unstable between devices.
 
 **The rules alone win, so they are the default.** The 0.5B model finds the same items but adds false positives
-(precision 10 to 40 points lower). The 1.5B model is more conservative and loses recall; on `test2` it kept almost
-nothing. The local model stays as an optional extractor, not a recommended one. Owner accuracy is the weak spot of
+(precision 10 to 40 points lower). The 1.5B model is more conservative and loses recall; on `test2` it found no
+correct action items. The local model stays as an optional extractor, not a recommended one. Owner accuracy is the weak spot of
 every variant (0.56 to 0.71 on matched items): without speaker labels, "I'll do it" has no owner. On the demo
 meeting the rules find 7 of 7 action items and 2 of 2 decisions with no false positives, but only 3 of 7 owners and
 6 of 7 deadline dates are right (`results/demo_small.en.json`).

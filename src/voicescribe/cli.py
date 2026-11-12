@@ -126,9 +126,17 @@ def cmd_eval(a: argparse.Namespace) -> int:
     from .extract.base import get_extractor
 
     data = Path(a.data_dir)
+    if getattr(a, "device", None):
+        import os
+
+        os.environ["VOICESCRIBE_DEVICE"] = a.device
     if a.what == "extract":
         ms = extract_eval.load_all(data / "eval" / "extract", a.split, with_speakers=a.speakers)
-        r = extract_eval.score(ms, get_extractor(a.extractor), people_from_speakers=a.speakers)
+        ex = get_extractor(a.extractor)
+        r = extract_eval.score(ms, ex, people_from_speakers=a.speakers)
+        gen = getattr(getattr(ex, "_generate", None), "__self__", None) or getattr(ex, "_generate", None)
+        if hasattr(gen, "device"):  # local model: record where and how it ran
+            r["model"], r["device"], r["dtype"] = gen.model_name, gen.device, gen.dtype
         r["extractor"], r["split"], r["speakers_given"] = a.extractor, a.split or "all", a.speakers
     else:
         from .asr import FasterWhisperTranscriber
@@ -195,6 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument("what", choices=["wer", "extract", "demo"])
     e.add_argument("--model", default="small.en")
     e.add_argument("--extractor", default="rules")
+    e.add_argument("--device", default=None, help="local extractor: cuda | cpu (default: automatic)")
     e.add_argument("--split", default=None, help="extract only: dev | test | test2 (default: all)")
     e.add_argument("--speakers", action="store_true", help="extract only: give the extractor speaker names")
     e.add_argument("--diarize", action="store_true", help="demo only")
