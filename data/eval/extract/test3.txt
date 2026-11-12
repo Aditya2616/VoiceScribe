@@ -1,0 +1,17 @@
+# title: Data pipeline stand-up
+# date: 2026-08-27
+# split: test
+Ivan: Quick stand-up on the data pipeline.
+Jo: The nightly job failed twice this week because of a schema change upstream.
+Ivan: Right, that needs fixing properly.
+Jo: I'm going to add schema validation to the ingest step, hopefully tomorrow. => ACTION owner=Jo due=2026-08-28
+Ivan: Kofi, can you talk to the upstream team about change notifications? => ACTION owner=Kofi due=
+Kofi: Yes, I'll message them this afternoon.
+Ivan: We are going with the managed scheduler instead of building our own. => DECISION
+Jo: Good, that saves a lot of time.
+Kofi: One more thing, the dashboards are slow.
+Ivan: Jo, take a look at the query plans for the three slowest dashboards next week. => ACTION owner=Jo due=2026-09-04
+Jo: Okay.
+Kofi: I was thinking about moving to a new warehouse at some point.
+Ivan: Not now.
+Ivan: Right, let's wrap up.

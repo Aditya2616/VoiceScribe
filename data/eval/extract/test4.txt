@@ -1,0 +1,18 @@
+# title: Offsite planning
+# date: 2026-10-07
+# split: test
+Rosa: Let's plan the team offsite.
+Ahmed: Budget is about six thousand for the whole team.
+Rosa: That should be enough for a venue outside the city.
+Ahmed: I'll research venues and put together three options by Monday. => ACTION owner=Ahmed due=2026-10-12
+Mei: Rosa, you could also ask finance whether the budget includes travel. => ACTION owner=Rosa due=
+Rosa: Good idea, I'll check with them.
+Rosa: The decision is to hold the offsite in the first week of December. => DECISION
+Mei: That works for me.
+Ahmed: Someone needs to send out a survey about dietary requirements.
+Mei: I'll do it this week. => ACTION owner=Mei due=2026-10-09
+Rosa: Thanks, Mei.
+Ahmed: Do we want to include a workshop?
+Rosa: Let's decide that after we see the venue options.
+Mei: Sounds good.
+Rosa: That's all from me.

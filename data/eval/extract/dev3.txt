@@ -1,0 +1,19 @@
+# title: Quarterly budget check-in
+# date: 2026-09-01
+# split: dev
+Chloe: Let's review where we are against the quarterly budget.
+Dev: Cloud spend is eight percent over plan.
+Chloe: Most of that is the new analytics cluster.
+Dev: I'll draft a cost reduction proposal and share it with finance by the 10th. => ACTION owner=Dev due=2026-09-10
+Ana: Marketing spend is on track.
+Chloe: Ana, can you send the updated campaign forecast to Hugo by Friday? => ACTION owner=Ana due=2026-09-04
+Ana: Yes, no problem.
+Chloe: We've decided to freeze new hires until the next quarter. => DECISION
+Dev: That will hurt the data team.
+Chloe: I know, but the freeze is approved.
+Hugo: Chloe will book the budget review meeting for next week. => ACTION owner=Chloe due=2026-09-11
+Chloe: Right, I will.
+Dev: Should we also renegotiate the vendor contracts?
+Chloe: Maybe later.
+Hugo: I need to think about it more.
+Chloe: Okay, that's it for today.

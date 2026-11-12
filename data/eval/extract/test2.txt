@@ -1,0 +1,20 @@
+# title: Security audit follow-up
+# date: 2026-06-18
+# split: test
+Tariq: This call is about the findings from the security audit.
+Lena: Overall they found twelve issues, two of them high severity.
+Tariq: Let's start with the high severity ones.
+Lena: The first is the expired certificate on the internal gateway.
+Sam: I will renew the certificate and rotate the keys before the 25th. => ACTION owner=Sam due=2026-06-25
+Tariq: Good.
+Lena: The second is the missing rate limit on the login endpoint.
+Tariq: Nina, can you add rate limiting to the login endpoint by next Wednesday? => ACTION owner=Nina due=2026-06-24
+Nina: I can take that, yes.
+Tariq: We've decided to run the next audit in December rather than January. => DECISION
+Sam: Fine.
+Lena: The medium issues are mostly about logging.
+Tariq: Lena will compile the medium issues into tickets by end of the month. => ACTION owner=Lena due=2026-06-30
+Lena: Yes.
+Sam: Maybe we need a bigger security budget.
+Tariq: That is a longer discussion.
+Tariq: I think that covers it.

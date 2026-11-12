@@ -1,0 +1,20 @@
+# title: Mobile release planning
+# date: 2026-05-14
+# split: dev
+Grace: Thanks for joining, this is the mobile release planning call.
+Hugo: The beta had a crash rate of one point two percent.
+Grace: That is higher than we want.
+Hugo: I'll look into the crash reports and send a summary by tomorrow. => ACTION owner=Hugo due=2026-05-15
+Elif: The new onboarding screens are ready for review.
+Grace: Farid, could you review the onboarding screens before the 20th? => ACTION owner=Farid due=2026-05-20
+Farid: Yes, I'll have feedback ready by then.
+Grace: We agreed to ship the release on the first of June. => DECISION
+Elif: Do we have a date for the app store submission?
+Grace: Submission needs to happen at least a week before that.
+Hugo: So roughly the twenty fifth.
+Grace: Elif, please prepare the store listing text and screenshots by end of next week. => ACTION owner=Elif due=2026-05-22
+Elif: Okay.
+Farid: The tablet layout is still broken in landscape.
+Grace: Let's postpone the tablet fixes to the next release. => DECISION
+Hugo: I should probably test on older phones as well.
+Grace: Good point, anyone who has an old phone should bring it in.

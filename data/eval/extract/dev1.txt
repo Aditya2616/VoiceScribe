@@ -1,0 +1,20 @@
+# title: Weekly platform sync
+# date: 2026-03-04
+# split: dev
+Ana: Okay, let's get started with the platform sync.
+Ana: First item is the database migration.
+Ben: The staging run finished last night and it took about forty minutes.
+Ben: I'll write up the rollback plan by Friday. => ACTION owner=Ben due=2026-03-06
+Ana: Great, thanks.
+Ana: Chloe, can you check the replication lag on the standby before the cutover? => ACTION owner=Chloe due=2026-03-05
+Chloe: Sure, I can do that tomorrow.
+Ana: We decided to keep the old cluster for two more weeks as a fallback. => DECISION
+Ben: That seems sensible.
+Ana: Next, the on-call rota.
+Chloe: Two people have asked to swap their weeks.
+Ana: Dev, please update the rota in the wiki by next Tuesday. => ACTION owner=Dev due=2026-03-10
+Dev: Will do.
+Ben: I can see why people are annoyed about the pager noise.
+Ana: We need to be careful about alert fatigue.
+Ana: Let's go with the new alert thresholds from the proposal. => DECISION
+Ana: That's everything, thanks all.

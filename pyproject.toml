@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voicescribe"
+version = "0.1.0"
+description = "Meetings in, clean action items out: Whisper word timestamps, segmentation and structured extraction."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Aditya Jain" }]
+requires-python = ">=3.10"
+dependencies = [
+  "faster-whisper>=1.1,<2",
+  "av>=15,<17",          # av 17+ breaks faster-whisper 1.2.x (metadata_errors kwarg)
+  "numpy>=1.26",
+  "pydantic>=2.5",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "python-multipart>=0.0.9",
+  "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+local = ["transformers>=4.50", "torch>=2.2"]
+diarize = ["sherpa-onnx>=1.10"]
+synth = ["kokoro-onnx>=0.4", "soundfile>=0.12"]
+dev = ["pytest>=8", "ruff>=0.5", "jiwer>=3", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+voicescribe = "voicescribe.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: needs downloaded models (deselect with -m 'not slow')"]
+addopts = "-m 'not slow'"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

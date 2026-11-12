@@ -1,0 +1,18 @@
+# title: Design review for the dashboard
+# date: 2026-01-22
+# split: dev
+Elif: Today we are looking at the new dashboard design.
+Farid: The overall layout is clear but the filters feel cramped.
+Elif: Agreed, let's move the filters into a side panel. => DECISION
+Grace: I like the colour scheme.
+Elif: Grace, can you update the style guide with the new palette by next Friday? => ACTION owner=Grace due=2026-01-30
+Grace: Absolutely, I'll do that.
+Farid: I'll mock up the side panel and post it in the channel tomorrow. => ACTION owner=Farid due=2026-01-23
+Elif: Hugo needs to send the usability test results before the next review. => ACTION owner=Hugo due=
+Hugo: I have most of them already.
+Farid: Should we test with real customers?
+Elif: We could, but it takes time.
+Elif: Let's go with internal testers for this round. => DECISION
+Grace: Fine by me.
+Elif: Please remember to log your feedback in the tracker. => ACTION owner= due=
+Elif: Thanks everyone.

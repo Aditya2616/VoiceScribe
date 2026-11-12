@@ -1,0 +1,18 @@
+# title: Customer onboarding retro
+# date: 2026-02-10
+# split: test
+Maria: Alright, welcome to the onboarding retro.
+Omar: Support tickets about setup dropped by a third since the new guide.
+Maria: That is encouraging.
+Omar: Priya, would you set up a call with the three customers who struggled by the end of the week? => ACTION owner=Priya due=2026-02-13
+Priya: Sure, I'll reach out today.
+Maria: I'll update the welcome email template and send it round on Thursday. => ACTION owner=Maria due=2026-02-12
+Omar: We should really improve the billing page.
+Maria: We've agreed to pause the billing redesign until April. => DECISION
+Priya: That makes sense given the workload.
+Omar: The import wizard still confuses people.
+Maria: Omar, please write down the top five confusing steps and share them with design in two weeks. => ACTION owner=Omar due=2026-02-24
+Omar: Okay, noted.
+Priya: I'm not sure the tutorial video is worth the effort.
+Maria: Let's drop the video and use annotated screenshots instead. => DECISION
+Maria: Good meeting, everyone.
