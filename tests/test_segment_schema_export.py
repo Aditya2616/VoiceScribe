@@ -8,8 +8,9 @@ from pydantic import ValidationError
 from voicescribe.export import cues, to_markdown, to_srt, to_vtt, ts
 from voicescribe.extract.base import RulesExtractor
 from voicescribe.pipeline import build_meeting
-from voicescribe.schema import ActionItem, Meeting, SourceSpan, Word, make_span
+from voicescribe.schema import ActionItem, Meeting, SourceSpan, Topic, Word, make_span
 from voicescribe.segment import (
+    _label,
     assign_speakers,
     clean_words,
     split_sentences,
@@ -125,3 +126,30 @@ def test_build_meeting_roundtrips_through_json():
     again = Meeting.model_validate_json(m.model_dump_json())
     assert again.action_items[0].deadline_date == dt.date(2026, 11, 13)
     assert again.summary is not None and again.summary.kind == "extractive"
+
+
+def test_topic_labels_read_like_labels():
+    lines = [
+        (None, "Okay, let's get started with Rohan and Lena."),
+        (None, "The invite flow takes too many steps."),
+        (None, "Rohan, can you shorten the invite flow?"),
+        (None, "I'll look at the invite flow tomorrow."),
+        (None, "Next, the free plan after launch."),
+        (None, "We decided to keep the free plan with three calendars."),
+        (None, "Pricing for the free plan stays the same."),
+        (None, "Thanks, Rohan."),
+    ]
+    t = transcript_from_lines(lines)
+    topics = _label(t.sentences, [Topic(start_sentence=1, start=0, label=""), Topic(start_sentence=4, start=0, label="")])
+    assert topics[0].label.startswith("Invite Flow")
+    assert topics[1].label.startswith("Free Plan")
+    for tp in topics:
+        words = tp.label.lower().replace("/", " ").split()
+        assert not {"let's", "rohan", "lena", "started", "i'll", "thanks"} & set(words)
+        assert tp.label == tp.label.title() or "/" in tp.label
+
+
+def test_topic_label_falls_back_to_the_first_content_sentence():
+    t = transcript_from_lines([(None, "Okay, so we shall see."), (None, "Yes, I will, thanks.")])
+    (tp,) = _label(t.sentences, [Topic(start_sentence=0, start=0, label="")])
+    assert tp.label and "," not in tp.label[:3]

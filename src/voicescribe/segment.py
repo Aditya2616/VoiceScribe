@@ -148,12 +148,77 @@ def topic_boundaries(sentences: list[Sentence], window: int = 4, min_gap: int = 
     return _label(sentences, topics)
 
 
+# words that say nothing about the subject of a topic: meeting talk, filler and generic verbs
+GENERIC = set(
+    "let lets start started starting need needs needed want wants think thought know say said says tell thing things "
+    "one two three also yes yeah okay great good nice thanks thank please will can could would just really next first "
+    "today tomorrow yesterday week month day time still much many lot bit sure fine right well maybe probably sorry "
+    "send write look looks looked take took make made give gave check see seen come came put keep kept talk talked "
+    "side book everything anything something nothing everyone everybody someone anyone team meeting update updates item items point points sync".split()
+)
+
+
+def _content(text: str, names: set[str]) -> list[str]:
+    """Lower-case content words in order: no stopwords, contractions, generic words or names."""
+    out = []
+    for t in re.findall(r"[a-z0-9']+", text.lower()):
+        if "'" in t or len(t) < 3 or t.isdigit() or t in STOPWORDS or t in GENERIC or t in names:
+            out.append("")  # a gap, so bigrams never span removed words
+        else:
+            out.append(t)
+    return out
+
+
+def _title(phrase: str) -> str:
+    return " ".join(w.capitalize() for w in phrase.split())
+
+
 def _label(sentences: list[Sentence], topics: list[Topic]) -> list[Topic]:
+    """Label each topic with its most distinctive noun-like phrase (bigram when repeated, else top words);
+    when nothing distinctive exists, the first content sentence trimmed to a few words."""
+    from .names import name_evidence
+
+    names = {n.lower() for n in name_evidence(sentences)} | {s.speaker.lower() for s in sentences if s.speaker}
     bounds = [t.start_sentence for t in topics] + [len(sentences)]
+    segs = [sentences[bounds[k] : bounds[k + 1]] for k in range(len(topics))]
+    uni: list[Counter] = []
+    bi: list[Counter] = []
+    for seg in segs:
+        u: Counter = Counter()
+        b2: Counter = Counter()
+        for sent in seg:
+            words = _content(sent.text, names)
+            u.update(w for w in words if w)
+            b2.update(f"{x} {y}" for x, y in zip(words, words[1:], strict=False) if x and y)
+        uni.append(u)
+        bi.append(b2)
+    df = Counter(w for u in uni for w in u)
+    n_seg = max(1, len(segs))
     for k, t in enumerate(topics):
-        c = Counter(w for s in sentences[bounds[k] : bounds[k + 1]] for w in tokens(s.text))
-        t.label = ", ".join(w for w, _ in c.most_common(3))
+        weight = lambda w, c: c * (1 + math.log(1 + n_seg / df[w]))  # noqa: E731
+        ranked = sorted(uni[k], key=lambda w: (-weight(w, uni[k][w]), -len(w), w))
+        phrases: list[str] = []
+        pairs = [p for p, c in bi[k].items() if c >= 2]
+        if pairs:
+            best = max(pairs, key=lambda p: (bi[k][p] * (weight(p.split()[0], 1) + weight(p.split()[1], 1)), p))
+            phrases.append(best)
+        for w in ranked:
+            if len(phrases) >= 2 or uni[k][w] < 2:
+                break  # a second phrase must be repeated in the segment, otherwise it is noise
+            if not any(w in p.split() for p in phrases):
+                phrases.append(w)
+        if not phrases and ranked:
+            phrases.append(ranked[0])
+        t.label = " / ".join(_title(p) for p in phrases[:2]) if phrases else _first_sentence_label(segs[k])
     return topics
+
+
+def _first_sentence_label(seg: list[Sentence]) -> str:
+    for sent in seg:
+        words = re.sub(r"^(?:(?:okay|ok|so|well|right|and|but|yes|yeah)[,.]?\s+)+", "", sent.text, flags=re.I).split()
+        if len(words) >= 3:
+            return " ".join(words[:5]).rstrip(",.;:!?") + ("..." if len(words) > 5 else "")
+    return seg[0].text[:30] if seg else ""
 
 
 def _cos(a: Counter, b: Counter) -> float:
