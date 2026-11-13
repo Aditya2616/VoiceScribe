@@ -61,14 +61,29 @@ def main() -> int:
                 page.on("pageerror", lambda e, n=name: errors.append(f"[{n}] pageerror {e}"))
                 page.goto(args.base, wait_until="networkidle")
                 page.wait_for_function("document.querySelector('#play') && !document.querySelector('#play').disabled")
-                page.screenshot(path=str(out / f"{name}-start.png"))
-                seek(page, 53)
-                page.click("#play")
-                page.wait_for_timeout(5000)
-                page.screenshot(path=str(out / f"{name}-playing.png"))
-                seek(page, 117)
-                page.wait_for_timeout(600)
-                page.screenshot(path=str(out / f"{name}-end.png"), full_page=True)
+                if touch:
+                    # end state: the whole recording has played, so every action item is in the panel; scroll so the
+                    # sticky stage shows the waveform and the cards end at a card boundary above the pinned transport
+                    seek(page, 117)
+                    page.wait_for_timeout(1500)
+                    page.evaluate("document.fonts.ready")
+                    page.evaluate(
+                        """() => { const st = document.querySelector('.stage').getBoundingClientRect();
+                        window.scrollTo(0, document.querySelector('.panel.items').getBoundingClientRect().top + scrollY - st.height - 8);
+                        const tt = document.querySelector('.transport').getBoundingClientRect().top;
+                        const cards = [...document.querySelectorAll('#actions li')];
+                        window.scrollBy(0, cards[2].getBoundingClientRect().bottom - (tt - 6)); }"""
+                    )
+                    page.wait_for_timeout(700)
+                    page.screenshot(path=str(out / f"{name}-playing.png"))
+                    page.evaluate("window.scrollTo(0, 0)")
+                else:
+                    seek(page, 53)
+                    page.click("#play")
+                    page.wait_for_timeout(5000)
+                    page.screenshot(path=str(out / f"{name}-playing.png"))
+                    seek(page, 117)
+                    page.wait_for_timeout(600)
                 overflow = page.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth")
                 print(f"{name}: horizontal overflow = {overflow}")
                 small = page.evaluate(

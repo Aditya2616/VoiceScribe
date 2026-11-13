@@ -27,6 +27,7 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 README = ROOT / "README.md"
+NOTES = ROOT / "docs" / "notes" / "RESULTS_DETAIL.md"  # generated the same way as the README
 RES = ROOT / "results"
 SPLITS = {"dev": "dev", "test": "test", "test2": "test2", "held": "held", "heldout": "test2,held"}
 
@@ -161,6 +162,7 @@ def compute() -> dict[str, str]:
         v[f"ao_{split}_text"], v[f"ao_{split}_diar"] = own(split, "text_only_participants"), own(split, "diarised_estimated_participants")
         v[f"ao_{split}_text_np"], v[f"ao_{split}_diar_np"] = own(split, "text_only"), own(split, "diarised_estimated")
         v[f"ao_{split}_oracle"] = own(split, "oracle_speaker_names")
+    v["ao_heldout_oracle_tp"] = str(ao["heldout"]["variants"]["oracle_speaker_names"]["tp"])
     v["ao_heldout_n"] = str(sum(ao["heldout"]["variants"]["text_only"][k] for k in ("correct", "wrong", "unassigned")))
     gain = ao["heldout"]["variants"]["diarised_estimated_participants"]["correct"] - ao["heldout"]["variants"]["text_only_participants"]["correct"]
     v["ao_heldout_gain"] = str(gain)
@@ -215,7 +217,15 @@ LABELS = [
     ("rules + 0.5B verifier", "verify_0.5B"),
     ("rules + 1.5B verifier", "verify_1.5B"),
 ]
-SET_NAMES = [("dev", "dev"), ("heldout", "**held-out**"), ("held", "`held` only")]
+HELDOUT_LABEL = "**held-out**"  # the 9 meetings include the 3 `test2` meetings that had already been seen
+SET_NAMES = [("dev", "dev"), ("heldout", HELDOUT_LABEL), ("held", "`held` only")]
+
+
+def set_cell(name: str, split: str, meetings: int) -> str:
+    """The set column: the held-out set says how many of its meetings had already been seen."""
+    if split == "heldout":
+        return f"{name} ({meetings}; {ext('rules', 'test2')['meetings']} previously seen)"
+    return f"{name} ({meetings})"
 
 
 def extract_table() -> str:
@@ -226,7 +236,7 @@ def extract_table() -> str:
             r = ext(method, split)
             o = r["owners"]
             dev = f"{r['device']} {r['dtype']}" if "device" in r else "cpu (no model)"
-            lines.append(f"| {label} | {name} ({r['meetings']}) | {prf(r)} | {f2(r['decisions']['f1'])} | "
+            lines.append(f"| {label} | {set_cell(name, split, r['meetings'])} | {prf(r)} | {f2(r['decisions']['f1'])} | "
                          f"{o['correct']} / {o['wrong']} / {o['unassigned']} | {dev} |")  # fmt: skip
     return "\n".join(lines)
 
@@ -242,7 +252,7 @@ def owners_table() -> str:
     for split, name in (("dev", "dev"), ("heldout", "**held-out**")):
         for variant, label in rows:
             a_ = ao[split]["variants"][variant]
-            lines.append(f"| {label} | {name} ({ao[split]['meetings']}) | {a_['correct']} / {a_['wrong']} / {a_['unassigned']} | {f2(a_['f1'])} |")
+            lines.append(f"| {label} | {set_cell(name, split, ao[split]['meetings'])} | {a_['correct']} / {a_['wrong']} / {a_['unassigned']} | {f2(a_['f1'])} |")
     return chr(10).join(lines)
 
 
@@ -254,7 +264,7 @@ def diar_table() -> str:
     for split, label in (("dev", "dev"), ("heldout", "**held-out**")):
         for key, nm in names.items():
             r = rep[split][key]
-            lines.append(f"| {nm} | {label} ({r['meetings']}) | {100 * r['der']:.1f}% | {100 * r['frame_accuracy']:.1f}% | "
+            lines.append(f"| {nm} | {set_cell(label, split, r['meetings'])} | {100 * r['der']:.1f}% | {100 * r['frame_accuracy']:.1f}% | "
                          f"{100 * r['speaker_count_exact']:.0f}% | {r['speaker_count_mean_abs_error']:.2f} |")  # fmt: skip
     return chr(10).join(lines)
 
@@ -400,18 +410,23 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--write", action="store_true")
     args = ap.parse_args(argv)
     text = README.read_text(encoding="utf8").replace("\r\n", "\n")
-    want = render(text, compute())
+    values = compute()
+    want = render(text, values)
+    notes_text = NOTES.read_text(encoding="utf8").replace("\r\n", "\n")
+    notes_want = render(notes_text, values)
     if args.write:
         README.write_text(want, encoding="utf8", newline="\n")
-        print("README.md regenerated")
+        NOTES.write_text(notes_want, encoding="utf8", newline="\n")
+        print("README.md and docs/notes/RESULTS_DETAIL.md regenerated")
         return 0
     problems = []
-    if want != text:
-        import difflib
+    for name, have, wanted in (("README.md", text, want), ("docs/notes/RESULTS_DETAIL.md", notes_text, notes_want)):
+        if wanted != have:
+            import difflib
 
-        diff = [ln for ln in difflib.unified_diff(text.splitlines(), want.splitlines(), "README.md", "generated", lineterm="", n=0)
-                if ln[:1] in "+-" and ln[:3] not in ("+++", "---")]  # fmt: skip
-        problems.append("README.md is out of sync with the results; run scripts/check_numbers.py --write:\n  " + "\n  ".join(diff[:12]))
+            diff = [ln for ln in difflib.unified_diff(have.splitlines(), wanted.splitlines(), name, "generated", lineterm="", n=0)
+                    if ln[:1] in "+-" and ln[:3] not in ("+++", "---")]  # fmt: skip
+            problems.append(f"{name} is out of sync with the results; run scripts/check_numbers.py --write:\n  " + "\n  ".join(diff[:12]))
     problems += check_references(text) + check_static_facts(text, compute()) + check_docs_sync() + check_demo_and_results()
     for p in problems:
         print("PROBLEM:", p)
