@@ -28,7 +28,6 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 README = ROOT / "README.md"
 RES = ROOT / "results"
-FUTURE_OUTPUTS = {"results/speed_cpu.json"}  # written by scripts/rerecord_demo.py once the machine is quiet
 SPLITS = {"dev": "dev", "test": "test", "test2": "test2", "held": "held", "heldout": "test2,held"}
 
 
@@ -189,6 +188,14 @@ def compute() -> dict[str, str]:
     v["owner_thr"] = str(inspect.signature(local.LocalExtractor.__init__).parameters["owner_threshold"].default)
     rd = __import__("rerecord_demo")
     v["quiet_pct"], v["threads"] = f"{100 * rd.QUIET_BELOW:.0f}%", str(rd.DEFAULT_THREADS)
+    sp = load("speed_cpu.json")
+    assert all(r["clean"] for r in sp["rows"]), "results/speed_cpu.json has a row measured on a busy CPU: re-run scripts/rerecord_demo.py"
+    assert {r["threads"] for r in sp["rows"]} == {rd.DEFAULT_THREADS}, "results/speed_cpu.json used a different thread count"
+    v["speed_date"], v["speed_audio"] = sp["date"], f"{sp['rows'][0]['audio_s']:.1f} s"
+    v["speed_busy_max"] = f"{100 * max(r['cpu_busy_before'] for r in sp['rows']):.1f}%"
+    tm = json.loads((ROOT / "docs/demo/meeting.json").read_text(encoding="utf8"))["timings"]
+    assert tm["quiet_machine"] == 1.0, "the recorded demo was not timed on a quiet machine"
+    v["demo_asr_s"], v["demo_rtf"], v["demo_busy"] = f"{tm['asr_s']:.1f} s", f"{tm['rtf']}", f"{100 * tm['cpu_busy_before']:.1f}%"
     v["port"] = re.search(r'"--port", type=int, default=(\d+)', (ROOT / "src/voicescribe/cli.py").read_text(encoding="utf8")).group(1)
     asr_src = (ROOT / "src/voicescribe/asr.py").read_text(encoding="utf8")
     v["default_whisper"] = re.search(r'"VOICESCRIBE_WHISPER", "([\w.]+)"', asr_src).group(1)
@@ -263,6 +270,14 @@ def speech_table(v: dict[str, str]) -> str:
     ])  # fmt: skip
 
 
+def speed_table() -> str:
+    lines = ["| Model | Audio | Transcription time | Real-time factor | CPU busy before | WER vs script |", "|---|---|---|---|---|---|"]
+    for r in load("speed_cpu.json")["rows"]:
+        lines.append(f"| {r['model']} | {r['audio_s']:.1f} s | {r['asr_s']:.1f} s | {r['rtf']:.3f} ({1 / r['rtf']:.0f}x faster than real time) | "
+                     f"{100 * r['cpu_busy_before']:.1f}% | {100 * r['wer_vs_script']:.2f}% |")  # fmt: skip
+    return chr(10).join(lines)
+
+
 # ---------------------------------------------------------------------------------------------- apply
 
 INLINE = re.compile(r"<!--n:(\w+)-->(.*?)<!--/n-->", re.S)
@@ -270,7 +285,7 @@ BLOCK = re.compile(r"(<!--b:(\w+)-->\n)(.*?)(\n<!--/b:\2-->)", re.S)
 
 
 def render(text: str, v: dict[str, str]) -> str:
-    blocks = {"speech_table": speech_table(v), "extract_table": extract_table(), "owners_table": owners_table(), "diar_table": diar_table()}
+    blocks = {"speech_table": speech_table(v), "extract_table": extract_table(), "owners_table": owners_table(), "diar_table": diar_table(), "speed_table": speed_table()}
 
     def inline(m: re.Match) -> str:
         key = m.group(1)
@@ -313,7 +328,7 @@ def check_references(text: str) -> list[str]:
         if not (ROOT / script).exists():
             problems.append(f"README runs {script}, which does not exist")
     for path in set(re.findall(r"`((?:docs|results|data|scripts|src|web|tests)/[^`\s<>*]*)`", text)):
-        if "<" not in path and path not in FUTURE_OUTPUTS and not (ROOT / path).exists():
+        if "<" not in path and not (ROOT / path).exists():
             problems.append(f"README names {path}, which does not exist")
     for png in re.findall(r"docs/assets/[\w-]+\.png", text):
         if not (ROOT / png).exists():

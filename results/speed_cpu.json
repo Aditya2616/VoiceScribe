@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-13",
+  "device": "cpu",
+  "compute": "int8",
+  "audio": "demo meeting (synthetic)",
+  "rows": [
+    {
+      "model": "tiny.en",
+      "audio_s": 117.7,
+      "asr_s": 2.3,
+      "rtf": 0.02,
+      "wer_vs_script": 0.0179,
+      "threads": 3,
+      "cpu_busy_before": 0.057,
+      "clean": true
+    },
+    {
+      "model": "base.en",
+      "audio_s": 117.7,
+      "asr_s": 4.1,
+      "rtf": 0.035,
+      "wer_vs_script": 0.006,
+      "threads": 3,
+      "cpu_busy_before": 0.031,
+      "clean": true
+    },
+    {
+      "model": "small.en",
+      "audio_s": 117.7,
+      "asr_s": 12.0,
+      "rtf": 0.102,
+      "wer_vs_script": 0.0119,
+      "threads": 3,
+      "cpu_busy_before": 0.036,
+      "clean": true
+    }
+  ],
+  "note": "rtf = transcription seconds per audio second; only rows with clean=true were measured on a mostly idle CPU"
+}

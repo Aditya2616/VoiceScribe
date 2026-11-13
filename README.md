@@ -104,11 +104,25 @@ Commands: `voicescribe eval wer --model small.en` (LibriSpeech, the first two ro
 meetings, so they say little about real meeting audio. The recorded run's names come from the supplied attendee list,
 which is why its WER is lower than the recogniser's own.
 
-**Speed.** I do not publish a transcription speed yet: the figures I have were taken while the CPU was busy with other
-jobs, so they describe the load, not the model. `python scripts/rerecord_demo.py` measures tiny.en, base.en and small.en
-on the CPU (int8, <!--n:threads-->3<!--/n--> threads), records the CPU busy fraction before each run, re-records the demo and only
-marks a figure as clean when the CPU was under <!--n:quiet_pct-->25%<!--/n--> busy. Its output goes to `results/speed_cpu.json`, and the
-demo banner shows the number only when it is clean.
+**Speed.** Transcription speed on the CPU (int8, <!--n:threads-->3<!--/n--> threads) for the demo meeting
+(<!--n:speed_audio-->117.7 s<!--/n--> of synthetic speech), measured on <!--n:speed_date-->2026-11-13<!--/n--> by `python scripts/rerecord_demo.py`. Model loading
+is not included. A figure counts as clean only when the CPU was under <!--n:quiet_pct-->25%<!--/n--> busy just before the run; every row below is
+clean (at most <!--n:speed_busy_max-->5.7%<!--/n--> busy). The real-time factor is transcription seconds per audio second, so below 1 is faster
+than real time.
+
+<!--b:speed_table-->
+| Model | Audio | Transcription time | Real-time factor | CPU busy before | WER vs script |
+|---|---|---|---|---|---|
+| tiny.en | 117.7 s | 2.3 s | 0.020 (50x faster than real time) | 5.7% | 1.79% |
+| base.en | 117.7 s | 4.1 s | 0.035 (29x faster than real time) | 3.1% | 0.60% |
+| small.en | 117.7 s | 12.0 s | 0.102 (10x faster than real time) | 3.6% | 1.19% |
+<!--/b:speed_table-->
+
+One run per model on one machine, so these are indicative, not averages. The WER column scores each speed run's own transcript
+against the demo script; those runs were made without the attendee list, so they are not the recorded run scored in the
+table above. The demo banner shows the recorded run's own timing
+(small.en, <!--n:demo_asr_s-->11.9 s<!--/n-->, real-time factor <!--n:demo_rtf-->0.101<!--/n-->, CPU <!--n:demo_busy-->2.2%<!--/n--> busy before the run). That is a separate
+run from the small.en row above, so the two differ slightly.
 
 **Word-timestamp accuracy** on the demo meeting, using the recogniser's own words (sentence first and last word against
 the TTS segment timings, <!--n:ts_n-->69<!--/n--> boundaries): median absolute error <!--n:ts_median-->100 ms<!--/n-->,
@@ -211,7 +225,7 @@ Without speaker labels, a bare "I'll do it" has no owner. So I measured how far 
 **Method.** Each recognised sentence is embedded with a sherpa-onnx speaker model (<!--n:diar_embedding-->NeMo TitaNet small<!--/n-->) and the
 embeddings are clustered by cosine distance (average linkage, threshold <!--n:diar_threshold-->0.35<!--/n-->; sentences under
 <!--n:diar_min_seconds-->1<!--/n--> s do not shape the clusters). With a participants list the number of speakers is set to its length. On the demo meeting
-this takes about <!--n:demo_diar_secs-->2<!--/n--> s on the CPU. The baseline is sherpa-onnx's own segmentation pipeline (pyannote segmentation 3.0
+this takes about <!--n:demo_diar_secs-->1<!--/n--> s on the CPU. The baseline is sherpa-onnx's own segmentation pipeline (pyannote segmentation 3.0
 plus a WeSpeaker embedding), which cuts the audio into arbitrary slices and clusters those.
 
 **Data and tuning.** I synthesised all <!--n:n_all-->17<!--/n--> labelled meetings with Kokoro-82M, one distinct voice per speaker, so every meeting has audio
