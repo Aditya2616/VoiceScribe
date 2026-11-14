@@ -305,4 +305,9 @@ Model weights are downloaded by script and not committed.
 
 Research and design notes are in `docs/notes/`.
 
+## Authors
+
+- [Aditya Jain](https://github.com/Aditya2616)
+- [Sneha Singh](https://github.com/snehasingh2608)
+
 Built by [Aditya Jain](https://adityajain16.vercel.app) and [Sneha Singh](https://github.com/snehasingh2608).
