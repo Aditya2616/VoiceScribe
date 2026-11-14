@@ -3,6 +3,8 @@
 [![CI](https://github.com/Aditya2616/VoiceScribe/actions/workflows/ci.yml/badge.svg)](https://github.com/Aditya2616/VoiceScribe/actions/workflows/ci.yml)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 
+By [Aditya Jain](https://adityajain16.vercel.app) and [Sneha Singh](https://github.com/snehasingh2608).
+
 **Meetings in, clean action items out.** VoiceScribe turns a meeting recording into a transcript with word-level
 timestamps, splits it into sentences and topics, and pulls out decisions, owners and deadlines as structured,
 validated action items. It runs offline on a CPU. Python, Whisper (faster-whisper), optional LLM adapters (untested against live APIs, see Results).
@@ -303,4 +305,4 @@ Model weights are downloaded by script and not committed.
 
 Research and design notes are in `docs/notes/`.
 
-Built by [Aditya Jain](https://adityajain16.vercel.app).
+Built by [Aditya Jain](https://adityajain16.vercel.app) and [Sneha Singh](https://github.com/snehasingh2608).
